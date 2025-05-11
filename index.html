@@ -167,16 +167,7 @@
             margin: 0 auto;
         }
 
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            background-color: #3498db;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            margin-left: -3px;
-        }
+       
 
         .timeline-item {
             padding: 10px 40px;
@@ -185,23 +176,9 @@
             width: 50%;
         }
 
-        .timeline-item::after { /* Circles on the timeline */
-            content: '';
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            right: -17px;
-            background-color: white;
-            border: 4px solid #3498db;
-            top: 15px;
-            border-radius: 50%;
-            z-index: 1;
-        }
+      
 
-        .timeline-item:nth-child(even)::after {
-            left: -14px; /* Adjusted for even items */
-        }
-
+      
 
         .timeline-content {
             padding: 20px 30px;

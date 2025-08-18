@@ -3,708 +3,701 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Govindh A Nair - Portfolio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Govindh A Nair | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* General Styles */
-        html {
-    width: 100%;
-    flex: 1;
-}
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+        /* General Styling */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #f4f6f7;
+            --text-color: #34495e;
+            --card-bg-color: #ffffff;
+            --header-bg-color: #ffffff;
+            --light-gray: #bdc3c7;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            color: #333;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-                background-color: #f4f4f4;
+            box-sizing: border-box;
         }
 
-        h1, h2, h3 {
-            color: #2c3e50;
+        html {
+            scroll-behavior: smooth;
         }
 
-        a {
-            text-decoration: none;
-            color: #3498db;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: 15px;
         }
 
-        a:hover {
-            color: #2980b9;
-        }
-
-        /* Navigation */
-        header {
-            background: #fff;
-            color: #333;
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            max-width: 1200px;
+        .container {
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #2c3e50;
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        
+        h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
         }
 
-        .nav-links {
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        section {
+            padding: 50px 0;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: var(--header-bg-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+        }
+
+        .nav-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
             display: flex;
             list-style: none;
         }
 
-        .nav-links li {
-            margin-left: 25px;
+        .nav-item {
+            margin-left: 1.8rem;
         }
 
-        .nav-links a {
-            color: #333;
-            font-weight: 500;
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 400;
+            font-size: 0.95rem;
             transition: color 0.3s ease;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active-link { /* Style for active link */
-            color: #3498db;
-            font-weight: bold;
+        .nav-link:hover {
+            color: var(--secondary-color);
         }
-
-
-        .burger {
+        
+        .hamburger {
             display: none;
             cursor: pointer;
         }
 
-        .burger div {
+        .bar {
+            display: block;
             width: 25px;
             height: 3px;
-            background-color: #333;
-            margin: 5px;
-            transition: all 0.3s ease;
+            margin: 5px auto;
+            -webkit-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--primary-color);
         }
+
 
         /* Hero Section */
-        .hero-section {
-    background: linear-gradient(rgb(0 0 0 / 80%), rgb(0 0 0 / 80%)), url(https://images.pexels.com/photos/96715/pexels-photo-96715.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2) no-repeat center center / cover;
-    color: #fff;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px;
-    margin-top: 70px;
-}
-
-
-
-
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .hero-content p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .cta-button {
-            background: #3498db;
-            color: #fff;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background: #2980b9;
-            color: #fff;
-        }
-
-        /* Content Sections */
-        .content-section {
-            padding: 80px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
+        #hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)), url('https://placehold.co/1200x800/2c3e50/ecf0f1?text=Agriculture+Tech') no-repeat center center/cover;
+            color: white;
+            height: 85vh;
+            display: flex;
+            align-items: center;
             text-align: center;
         }
 
-        .content-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            position: relative;
-            display: inline-block;
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: white;
         }
 
-        .content-section h2::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: #3498db;
-            margin: 10px auto 0;
+        .hero-content p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-content .subtitle {
+            color: var(--secondary-color);
+            font-weight: 600;
         }
 
-        .bg-light {
-            background-color: #f4f4f4;
+        .social-links {
+            margin-top: 1rem;
         }
 
-        /* Timeline for Education */
-      .timeline {
-    position: relative;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-       
-
-        .timeline-item {
-            padding: 10px 40px;
-            position: relative;
-            background-color: inherit;
-            width: 100%;
-            flex:1;
+        .social-links a {
+            color: white;
+            font-size: 1.6rem;
+            margin: 0 12px;
+            transition: color 0.3s ease;
         }
 
-      
-
-      
-
-        .timeline-content {
-            padding: 20px 30px;
-            background-color: white;
-            position: relative;
-            border-radius: 6px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        .timeline-content h3 {
-            margin-top: 0;
-            color: #3498db;
+        .social-links a:hover {
+            color: var(--secondary-color);
         }
 
-        /* Skills Section */
-        .skills-grid {
+        /* About Section */
+        #about p {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* Card Styling */
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            text-align: left;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .card-grid-achievements {
+             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
-        .skill-category {
-            background: #fff;
-            padding: 25px;
+        .card {
+            background: var(--card-bg-color);
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        .skill-category h3 {
-            color: #3498db;
-            margin-bottom: 15px;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
 
-        .skill-category ul {
+        .card h3 {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+        
+        .card p {
+            margin-bottom: 0.4rem;
+        }
+        
+        .card .institution, .card .board {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .card .date {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card .fields {
+            font-size: 0.85rem;
+            color: #555;
+            margin-top: auto;
+            padding-top: 0.8rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .card .details {
+            font-size: 0.9rem;
+        }
+
+        /* Skills & Lists Styling */
+        .skills-list, .achievements-list {
             list-style: none;
-            padding: 0;
+        }
+        
+        .skills-list li, .achievements-list li {
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: flex-start;
+            font-size: 0.9rem;
         }
 
-        .skill-category ul li {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            position: relative;
+        .skills-list i, .achievements-list i {
+            color: var(--secondary-color);
+            margin-right: 10px;
+            width: 16px;
+            text-align: center;
+            margin-top: 3px;
         }
-
-        .skill-category ul li::before {
-            content: '\f00c'; /* FontAwesome check icon */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 0;
-            color: #2ecc71;
+        
+        .achievements-list .detail-text {
+            font-size: 0.85rem;
+            color: #555;
+            padding-left: 26px; /* Align with text above */
+            margin-top: -5px;
         }
-
 
         /* Projects Section */
-        .project-item {
-            background: #fff;
-            margin-bottom: 30px;
-            padding: 25px;
+        .project-card .project-objective {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 0.8rem;
+            border-left: 2px solid var(--secondary-color);
+            padding-left: 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Languages Section */
+        .languages-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+        .language-item {
+            background: var(--card-bg-color);
+            padding: 1rem 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            min-width: 150px;
         }
-        .project-item h3 {
-            color: #3498db;
+        .language-item h3 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
         }
-
-
-        /* Internships Section */
-        .internship-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            text-align: left;
-        }
-
-        .internship-item {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-        }
-        .internship-item h3 {
-            color: #3498db;
-            margin-top: 0;
-        }
-
-        /* Achievements Section */
-        #achievements ul {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-        }
-
-        #achievements ul li {
-            background: #fff;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-            position: relative;
-            padding-left: 35px;
-        }
-
-        #achievements ul li::before {
-            content: '\f005'; /* FontAwesome star icon */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 10px;
-            top: 16px;
-            color: #f1c40f;
+        .language-item p {
+            font-size: 0.85rem;
+            color: #7f8c8d;
         }
 
 
         /* Contact Section */
-        .contact-info p {
-            font-size: 1.1rem;
-            margin: 10px 0;
+        #contact .contact-info {
+            text-align: center;
+        }
+        #contact .contact-info p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .contact-items {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .contact-item {
             display: flex;
             align-items: center;
-            justify-content: center; /* Center items for a cleaner look */
+            font-size: 0.95rem;
         }
-
-        .contact-info p i {
-            margin-right: 10px;
-            color: #3498db;
+        .contact-item i {
             font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-right: 8px;
         }
-        .contact-info a {
-            color: #333;
-            transition: color 0.3s ease;
+        .contact-item a {
+            color: var(--text-color);
+            text-decoration: none;
         }
-        .contact-info a:hover {
-            color: #3498db;
-        }
-        #contact h3 {
-            margin-top: 30px;
+        .contact-item a:hover {
+            text-decoration: underline;
+            color: var(--secondary-color);
         }
 
 
         /* Footer */
         footer {
-            background: #2c3e50;
-            color: #ecf0f1;
+            background: var(--primary-color);
+            color: white;
             text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
+            padding: 1.2rem 0;
+            font-size: 0.9rem;
         }
 
         /* Responsive Design */
-        @media screen and (max-width: 768px) {
-            .nav-links {
-                position: absolute;
-                right: 0px;
-                height: 92vh;
-                top: 8vh; /* Should match header height */
-                background: #fff;
-                display: flex;
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 60px; /* Aligns menu below header */
                 flex-direction: column;
-                align-items: center;
-                width: 50%;
-                transform: translateX(100%);
-                transition: transform 0.5s ease-in;
-                padding-top: 20px;
-                box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+                background-color: var(--header-bg-color);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+                padding: 1rem 20px; /* Added padding for mobile menu */
             }
 
-            .nav-links li {
-                opacity: 0;
-                margin-left: 0;
-                margin-bottom: 20px;
+            .nav-menu.active {
+                left: 0;
             }
 
-            .burger {
+            .nav-item {
+                margin: 1.2rem 0;
+            }
+
+            .hamburger {
                 display: block;
             }
-
-            .nav-active {
-                transform: translateX(0%);
-            }
-
-            .nav-active li {
-                opacity: 1;
-                transition: opacity 0.5s ease 0.2s; /* Staggered animation */
-            }
-
-            .toggle .line1 {
-                transform: rotate(-45deg) translate(-5px, 6px);
-            }
-            .toggle .line2 {
+            
+            .hamburger.active .bar:nth-child(2) {
                 opacity: 0;
             }
-            .toggle .line3 {
-                transform: rotate(45deg) translate(-5px, -6px);
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
             }
 
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+            
             .hero-content h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
+            
             .hero-content p {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
-
-            .content-section h2 {
-                font-size: 2rem;
+            
+            h2 {
+                font-size: 1.8rem;
             }
-
-            /* Timeline adjustments for smaller screens */
-            .timeline::after {
-                left: 31px; /* Move line to the left */
-            }
-            .timeline-item {
-                width: 100%;
-                padding-left: 70px; /* Adjust padding */
-                padding-right: 25px;
-                text-align: left; /* Align all items to the left */
-            }
-            .timeline-item:nth-child(odd) {
-                left: 0%;
-                text-align: left;
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-            .timeline-item:nth-child(even) {
-                left: 0%; /* Align even items to the left as well */
-                padding-left: 70px;
-                padding-right: 25px;
-            }
-            .timeline-item::after {
-                left: 15px; /* Position circle to the left of content */
-            }
-            .timeline-item:nth-child(even)::after {
-                 left: 15px;
-            }
-
-
-            .skills-grid, .internship-grid {
-                grid-template-columns: 1fr; /* Stack items on smaller screens */
-            }
-        }
-
-        /* Smooth Scrolling */
-        html {
-            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Govindh A Nair</div>
-            <ul class="nav-links">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#internships">Internships</a></li>
-                <li><a href="#achievements">Achievements</a></li>
-                <li><a href="#contact">Contact</a></li>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="#" class="nav-logo">Govindh A Nair</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#education" class="nav-link">Education</a></li>
+                <li class="nav-item"><a href="#skills" class="nav-link">Skills</a></li>
+                <li class="nav-item"><a href="#projects" class="nav-link">Projects</a></li>
+                <li class="nav-item"><a href="#experience" class="nav-link">Experience</a></li>
+                <li class="nav-item"><a href="#achievements" class="nav-link">Achievements</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
         </nav>
     </header>
 
-    <section id="hero" class="hero-section">
-        <div class="hero-content">
-            <h1>Govindh A Nair</h1>
-            <p>M.Sc. (Agriculture) in Plant Pathology, B.Sc. (Hons.) Agriculture</p>
-            <a href="#contact" class="cta-button">Get in Touch</a>
-        </div>
-    </section>
-
-    <section id="about" class="content-section">
-        <h2>About Me</h2>
-        <p>As a passionate Agriculture student currently pursuing my Master's in Plant Pathology, I am eager to find a role where I can use my knowledge and technical skills to help grow the Agri sector sustainably and develop innovative solutions. </p>
-    </section>
-
-    <section id="education" class="content-section bg-light">
-        <h2>Education</h2>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>M.Sc. (Ag.) Plant Pathology</h3>
-                    <p>Kerala Agricultural University (KAU), College of Agriculture, Vellayani </p>
-                    <p><em>2023-Present</em> | OGPA: 9.29 (92.9%) </p>
-                    <p>Main fields: Mycology, Plant Virology, Bacteriology, Microbial Genetics, Plant Physiology, Plant Biotechnology </p>
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="container hero-content">
+                <h1>Govindh A Nair</h1>
+                <p class="subtitle">M.Sc. (Agriculture) in Plant Pathology | B.Sc. (Hons.) Agriculture</p>
+                <p>Passionate about leveraging technology and scientific knowledge to foster sustainable growth in the Agri sector.</p>
+                <div class="social-links">
+                    <a href="mailto:govindhaniyannair@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
+                    <a href="https://linkedin.com/in/govindh-a-nair" target="_blank"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>B.Sc. (Hons.) Agriculture</h3>
-                    <p>Tamil Nadu Agricultural University (TNAU), Agricultural College and Research Institute, Coimbatore </p>
-                    <p><em>2019-2023</em> | OGPA: 8.81 (88.10%) </p>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="container">
+                <h2>About Me</h2>
+                <p>As a dedicated Agriculture student currently pursuing my Master's in Plant Pathology, I am eager to find a role where I can apply my knowledge and technical skills. My goal is to contribute to the sustainable growth of the Agri sector by developing and implementing innovative solutions for modern agricultural challenges.</p>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education">
+            <div class="container">
+                <h2>Education</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>M.Sc. (Ag.) Plant Pathology</h3>
+                        <p class="institution">College of Agriculture, Vellayani</p>
+                        <p class="board">Kerala Agricultural University (KAU)</p>
+                        <p class="date">2023 - Present</p>
+                        <p>OGPA: 9.29 (92.9%)</p>
+                        <p class="fields"><strong>Main fields:</strong> Mycology, Plant Virology, Bacteriology, Microbial Genetics, Plant Physiology, Plant Biotechnology.</p>
+                    </div>
+                    <div class="card">
+                        <h3>B.Sc. (Hons.) Agriculture</h3>
+                        <p class="institution">Agricultural College and Research Institute, Coimbatore</p>
+                        <p class="board">Tamil Nadu Agricultural University (TNAU)</p>
+                        <p class="date">2019 - 2023</p>
+                        <p>OGPA: 8.81 (88.10%)</p>
+                    </div>
+                    <div class="card">
+                        <h3>Class XII & X</h3>
+                        <p class="institution">Viswabharathy Public School, Neyyattinkara</p>
+                        <p class="board">Central Board of Secondary Education (CBSE)</p>
+                        <p class="date">Class XII (2018): 87.6%</p>
+                        <p class="date">Class X (2016): 10.00 OGPA</p>
+                    </div>
                 </div>
             </div>
-             <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>Class XII - Bio Maths</h3>
-                    <p>Central Board of Secondary Education (CBSE), Viswabharathy Public School, Neyyattinkara </p>
-                    <p><em>2017-2018</em> | Percentage: 87.6% </p>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills">
+            <div class="container">
+                <h2>Skills</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Subject-Based Skills</h3>
+                        <ul class="skills-list">
+                            <li><i class="fas fa-leaf"></i>Plant disease detection</li>
+                            <li><i class="fas fa-vial"></i>Molecular Biology & Diagnostics (DNA/RNA extraction, PCR, ELISA)</li>
+                            <li><i class="fas fa-microscope"></i>Microbial cultural studies</li>
+                            <li><i class="fas fa-chart-line"></i>Agricultural Economics</li>
+                            <li><i class="fas fa-cogs"></i>Rural Management</li>
+                            <li><i class="fas fa-brain"></i>Agro-informatics (AI-based disease detection and management)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>IT & Technical Skills</h3>
+                         <ul class="skills-list">
+                            <li><i class="fas fa-file-word"></i>Office Tools (PowerPoint, Word, Excel)</li>
+                            <li><i class="fas fa-code"></i>Frontend Web Development</li>
+                            <li><i class="fas fa-paint-brush"></i>Graphic Design (Inkscape, Adobe products, CorelDraw)</li>
+                            <li><i class="fab fa-figma"></i>UI/UX Design (Figma)</li>
+                            <li><i class="fas fa-video"></i>Video Production & Editing</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Professional Skills</h3>
+                         <ul class="skills-list">
+                            <li><i class="fas fa-comments"></i>Communication Skills</li>
+                            <li><i class="fas fa-lightbulb"></i>Problem solving and Decision making</li>
+                            <li><i class="fas fa-users"></i>Leadership Skills</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <h3>Class X</h3>
-                    <p>Central Board of Secondary Education (CBSE), Viswabharathy Public School, Neyyattinkara</p>
-                    <p><em>2015-2016</em> | OGPA: 10.00</p>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects">
+            <div class="container">
+                <h2>Thesis & Projects</h2>
+                <div class="card-grid">
+                    <div class="card project-card">
+                        <h3>Eco-friendly management of leaf spot disease in turmeric</h3>
+                        <p class="institution">Master's Thesis, Kerala Agricultural University</p>
+                        <p class="date">2023 - Present</p>
+                        <p class="project-objective">To develop an integrated, eco-friendly management strategy for turmeric leaf spot disease (caused by Colletotrichum sp.) using bioagents, botanicals, and AI-driven detection.</p>
+                    </div>
+                    <div class="card project-card">
+                        <h3>Web Resource Portal for Farmers</h3>
+                        <p class="institution">Computer Science Project, TNAU</p>
+                        <p class="date">2023</p>
+                        <p class="project-objective">Investigated challenges faced by farmers and created a platform to aid them in determining appropriate agricultural input quantities.</p>
+                    </div>
+                    <div class="card project-card">
+                        <h3>Variation in Rhizosphere Microorganisms</h3>
+                        <p class="institution">Microbiology Project, TNAU</p>
+                        <p class="date">2022</p>
+                        <p class="project-objective">Evaluated alterations in bacterial, fungal, and actinobacterial communities in the rhizosphere of rice and cotton cultivars and hybrids.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="skills" class="content-section">
-        <h2>Skills</h2>
-        <div class="skills-grid">
-            <div class="skill-category">
-                <h3>Subject Based Skills </h3>
-                <ul>
-                    <li>Plant disease detection </li>
-                    <li>Molecular Biology and Diagnostic Procedures (DNA/RNA extraction, PCR, ELISA, microbial cultural studies) </li>
-                    <li>Agriculture </li>
-                    <li>Agricultural Economics </li>
-                    <li>Rural Management </li>
-                    <li>Agro-informatics (Artificial Intelligence based plant disease detection and management) </li>
-                </ul>
+        <!-- Internships Section -->
+        <section id="experience">
+            <div class="container">
+                <h2>Internships & Experience</h2>
+                <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">SK A Coirs, Coimbatore</h3>
+                        <p class="details">Procurement of raw materials, processing, marketing and trade, supply chain management.</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">Tamil Nadu Agriculture Dept.</h3>
+                        <p class="details">Data Entry Work for Government Agricultural Schemes, Data Collection, and compiling.</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">Arulmigu Someshwarar FPC Ltd.</h3>
+                        <p class="details">Collection and compiling of farmer's data, communication with farmers.</p>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-size: 1.1rem;">Anaimalais Coconut Producer Co. Ltd.</h3>
+                        <p class="details">Production of value-added products from coconut, Marketing and Supply chain management.</p>
+                    </div>
+                     <div class="card">
+                        <h3 style="font-size: 1.1rem;">Karpaga Vruksham Coconut Producer Co. Ltd.</h3>
+                        <p class="details">Procurement and Supply Chain Management, Value addition of horticultural products.</p>
+                    </div>
+                </div>
             </div>
-            <div class="skill-category">
-                <h3>IT Skills </h3>
-                <ul>
-                    <li>Office Tools (PowerPoint, Word, Excel etc.) </li>
-                    <li>Frontend Web Development </li>
-                    <li>Graphic Design and Multimedia Tools (Inkscape, Adobe products, CorelDraw, Figma) </li>
-                </ul>
+        </section>
+        
+        <!-- Achievements Section -->
+        <section id="achievements">
+            <div class="container">
+                <h2>Achievements & Roles</h2>
+                <div class="card-grid-achievements">
+                    <div class="card">
+                        <h3>Awards & Scholarships</h3>
+                        <ul class="achievements-list">
+                            <li><i class="fas fa-award"></i>Recipient of National Talent Scholarship (NTS)</li>
+                            <p class="detail-text">Awarded ICAR Fellowship from 2019 to 2023.</p>
+                            <li><i class="fas fa-trophy"></i>Best Editor - College Level</li>
+                             <p class="detail-text">Award for Sangamitra '22, TNAU cultural competition.</p>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Leadership & Volunteering</h3>
+                        <ul class="achievements-list">
+                            <li><i class="fas fa-rocket"></i>Founder of Enscygen</li>
+                            <p class="detail-text">An online platform for agricultural science.</p>
+                            <li><i class="fas fa-user-tie"></i>Secretary of 112th Students' Club, TNAU</li>
+                            <li><i class="fas fa-pen-nib"></i>Editor (IT Wing), AIASA - Tamil Nadu</li>
+                            <li><i class="fas fa-hands-helping"></i>NGO Volunteer</li>
+                            <p class="detail-text">Social service with Sevalayam Trust (Pollachi) and Vagai Sevai Trust (Anaimalai).</p>
+                             <li><i class="fas fa-hands-helping"></i>National Service Scheme (NSS)</li>
+                             <p class="detail-text">Rendered Social Service from 2019 to 2021 and attended special camp programme.</p>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Certificates & Training</h3>
+                        <ul class="achievements-list">
+                            <li><i class="fas fa-certificate"></i>AI & Big Data Analytics in Agriculture</li>
+                             <p class="detail-text">Workshop by Dept. of Agri. Economics, TNAU.</p>
+                            <li><i class="fas fa-video"></i>Video Production & Editing Skills</li>
+                             <p class="detail-text">Training by Centre for Agricultural and Rural Development Studies, TNAU.</p>
+                            <li><i class="fas fa-language"></i>Praveshika Examination (Hindi)</li>
+                             <p class="detail-text">Completed with First Class, from Dakshina Bharat Hindi Prachar Sabha, Madras.</p>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="skill-category">
-                <h3>General Skills </h3>
-                <ul>
-                    <li>Communication Skills </li>
-                    <li>Problem solving and Decision making </li>
-                    <li>Leadership Skills </li>
-                </ul>
+        </section>
+        
+        <!-- Languages Section -->
+        <section id="languages">
+            <div class="container">
+                <h2>Languages</h2>
+                <div class="languages-container">
+                    <div class="language-item">
+                        <h3>Malayalam</h3>
+                        <p>Mother Tongue</p>
+                    </div>
+                    <div class="language-item">
+                        <h3>English</h3>
+                        <p>Read, Write, Speak</p>
+                    </div>
+                    <div class="language-item">
+                        <h3>Hindi</h3>
+                        <p>Read, Write, Speak</p>
+                    </div>
+                    <div class="language-item">
+                        <h3>Tamil</h3>
+                        <p>Speak</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="projects" class="content-section bg-light">
-        <h2>Thesis/Projects</h2>
-        <div class="project-item">
-            <h3>Ecofriendly management of leaf spot disease in turmeric caused by Colletotrichum sp. (2023 - Present) </h3>
-            <p><em>Master's thesis research associated with Department of Plant Pathology, Kerala Agricultural University</em> </p>
-            <p><strong>Objective:</strong> To investigate and develop an integrated, eco-friendly management strategy for turmeric leaf spot disease caused by Colletotrichum sp., utilizing bioagents, botanicals, and Al-driven timely disease detection techniques. </p>
-        </div>
-        <div class="project-item">
-            <h3>Development of a Web Resource Portal for Farmers and Agri Graduates (2023) </h3>
-            <p><em>Computer Science project associated with Department of Physical Science and Information Technology, TNAU</em> </p>
-            <p><strong>Objective:</strong> Investigating challenges encountered by farmers arising from inadequate use of agricultural input and technology usage, and creating a platform to aid farmers in determining appropriate input quantities. </p>
-        </div>
-        <div class="project-item">
-            <h3>Assessment of Variation in Rhizosphere Microorganisms between Cultivar and Hybrid of Rice and Cotton (2022) </h3>
-            <p><em>Microbiology project associated with Department of Agricultural Microbiology, TNAU</em> </p>
-            <p><strong>Objective:</strong> To evaluate alterations in bacterial, fungal, and actinobacterial communities within the rhizosphere soil of both Rice and Cotton cultivars and hybrids. </p>
-        </div>
-    </section>
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container contact-info">
+                 <h2>Get In Touch</h2>
+                 <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Feel free to reach out.</p>
+                 <div class="contact-items">
+                     <div class="contact-item">
+                         <i class="fas fa-envelope"></i>
+                         <a href="mailto:govindhaniyannair@gmail.com">govindhaniyannair@gmail.com</a>
+                     </div>
+                      <div class="contact-item">
+                         <i class="fas fa-phone"></i>
+                         <span>+91 8943049501</span>
+                     </div>
+                      <div class="contact-item">
+                         <i class="fas fa-map-marker-alt"></i>
+                         <span>Thiruvananthapuram, Kerala</span>
+                     </div>
+                      <div class="contact-item">
+                         <i class="fas fa-calendar-alt"></i>
+                         <span>Born on: 04-09-2000</span>
+                     </div>
+                 </div>
+            </div>
+        </section>
 
-    <section id="internships" class="content-section">
-        <h2>Internships</h2>
-        <div class="internship-grid">
-            <div class="internship-item">
-                <h3>SK A Coirs, Coimbatore </h3>
-                <p>Procurement of raw materials, processing, marketing and trade, supply chain management. </p>
-            </div>
-            <div class="internship-item">
-                <h3>Tamil Nadu Agriculture and Farmers Welfare Department, Coimbatore </h3>
-                <p>Data Entry Work for Government Agricultural Schemes, Data Collection, and compiling. </p>
-            </div>
-            <div class="internship-item">
-                <h3>Arulmigu Someshwarar Farmer Producer Company Limited, Coimbatore </h3>
-                <p>Collection and compiling of farmer's data, communication with farmers. </p>
-            </div>
-            <div class="internship-item">
-                <h3>Anaimalais Coconut Producer Company Limited, Coimbatore </h3>
-                <p>Production of value-added products from coconut, Marketing and Supply chain management. </p>
-            </div>
-             <div class="internship-item">
-                <h3>Karpaga Vruksham Coconut Producer Company Limited, Coimbatore </h3>
-                <p>Procurement and Supply Chain Management, Value addition of horticultural products </p>
-            </div>
-        </div>
-    </section>
+    </main>
 
-    <section id="achievements" class="content-section bg-light">
-        <h2>Certificates & Achievements</h2>
-        <ul>
-            <li>Non-Governmental Organization (NGO) - Volunteer: Rendered social service in association with 2 NGOs Sevalayam Trust (Pollachi) and Vagai Sevai Trust (Anaimalai) </li>
-            <li>Artificial Intelligence and Big Data Analytics in Agriculture: Workshop conducted by Dept. of Agricultural Economics, Centre for Agricultural and Rural Development Studies, TNAU </li>
-            <li>Video Production and Editing Skills for Outreach: Training conducted by Centre for Agricultural and Rural Development Studies, TNAU </li>
-            <li>National Service Scheme (NSS): Rendered Social Service from 2019 to 2021 as NSS Volunteer and attended special camp programme </li>
-            <li>Best Editor - College Level Cultural Competition: Best editor of TNAU award for Sangamitra 22, College level cultural competition </li>
-            <li>Recipient of National Talent Scholarship (NTS): Recipient of NTS Fellowship by Indian Council of Agricultural Research (ICAR) from 2019 to 2023 </li>
-            <li>Completed Praveshika Examination with First Class: Completed Hindi Courses up to Praveshika level conducted by Dakshina Bharat Hindi Prachar Sabha, Madras </li>
-            <li>Secretary of 112th Students' Club: Served as Secretary (Technical) of 112th Students' Club of Tamil Nadu Agricultural University </li>
-            <li>Editor (IT Wing) for All India Agricultural Students Association - Tamil Nadu (AIASA - TN) </li>
-        </ul>
-    </section>
-
-    <section id="contact" class="content-section">
-        <h2>Contact</h2>
-        <div class="contact-info">
-            <p><i class="fas fa-envelope"></i> <a href="mailto:govindhaniyannair@gmail.com">govindhaniyannair@gmail.com</a> </p>
-            <p><i class="fas fa-phone"></i> +91 8943049501 </p>
-            <p><i class="fab fa-linkedin"></i> <a href="https://linkedin.com/in/govindh-a-nair" target="_blank">linkedin.com/in/govindh-a-nair</a> </p>
-            <p><i class="fas fa-map-marker-alt"></i> Thiruvananthapuram, Kerala 695122 </p>
-        </div>
-        <h3>Languages Known </h3>
-        <p>Malayalam (Mother Tongue), English (Read, Write and Speak), Hindi (Read, Write and Speak), Tamil (Speak) </p>
-    </section>
-
+    <!-- Footer -->
     <footer>
-        <p>&copy; <span id="currentYear"></span> Govindh A Nair. All Rights Reserved.</p>
+        <div class="container">
+            <p>&copy; 2024 Govindh A Nair. All Rights Reserved.</p>
+        </div>
     </footer>
 
     <script>
-        const navSlide = () => {
-            const burger = document.querySelector('.burger');
-            const nav = document.querySelector('.nav-links');
-            const navLinks = document.querySelectorAll('.nav-links li');
+        // JavaScript for mobile navigation
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
 
-            burger.addEventListener('click', () => {
-                // Toggle Nav
-                nav.classList.toggle('nav-active');
-
-                // Animate Links
-                navLinks.forEach((link, index) => {
-                    if (link.style.animation) {
-                        link.style.animation = '';
-                    } else {
-                        link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-                    }
-                });
-
-                // Burger Animation
-                burger.classList.toggle('toggle');
-            });
-
-            // Close nav when a link is clicked
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (nav.classList.contains('nav-active')) {
-                        nav.classList.remove('nav-active');
-                        burger.classList.remove('toggle');
-                         navLinks.forEach(linkAnim => { // Changed variable name to avoid conflict
-                            linkAnim.style.animation = ''; // Reset animation
-                        });
-                    }
-                });
-            });
-        }
-
-        navSlide();
-
-        // Set current year in footer
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        // Optional: Add active class to nav link on scroll
-        const sections = document.querySelectorAll("section");
-        const navLi = document.querySelectorAll("nav .nav-links li a");
-
-        window.addEventListener("scroll", () => {
-          let current = "";
-          sections.forEach((section) => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            // Adjust the offset condition for better active link highlighting
-            if (pageYOffset >= (sectionTop - (sectionHeight / 2.5) )) { // Highlight when section is more visible
-              current = section.getAttribute("id");
-            }
-          });
-
-          navLi.forEach((a) => {
-            a.classList.remove("active-link");
-            if (a.getAttribute("href").includes(current)) {
-              a.classList.add("active-link");
-            }
-          });
-           // Ensure Home is active when at the top of the page
-            if (window.pageYOffset < (sections[0].offsetTop - (sections[0].clientHeight / 2.5))) {
-                navLi.forEach(a => a.classList.remove("active-link"));
-                const homeLink = document.querySelector("nav .nav-links li a[href='#hero']");
-                if (homeLink) {
-                    homeLink.classList.add("active-link");
-                }
-            }
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
         });
 
-        // Keyframes for navLinkFade (needed if not using separate CSS file)
-        const styleSheet = document.createElement("style");
-        styleSheet.type = "text/css";
-        styleSheet.innerText = `
-            @keyframes navLinkFade {
-                from {
-                    opacity: 0;
-                    transform: translateX(50px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0px);
-                }
-            }
-        `;
-        document.head.appendChild(styleSheet);
-
+        document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", () => {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }));
     </script>
 </body>
 </html>
+

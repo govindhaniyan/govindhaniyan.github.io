@@ -16,7 +16,7 @@
 
     <style>
         :root {
-            --primary-color: #1a365d; /* Deep professional blue */
+            --primary-color: #1a365d;
             --secondary-color: #2b6cb0;
             --background-color: #f4f5f7;
             --surface-color: #ffffff;
@@ -24,6 +24,7 @@
             --text-main: #2d3748;
             --text-muted: #718096;
             --success-color: #2f855a;
+            --success-light: #c6f6d5;
             --error-color: #c53030;
             --radius: 3px; /* Compact, minimally rounded design */
         }
@@ -144,10 +145,45 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            cursor: crosshair; /* Indicates it's interactive */
         }
 
         #reader {
             width: 100%;
+        }
+
+        /* Success State for Scanner Corners */
+        #reader-container.scan-success {
+            box-shadow: inset 0 0 0 6px var(--success-color);
+            transition: box-shadow 0.1s ease-in-out;
+        }
+
+        /* Target the internal SVG drawn by the library */
+        #reader-container.scan-success svg polyline,
+        #reader-container.scan-success svg path,
+        #reader-container.scan-success svg rect {
+            stroke: var(--success-color) !important;
+            transition: stroke 0.1s;
+        }
+
+        /* Focus Ring Animation */
+        .focus-ring {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid white;
+            border-radius: var(--radius);
+            transform: translate(-50%, -50%) scale(1.5);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes focusAnim {
+            0% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+            20% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; border-color: var(--success-light); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
         }
 
         .btn-primary, .btn-secondary {
@@ -202,16 +238,19 @@
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            font-size: 0.95rem;
+            font-size: 1.1rem; /* Slightly larger for visibility */
+            font-weight: 500;
             color: var(--text-main);
             resize: vertical;
             line-height: 1.5;
+            background-color: #f8fafc;
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--secondary-color);
             box-shadow: 0 0 0 1px var(--secondary-color);
+            background-color: white;
         }
 
         .actions-row {
@@ -246,6 +285,9 @@
             }
             .panel {
                 padding: 16px;
+            }
+            #reader-container {
+                min-height: 250px;
             }
         }
     </style>
@@ -321,19 +363,28 @@
         let isScanning = false;
         let currentMode = 'QR'; // 'QR' or 'BARCODE'
 
-        // Initialize Audio context for beep sound on success
+        // 1. Audio Beep Context
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playBeep() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.1);
+            try {
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.15);
+            } catch (e) {
+                console.error("Audio playback failed", e);
+            }
         }
 
         function showMessage(msg, type) {
@@ -351,13 +402,9 @@
             }
             
             currentMode = mode;
-            
-            // Update UI
             document.getElementById('btn-qr').classList.toggle('active', mode === 'QR');
             document.getElementById('btn-barcode').classList.toggle('active', mode === 'BARCODE');
-            
-            const msgBox = document.getElementById('message-box');
-            msgBox.style.display = 'none';
+            document.getElementById('message-box').style.display = 'none';
         }
 
         async function toggleScanner() {
@@ -365,7 +412,6 @@
             const btnIcon = document.getElementById('start-icon');
 
             if (isScanning) {
-                // Stop Scanning
                 try {
                     await html5QrCode.stop();
                     isScanning = false;
@@ -376,12 +422,10 @@
                     console.error("Failed to stop scanner", err);
                 }
             } else {
-                // Start Scanning
                 if (!html5QrCode) {
                     html5QrCode = new Html5Qrcode("reader");
                 }
 
-                // Determine formats based on mode
                 const formatsToSupport = currentMode === 'QR' 
                     ? [Html5QrcodeSupportedFormats.QR_CODE]
                     : [
@@ -391,12 +435,12 @@
                         Html5QrcodeSupportedFormats.UPC_A
                       ];
 
-                // Configure box size: square for QR, rectangle for Barcode
                 const config = { 
                     fps: 10, 
-                    qrbox: { width: 250, height: currentMode === 'QR' ? 250 : 150 },
+                    qrbox: { width: 250, height: currentMode === 'QR' ? 250 : 120 },
                     formatsToSupport: formatsToSupport,
-                    aspectRatio: 1.0
+                    aspectRatio: 1.0,
+                    disableFlip: false
                 };
 
                 try {
@@ -404,7 +448,7 @@
                         { facingMode: "environment" },
                         config,
                         onScanSuccess,
-                        onScanFailure
+                        undefined // Ignore continuous failure logs
                     );
                     isScanning = true;
                     btnText.innerText = "Stop Scanner";
@@ -412,37 +456,68 @@
                     document.getElementById('start-btn').style.backgroundColor = "var(--error-color)";
                 } catch (err) {
                     showMessage("Camera access denied or device not found.", "error");
-                    console.error("Error starting scanner", err);
                 }
             }
         }
 
+        // 2. On Success logic (Beep, Green UI, Replace Text)
         function onScanSuccess(decodedText, decodedResult) {
-            // Play audio feedback
+            // Play Beep
             playBeep();
             
-            // Output to textarea
+            // Visual Feedback: Flash Green Corners
+            const container = document.getElementById('reader-container');
+            container.classList.add('scan-success');
+            setTimeout(() => {
+                container.classList.remove('scan-success');
+            }, 800); // Remove green after 800ms
+
+            // Overwrite Text Area (Clears previous, sets new)
             const textArea = document.getElementById('scanned-result');
+            textArea.value = decodedText;
             
-            // If empty, just set it. If it has content, append to a new line.
-            if(textArea.value.trim() === "") {
-                textArea.value = decodedText;
-            } else {
-                textArea.value += '\n' + decodedText;
-            }
-            
-            // Scroll to bottom
-            textArea.scrollTop = textArea.scrollHeight;
-            
-            showMessage("Identifier scanned successfully!", "success");
-            
-            // Optional: Auto-stop scanner after 1 successful read
-            // toggleScanner(); 
+            showMessage("Identifier scanned!", "success");
         }
 
-        function onScanFailure(error) {
-            // Expected to fail constantly while searching for a code. Do not alert.
-        }
+        // 3. Touch to Focus Implementation
+        document.getElementById('reader-container').addEventListener('click', async function(e) {
+            if (!isScanning) return;
+
+            // Create Visual Focus Ring
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const ring = document.createElement('div');
+            ring.className = 'focus-ring';
+            ring.style.left = `${x}px`;
+            ring.style.top = `${y}px`;
+            ring.style.animation = 'focusAnim 0.8s ease-out forwards';
+            
+            this.appendChild(ring);
+            
+            // Clean up the DOM element after animation
+            setTimeout(() => ring.remove(), 800);
+
+            // Attempt hardware focus (if browser/device supports it)
+            try {
+                const video = document.querySelector('#reader video');
+                if (video && video.srcObject) {
+                    const track = video.srcObject.getVideoTracks()[0];
+                    const capabilities = track.getCapabilities();
+                    
+                    // Trigger native continuous autofocus recalculation if allowed
+                    if (capabilities.focusMode) {
+                        await track.applyConstraints({
+                            advanced: [{ focusMode: "continuous" }]
+                        });
+                    }
+                }
+            } catch (err) {
+                // Fails silently on devices that don't support manual web API focus
+                console.log("Hardware focus adjustment not supported.");
+            }
+        });
 
         function copyResult() {
             const textArea = document.getElementById('scanned-result');
@@ -461,4 +536,6 @@
     </script>
 </body>
 </html>
+
+
 

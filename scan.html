@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CBPSR - Identifier Scanner</title>
     
-    <!-- Google Fonts & Material Symbols Outlined -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
     
-    <!-- HTML5 QRCode Library -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
@@ -26,7 +24,7 @@
             --success-color: #2f855a;
             --success-light: #c6f6d5;
             --error-color: #c53030;
-            --radius: 3px; /* Compact, minimally rounded design */
+            --radius: 3px; 
         }
 
         * {
@@ -145,11 +143,42 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            cursor: crosshair; /* Indicates it's interactive */
+            cursor: crosshair;
         }
 
         #reader {
             width: 100%;
+        }
+
+        /* Zoom Slider */
+        #zoom-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+        }
+
+        #zoom-container label {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        #zoom-slider {
+            flex: 1;
+            accent-color: var(--secondary-color);
+            height: 4px;
+        }
+
+        #zoom-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-main);
+            min-width: 35px;
+            text-align: right;
         }
 
         /* Success State for Scanner Corners */
@@ -158,7 +187,6 @@
             transition: box-shadow 0.1s ease-in-out;
         }
 
-        /* Target the internal SVG drawn by the library */
         #reader-container.scan-success svg polyline,
         #reader-container.scan-success svg path,
         #reader-container.scan-success svg rect {
@@ -234,11 +262,11 @@
 
         textarea {
             flex: 1;
-            min-height: 150px;
+            min-height: 60px; /* Reduced height */
             padding: 12px;
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            font-size: 1.1rem; /* Slightly larger for visibility */
+            font-size: 1.1rem;
             font-weight: 500;
             color: var(--text-main);
             resize: vertical;
@@ -261,6 +289,7 @@
         
         .actions-row button {
             flex: 1;
+            margin-top: 0; /* Reset top margin inside flex row */
         }
 
         /* Message Box */
@@ -303,13 +332,7 @@
     </header>
 
     <main>
-        <!-- Left Panel: Scanner -->
         <div class="panel">
-            <div class="panel-header">
-                <span class="material-symbols-outlined">document_scanner</span>
-                Scanner Input
-            </div>
-
             <div class="toggle-group">
                 <button class="toggle-btn active" id="btn-qr" onclick="setMode('QR')">
                     <span class="material-symbols-outlined">qr_code_2</span>
@@ -325,6 +348,12 @@
                 <div id="reader"></div>
             </div>
 
+            <div id="zoom-container" style="display: none;">
+                <label for="zoom-slider" class="material-symbols-outlined">zoom_in</label>
+                <input type="range" id="zoom-slider" min="1" max="3" step="0.1" value="1">
+                <span id="zoom-value">1.0x</span>
+            </div>
+
             <button class="btn-primary" id="start-btn" onclick="toggleScanner()">
                 <span class="material-symbols-outlined" id="start-icon">videocam</span>
                 <span id="start-text">Start Scanner</span>
@@ -333,7 +362,6 @@
             <div id="message-box"></div>
         </div>
 
-        <!-- Right Panel: Data Entry/Results -->
         <div class="panel">
             <div class="panel-header">
                 <span class="material-symbols-outlined">assignment</span>
@@ -344,6 +372,11 @@
                 <label for="scanned-result">Scanned Identifier Value</label>
                 <textarea id="scanned-result" placeholder="Waiting for scan..."></textarea>
             </div>
+
+            <button class="btn-primary" onclick="openAccession()" style="margin-bottom: 12px; margin-top: auto; background-color: var(--primary-color);">
+                <span class="material-symbols-outlined">open_in_new</span>
+                Open Accession
+            </button>
 
             <div class="actions-row">
                 <button class="btn-secondary" onclick="copyResult()">
@@ -361,9 +394,10 @@
     <script>
         let html5QrCode = null;
         let isScanning = false;
-        let currentMode = 'QR'; // 'QR' or 'BARCODE'
+        let currentMode = 'QR';
+        let activeVideoTrack = null;
 
-        // 1. Audio Beep Context
+        // Audio Beep Context
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playBeep() {
             try {
@@ -372,9 +406,9 @@
                 const gainNode = audioCtx.createGain();
                 
                 oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
                 
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); 
                 gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
                 
                 oscillator.connect(gainNode);
@@ -400,7 +434,6 @@
                 showMessage("Please stop the scanner before changing modes.", "error");
                 return;
             }
-            
             currentMode = mode;
             document.getElementById('btn-qr').classList.toggle('active', mode === 'QR');
             document.getElementById('btn-barcode').classList.toggle('active', mode === 'BARCODE');
@@ -410,11 +443,14 @@
         async function toggleScanner() {
             const btnText = document.getElementById('start-text');
             const btnIcon = document.getElementById('start-icon');
+            const zoomContainer = document.getElementById('zoom-container');
 
             if (isScanning) {
                 try {
                     await html5QrCode.stop();
                     isScanning = false;
+                    activeVideoTrack = null;
+                    zoomContainer.style.display = 'none';
                     btnText.innerText = "Start Scanner";
                     btnIcon.innerText = "videocam";
                     document.getElementById('start-btn').style.backgroundColor = "var(--secondary-color)";
@@ -443,47 +479,82 @@
                     disableFlip: false
                 };
 
+                // Request HIGH RESOLUTION
+                const cameraConstraints = {
+                    facingMode: "environment",
+                    width: { min: 640, ideal: 1280, max: 1920 },
+                    height: { min: 480, ideal: 720, max: 1080 }
+                };
+
                 try {
                     await html5QrCode.start(
-                        { facingMode: "environment" },
+                        cameraConstraints,
                         config,
                         onScanSuccess,
-                        undefined // Ignore continuous failure logs
+                        undefined 
                     );
+                    
                     isScanning = true;
                     btnText.innerText = "Stop Scanner";
                     btnIcon.innerText = "videocam_off";
                     document.getElementById('start-btn').style.backgroundColor = "var(--error-color)";
+
+                    // Initialize Zoom feature
+                    setTimeout(initZoomControls, 1000);
+
                 } catch (err) {
                     showMessage("Camera access denied or device not found.", "error");
                 }
             }
         }
 
-        // 2. On Success logic (Beep, Green UI, Replace Text)
+        function initZoomControls() {
+            const videoElement = document.querySelector('#reader video');
+            if (!videoElement || !videoElement.srcObject) return;
+
+            activeVideoTrack = videoElement.srcObject.getVideoTracks()[0];
+            const capabilities = activeVideoTrack.getCapabilities();
+
+            if (capabilities && capabilities.zoom) {
+                const zoomContainer = document.getElementById('zoom-container');
+                const zoomSlider = document.getElementById('zoom-slider');
+                
+                zoomContainer.style.display = 'flex';
+                zoomSlider.min = capabilities.zoom.min || 1;
+                zoomSlider.max = Math.min(capabilities.zoom.max, 5); 
+                zoomSlider.step = capabilities.zoom.step || 0.1;
+                zoomSlider.value = capabilities.zoom.min || 1;
+
+                zoomSlider.oninput = async (e) => {
+                    const zoomVal = e.target.value;
+                    document.getElementById('zoom-value').innerText = Number(zoomVal).toFixed(1) + 'x';
+                    try {
+                        await activeVideoTrack.applyConstraints({ advanced: [{ zoom: zoomVal }] });
+                    } catch (err) {
+                        console.log("Zoom failed", err);
+                    }
+                };
+            }
+        }
+
         function onScanSuccess(decodedText, decodedResult) {
-            // Play Beep
             playBeep();
             
-            // Visual Feedback: Flash Green Corners
             const container = document.getElementById('reader-container');
             container.classList.add('scan-success');
             setTimeout(() => {
                 container.classList.remove('scan-success');
-            }, 800); // Remove green after 800ms
+            }, 800); 
 
-            // Overwrite Text Area (Clears previous, sets new)
             const textArea = document.getElementById('scanned-result');
             textArea.value = decodedText;
             
             showMessage("Identifier scanned!", "success");
         }
 
-        // 3. Touch to Focus Implementation
         document.getElementById('reader-container').addEventListener('click', async function(e) {
             if (!isScanning) return;
 
-            // Create Visual Focus Ring
             const rect = this.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -495,18 +566,14 @@
             ring.style.animation = 'focusAnim 0.8s ease-out forwards';
             
             this.appendChild(ring);
-            
-            // Clean up the DOM element after animation
             setTimeout(() => ring.remove(), 800);
 
-            // Attempt hardware focus (if browser/device supports it)
             try {
                 const video = document.querySelector('#reader video');
                 if (video && video.srcObject) {
                     const track = video.srcObject.getVideoTracks()[0];
                     const capabilities = track.getCapabilities();
                     
-                    // Trigger native continuous autofocus recalculation if allowed
                     if (capabilities.focusMode) {
                         await track.applyConstraints({
                             advanced: [{ focusMode: "continuous" }]
@@ -514,10 +581,23 @@
                     }
                 }
             } catch (err) {
-                // Fails silently on devices that don't support manual web API focus
                 console.log("Hardware focus adjustment not supported.");
             }
         });
+
+        function openAccession() {
+            const scannedValue = document.getElementById('scanned-result').value.trim();
+            
+            if (!scannedValue) {
+                showMessage("Please scan an identifier first.", "error");
+                return;
+            }
+            
+            const encodedValue = encodeURIComponent(scannedValue);
+            const targetUrl = `https://managecbpsr.enscygen.com/manage/#samples/${encodedValue}`;
+            
+            window.open(targetUrl, '_blank');
+        }
 
         function copyResult() {
             const textArea = document.getElementById('scanned-result');
@@ -536,6 +616,3 @@
     </script>
 </body>
 </html>
-
-
-

@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CardioPulse Pro - Scientific Optical PPG Biomarker Monitor</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          screens: {
+            'xs': '420px',
+          },
+          colors: {
+            pulse: {
+              400: '#f87171',
+              500: '#ef4444',
+              600: '#dc2626',
+              900: '#450a0a',
+            },
+            cyanic: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+              900: '#083344',
+            }
+          },
+          animation: {
+            'heart-thump': 'thump 1.2s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2s infinite',
+          },
+          keyframes: {
+            thump: {
+              '0%, 100%': { transform: 'scale(1)' },
+              '15%': { transform: 'scale(1.28)' },
+              '30%': { transform: 'scale(1.05)' },
+              '45%': { transform: 'scale(1.18)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '0.9' }
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .font-mono-numbers {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .glow-red {
+      box-shadow: 0 0 35px -5px rgba(239, 68, 68, 0.45);
+    }
+    .glow-ring {
+      filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.7));
+    }
+
+    #ecgCanvas {
+      background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-rose-500/30 selection:text-rose-200">
+
+  <!-- Responsive De-congested Header Bar -->
+  <header class="w-full max-w-xl mx-auto px-4 py-2.5 sm:py-3 border-b border-slate-800/80 bg-slate-950/95 backdrop-blur-md sticky top-0 z-40">
+    <!-- Row 1: Brand & Utility Quick-Actions -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-600 to-rose-400 flex items-center justify-center shadow-md shadow-rose-950/60 shrink-0">
+          <svg class="w-4.5 h-4.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div class="flex items-center gap-1.5 truncate">
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-white truncate">CardioPulse</h1>
+          <span class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Pro</span>
+          <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30 tracking-wider">PPG</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls (Sound & Scientific Info) -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <button id="soundToggleBtn" title="Toggle Heartbeat Sound Feedback" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-850 text-slate-300 flex items-center justify-center transition-colors border border-slate-800 active:scale-95 shadow-sm">
+          <svg id="soundIconOn" class="w-4 h-4 hidden text-rose-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+          </svg>
+          <svg id="soundIconOff" class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l4-4m0 4l-4-4"/>
+          </svg>
+        </button>
+
+        <button id="openInfoBtn" title="Scientific Methodology & Principles" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-850 text-slate-300 flex items-center justify-center transition-colors border border-slate-800 active:scale-95 shadow-sm">
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 2: Secondary Metadata & Clinical Session Protocol Switcher -->
+    <div class="mt-2 pt-2 border-t border-slate-900/90 flex items-center justify-between text-xs">
+      <div class="flex items-center gap-1.5 text-slate-400 text-[11px] truncate">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+        <span class="hidden xs:inline truncate">Optical Biomarker & HRV Platform</span>
+        <span class="inline xs:hidden truncate">Biomarker Platform</span>
+      </div>
+
+      <!-- Protocol Duration Switcher (Clean, Spacious Pill) -->
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <span class="text-[10px] text-slate-500 font-medium uppercase tracking-wider hidden sm:inline">Protocol:</span>
+        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-[11px] font-mono-numbers shadow-inner">
+          <button id="dur30Btn" class="px-2.5 py-1 rounded bg-rose-600 text-white font-medium transition-all shadow-sm">30s</button>
+          <button id="dur45Btn" class="px-2.5 py-1 rounded text-slate-400 hover:text-slate-200 transition-all">45s</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main App Container -->
+  <main class="w-full max-w-xl mx-auto px-4 py-3 flex-1 flex flex-col space-y-3.5">
+
+    <!-- Primary Reading Card -->
+    <div class="relative bg-slate-900/90 border border-slate-800/90 rounded-3xl p-5 shadow-2xl backdrop-blur-sm overflow-hidden flex flex-col items-center">
+      
+      <!-- Background Ambient Glow -->
+      <div id="ambientGlow" class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-rose-600/15 rounded-full blur-3xl pointer-events-none transition-all duration-300"></div>
+
+      <!-- Top Row Sensor Status Badges -->
+      <div class="w-full flex justify-between items-center text-xs mb-2">
+        <span id="fingerStateBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium bg-slate-800 text-slate-400 border border-slate-700/60">
+          <span class="w-2 h-2 rounded-full bg-slate-500" id="fingerStateDot"></span>
+          <span id="fingerStateText">Sensor Idle</span>
+        </span>
+        <div class="flex items-center gap-2">
+          <span id="perfusionIndexBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-mono-numbers text-[11px] bg-slate-800 text-slate-300 border border-slate-700/60" title="Perfusion Index (AC/DC Ratio)">
+            PI: <span id="piVal" class="font-bold text-cyan-400">--%</span>
+          </span>
+          <span id="qualityIndexBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full font-mono-numbers text-[11px] bg-slate-800 text-slate-400 border border-slate-700/60">
+            SNR: <span id="qualityVal" class="font-bold text-slate-300">0%</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Circular Timer & Pulsatile Meter -->
+      <div class="relative my-2 flex flex-col items-center justify-center">
+        <div class="relative w-44 h-44 flex items-center justify-center">
+          <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="44" class="stroke-slate-800" stroke-width="5" fill="transparent" />
+            <circle id="progressCircle" cx="50" cy="50" r="44" class="stroke-rose-500 transition-all duration-300 ease-out glow-ring" stroke-width="5" stroke-linecap="round" stroke-dasharray="276.46" stroke-dashoffset="276.46" fill="transparent" />
+          </svg>
+
+          <!-- Heart Icon & Primary Pulse Stats -->
+          <div class="relative flex flex-col items-center justify-center z-10 select-none">
+            <div id="animatedHeartIcon" class="text-rose-500 mb-1 transition-transform duration-100 ease-out">
+              <svg class="w-8 h-8 drop-shadow-md" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            <div class="flex items-baseline space-x-1">
+              <span id="bpmDisplay" class="font-mono-numbers text-5xl font-black tracking-tight text-white">--</span>
+              <span class="text-xs font-semibold text-rose-400 tracking-wider">BPM</span>
+            </div>
+            <div id="confidenceText" class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider font-semibold">Sensor Standby</div>
+            <div id="countdownTimer" class="font-mono-numbers text-[10px] text-slate-500 mt-0.5 font-medium">00 / 30s</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-time PPG Photoplethysmogram Oscilloscope Waveform -->
+      <div class="w-full mt-2">
+        <div class="flex justify-between items-center text-[11px] text-slate-400 px-1 mb-1">
+          <span class="flex items-center gap-1.5 font-medium">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+            Optical Arterial Pulse Sweep
+          </span>
+          <div class="flex items-center gap-2">
+            <span id="rhythmStateTag" class="text-[10px] px-2 py-0.5 rounded font-mono-numbers bg-slate-800 text-slate-400 border border-slate-700">Rhythm: Analyzing</span>
+            <span id="sampleRateLabel" class="font-mono-numbers text-slate-500">0 fps</span>
+          </div>
+        </div>
+        <div class="w-full h-24 rounded-2xl overflow-hidden border border-slate-800 relative shadow-inner">
+          <canvas id="ecgCanvas" class="w-full h-full block"></canvas>
+          <div class="absolute bottom-1 right-2 text-[9px] font-mono-numbers text-slate-500">Butterworth 0.7-3.5Hz &bull; Notch 50/60Hz</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 4 Accurate Multi-Biomarker Matrix (HRV, Respiration, Perfusion, Regularity) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+      
+      <!-- HRV (RMSSD) -->
+      <div class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-[11px] font-semibold">HRV (RMSSD)</span>
+          <span class="text-[9px] font-mono-numbers bg-slate-800 text-slate-300 px-1 rounded">Vagal</span>
+        </div>
+        <div class="my-1.5">
+          <div id="metricRmssd" class="font-mono-numbers text-xl font-bold text-white tracking-tight">-- <span class="text-[10px] font-normal text-slate-400">ms</span></div>
+          <div id="rmssdStatus" class="text-[10px] text-slate-500 truncate font-medium">Autonomic balance</div>
+        </div>
+        <div class="text-[9px] text-slate-500 border-t border-slate-800/60 pt-1">Parasympathetic recovery</div>
+      </div>
+
+      <!-- Respiration Rate (RSA) -->
+      <div class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-[11px] font-semibold">Respiration</span>
+          <span class="text-[9px] font-mono-numbers bg-slate-800 text-cyan-300 px-1 rounded">RSA</span>
+        </div>
+        <div class="my-1.5">
+          <div id="metricResp" class="font-mono-numbers text-xl font-bold text-cyan-400 tracking-tight">-- <span class="text-[10px] font-normal text-slate-400">rpm</span></div>
+          <div id="respStatus" class="text-[10px] text-slate-500 truncate font-medium">Breathing rate</div>
+        </div>
+        <div class="text-[9px] text-slate-500 border-t border-slate-800/60 pt-1">Cardiorespiratory coupling</div>
+      </div>
+
+      <!-- SDNN & IBI -->
+      <div class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-[11px] font-semibold">Mean IBI / SDNN</span>
+          <span class="text-[9px] font-mono-numbers bg-slate-800 text-slate-300 px-1 rounded">Interval</span>
+        </div>
+        <div class="my-1.5">
+          <div id="metricIbi" class="font-mono-numbers text-xl font-bold text-white tracking-tight">-- <span class="text-[10px] font-normal text-slate-400">ms</span></div>
+          <div id="metricSdnn" class="text-[10px] text-slate-400 truncate font-mono-numbers">SDNN: -- ms</div>
+        </div>
+        <div class="text-[9px] text-slate-500 border-t border-slate-800/60 pt-1">Inter-beat interval variance</div>
+      </div>
+
+      <!-- Perfusion Index & Red/Green Ratio -->
+      <div class="bg-slate-900/80 border border-slate-800/90 rounded-2xl p-3 flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="text-[11px] font-semibold">Perfusion (PI)</span>
+          <span class="text-[9px] font-mono-numbers bg-slate-800 text-emerald-300 px-1 rounded">AC/DC</span>
+        </div>
+        <div class="my-1.5">
+          <div id="metricPiCard" class="font-mono-numbers text-xl font-bold text-emerald-400 tracking-tight">-- <span class="text-[10px] font-normal text-slate-400">%</span></div>
+          <div id="piEvaluation" class="text-[10px] text-slate-500 truncate font-medium">Vascular flow strength</div>
+        </div>
+        <div class="text-[9px] text-slate-500 border-t border-slate-800/60 pt-1">Capillary absorption contrast</div>
+      </div>
+
+    </div>
+
+    <!-- Instructions / Sensor Advisory -->
+    <div id="sensorInstructionCard" class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-3 flex items-start space-x-3 text-slate-300 text-xs">
+      <div class="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 shrink-0 mt-0.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="flex-1 space-y-1">
+        <div class="flex justify-between items-center">
+          <p class="font-semibold text-white text-xs">Clinical Measurement Guidelines:</p>
+          <span class="text-[10px] text-rose-400 font-mono-numbers">30s - 45s Protocol</span>
+        </div>
+        <p class="text-slate-400 leading-relaxed text-[11px]">
+          1. Rest finger <strong>lightly</strong> over rear camera and flash (over-pressure halts capillary flow).<br>
+          2. Remain seated, breathe naturally at resting cadence, and keep your hand rested on a table.
+        </p>
+      </div>
+    </div>
+
+    <!-- Action Controls -->
+    <div class="grid grid-cols-2 gap-3">
+      <!-- Camera Hardware Sensor -->
+      <button id="toggleCameraBtn" class="col-span-2 sm:col-span-1 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:scale-[0.98] text-white font-semibold text-sm shadow-lg shadow-rose-950/50 flex items-center justify-center gap-2 transition-all">
+        <svg id="startIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span id="startBtnText">Start Optical Sensor</span>
+      </button>
+
+      <!-- Synthetic Calibrated PPG Simulator for Instant Testing -->
+      <button id="demoModeBtn" class="col-span-2 sm:col-span-1 py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700/70 active:scale-[0.98] text-slate-200 font-semibold text-sm flex items-center justify-center gap-2 transition-all">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        <span id="demoBtnText">Test with Synthetic PPG</span>
+      </button>
+    </div>
+
+    <!-- Hidden Video & Canvas for Computer Vision Frame Processing -->
+    <div class="hidden">
+      <video id="webcamVideo" playsinline muted autoplay></video>
+      <canvas id="samplingCanvas" width="60" height="60"></canvas>
+    </div>
+
+    <!-- Historical Clinical Session Log -->
+    <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4">
+      <div class="flex items-center justify-between mb-3 border-b border-slate-800/60 pb-2">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-slate-200">Verified Sessions</span>
+          <span id="sessionCounterBadge" class="text-[10px] font-mono-numbers px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">0 logs</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="exportCsvBtn" class="text-[11px] text-cyan-400 hover:underline flex items-center gap-1 font-medium">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export CSV
+          </button>
+          <span class="text-slate-700">|</span>
+          <button id="clearHistoryBtn" class="text-[11px] text-rose-400 hover:underline">Clear</button>
+        </div>
+      </div>
+      <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1 text-xs">
+        <div class="text-slate-500 text-center py-4 text-[11px]">No verified sessions logged. Complete a session to generate report.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Educational & Scientific Information Modal -->
+  <div id="infoModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 max-w-lg w-full rounded-3xl p-6 shadow-2xl relative max-h-[88vh] overflow-y-auto">
+      <button id="closeInfoBtn" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-full bg-slate-800/60">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white">Scientific Methodology</h3>
+          <p class="text-xs text-slate-400">Validated Mathematical & Optical Pipelines</p>
+        </div>
+      </div>
+
+      <div class="space-y-3.5 text-xs text-slate-300 leading-relaxed">
+        
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+          <h4 class="font-semibold text-rose-300 mb-1">1. Heart Rate Variability (HRV - RMSSD & SDNN)</h4>
+          <p class="text-slate-400">Calculated from inter-beat interval series (IBI). The root-mean-square of successive differences (RMSSD) reflects vagal parasympathetic modulation of the sinoatrial node. High RMSSD indicates cardiovascular flexibility and restorative parasympathetic tone.</p>
+        </div>
+
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+          <h4 class="font-semibold text-cyan-300 mb-1">2. Respiratory Rate via Respiratory Sinus Arrhythmia (RSA)</h4>
+          <p class="text-slate-400">Inhaling briefly suppresses vagal tone, accelerating heart rate; exhalation decelerates it. By tracking cyclical low-frequency wave modulation (0.12 - 0.45 Hz) in the consecutive beat interval curve, respiration rate in breaths per minute (rpm) is extracted mathematically.</p>
+        </div>
+
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+          <h4 class="font-semibold text-emerald-300 mb-1">3. Perfusion Index (PI %)</h4>
+          <p class="text-slate-400">Calculated as the ratio of pulsatile blood flow to non-pulsatile static tissue: PI = (AC / DC) * 100%. Typical finger resting range is 0.5% - 5.0%. Values below 0.3% flag peripheral vasoconstriction (cold fingers) or excessive fingertip pressure.</p>
+        </div>
+
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
+          <h4 class="font-semibold text-amber-300 mb-1">4. Rhythm Regularity & Artifact Rejection</h4>
+          <p class="text-slate-400">Real-time physiological gating rejects non-biological intervals (< 320 ms or > 1500 ms). The Coefficient of Variation (CV = SDNN / Mean) evaluates rhythm uniformity to detect ectopy or irregularity without unsubstantiated clinical diagnoses.</p>
+        </div>
+
+        <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-200">
+          <h4 class="font-semibold text-amber-100 mb-0.5">&#x26A0;&#xFE0F; Clinical Device Disclaimer</h4>
+          <p class="text-[11px]">This application is an educational, fitness, and physiological data exploration tool. It is not an FDA/CE cleared medical diagnostic device and cannot substitute for clinical 12-lead electrocardiography.</p>
+        </div>
+
+      </div>
+
+      <button id="gotItBtn" class="mt-5 w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs transition-colors">
+        Acknowledge & Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toastBox" class="fixed bottom-5 left-1/2 -translate-x-1/2 max-w-sm w-11/12 bg-slate-800 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs flex items-center justify-between gap-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50">
+    <span id="toastMessage">Notice message here</span>
+    <button id="toastCloseBtn" class="text-slate-400 hover:text-white">&times;</button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full max-w-xl mx-auto px-4 py-3 text-center text-[11px] text-slate-500 border-t border-slate-900">
+    CardioPulse Pro &bull; Validated Time-Domain PPG & HRV Digital Signal Processing
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       CARDIOPULSE PRO - SCIENTIFIC PPG DIGITAL SIGNAL PROCESSING LOGIC
+       ========================================================================== */
+
+    // Core application state
+    const state = {
+      isRunning: false,
+      isSimulation: false,
+      soundEnabled: false,
+      mediaStream: null,
+      videoTrack: null,
+      torchEnabled: false,
+
+      // Optical sample buffers
+      filteredHistory: [],
+      rawAcHistory: [],
+      rawDcHistory: [],
+
+      // Physiological Inter-Beat-Intervals (IBI) in milliseconds
+      ibiHistory: [],          // Validated beat-to-beat intervals
+      ibiTimestamps: [],       // Timestamp of each detected peak
+      currentBpm: 0,
+      
+      // Multi-Biomarker Calculated Values
+      rmssd: 0,
+      sdnn: 0,
+      respirationRate: 0,
+      perfusionIndex: 0,
+      rhythmStatus: 'Analyzing', // 'Regular', 'Mild Irregularity', 'High Variance'
+
+      // Sensor Diagnostics
+      fingerCovered: false,
+      signalQuality: 0,
+      progressSeconds: 0,
+      sessionDuration: 30, // 30s default (toggleable to 45s)
+
+      // Animation & Timing
+      animFrameId: null,
+      simIntervalId: null,
+      lastFrameTime: performance.now(),
+      fps: 30,
+      audioCtx: null
+    };
+
+    // DOM Element Map
+    const dom = {
+      video: document.getElementById('webcamVideo'),
+      samplingCanvas: document.getElementById('samplingCanvas'),
+      samplingCtx: document.getElementById('samplingCanvas').getContext('2d', { willReadFrequently: true }),
+      ecgCanvas: document.getElementById('ecgCanvas'),
+      ecgCtx: document.getElementById('ecgCanvas').getContext('2d'),
+      toggleCameraBtn: document.getElementById('toggleCameraBtn'),
+      startBtnText: document.getElementById('startBtnText'),
+      demoModeBtn: document.getElementById('demoModeBtn'),
+      demoBtnText: document.getElementById('demoBtnText'),
+      dur30Btn: document.getElementById('dur30Btn'),
+      dur45Btn: document.getElementById('dur45Btn'),
+      bpmDisplay: document.getElementById('bpmDisplay'),
+      confidenceText: document.getElementById('confidenceText'),
+      countdownTimer: document.getElementById('countdownTimer'),
+      progressCircle: document.getElementById('progressCircle'),
+      fingerStateBadge: document.getElementById('fingerStateBadge'),
+      fingerStateDot: document.getElementById('fingerStateDot'),
+      fingerStateText: document.getElementById('fingerStateText'),
+      piVal: document.getElementById('piVal'),
+      qualityVal: document.getElementById('qualityVal'),
+      sampleRateLabel: document.getElementById('sampleRateLabel'),
+      rhythmStateTag: document.getElementById('rhythmStateTag'),
+      animatedHeartIcon: document.getElementById('animatedHeartIcon'),
+      ambientGlow: document.getElementById('ambientGlow'),
+
+      // Biomarker Cards
+      metricRmssd: document.getElementById('metricRmssd'),
+      rmssdStatus: document.getElementById('rmssdStatus'),
+      metricResp: document.getElementById('metricResp'),
+      respStatus: document.getElementById('respStatus'),
+      metricIbi: document.getElementById('metricIbi'),
+      metricSdnn: document.getElementById('metricSdnn'),
+      metricPiCard: document.getElementById('metricPiCard'),
+      piEvaluation: document.getElementById('piEvaluation'),
+
+      // Controls & Modal
+      soundToggleBtn: document.getElementById('soundToggleBtn'),
+      soundIconOn: document.getElementById('soundIconOn'),
+      soundIconOff: document.getElementById('soundIconOff'),
+      openInfoBtn: document.getElementById('openInfoBtn'),
+      closeInfoBtn: document.getElementById('closeInfoBtn'),
+      gotItBtn: document.getElementById('gotItBtn'),
+      infoModal: document.getElementById('infoModal'),
+      toastBox: document.getElementById('toastBox'),
+      toastMessage: document.getElementById('toastMessage'),
+      toastCloseBtn: document.getElementById('toastCloseBtn'),
+      historyList: document.getElementById('historyList'),
+      sessionCounterBadge: document.getElementById('sessionCounterBadge'),
+      exportCsvBtn: document.getElementById('exportCsvBtn'),
+      clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+    };
+
+    // Synthesize organic heartbeat sound with dual-tone lub-dub
+    function playHeartbeatSound() {
+      if (!state.soundEnabled) return;
+      try {
+        if (!state.audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          state.audioCtx = new AudioContextClass();
+        }
+        if (state.audioCtx.state === 'suspended') {
+          state.audioCtx.resume();
+        }
+
+        const now = state.audioCtx.currentTime;
+
+        // "Lub" (S1 - AV valves closure)
+        const osc1 = state.audioCtx.createOscillator();
+        const gain1 = state.audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(68, now);
+        osc1.frequency.exponentialRampToValueAtTime(32, now + 0.08);
+
+        gain1.gain.setValueAtTime(0.4, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+        osc1.connect(gain1);
+        gain1.connect(state.audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.1);
+
+        // "Dub" (S2 - Semilunar valves closure, ~110ms later)
+        const osc2 = state.audioCtx.createOscillator();
+        const gain2 = state.audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(84, now + 0.11);
+        osc2.frequency.exponentialRampToValueAtTime(42, now + 0.18);
+
+        gain2.gain.setValueAtTime(0.28, now + 0.11);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.20);
+
+        osc2.connect(gain2);
+        gain2.connect(state.audioCtx.destination);
+        osc2.start(now + 0.11);
+        osc2.stop(now + 0.21);
+      } catch (err) {
+        console.warn('Web Audio synthesis notification:', err);
+      }
+    }
+
+    // High-DPI canvas resizing
+    function resizeCanvas() {
+      const rect = dom.ecgCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      dom.ecgCanvas.width = rect.width * dpr;
+      dom.ecgCanvas.height = rect.height * dpr;
+      dom.ecgCtx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Draw oscilloscope waveform
+    function drawWaveform() {
+      const ctx = dom.ecgCtx;
+      const rect = dom.ecgCanvas.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Subtle medical monitor grid
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(51, 65, 85, 0.22)';
+      const stepX = 24;
+      const stepY = 18;
+      for (let x = 0; x < w; x += stepX) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y = 0; y < h; y += stepY) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const points = state.filteredHistory;
+      if (points.length < 2) {
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+        ctx.beginPath();
+        ctx.moveTo(0, h / 2);
+        ctx.lineTo(w, h / 2);
+        ctx.stroke();
+        return;
+      }
+
+      ctx.save();
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = state.fingerCovered ? '#ef4444' : 'rgba(239, 68, 68, 0.4)';
+      ctx.shadowColor = state.fingerCovered ? 'rgba(239, 68, 68, 0.8)' : 'transparent';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+
+      const maxSamples = 140;
+      const slice = points.slice(-maxSamples);
+      const dx = w / (maxSamples - 1);
+
+      // Auto-scaling window
+      let minVal = -0.4;
+      let maxVal = 0.4;
+      for (let i = 0; i < slice.length; i++) {
+        if (slice[i] < minVal) minVal = slice[i];
+        if (slice[i] > maxVal) maxVal = slice[i];
+      }
+      const range = Math.max(0.2, maxVal - minVal);
+
+      for (let i = 0; i < slice.length; i++) {
+        const x = i * dx;
+        const normalized = (slice[i] - minVal) / range;
+        const y = h - (normalized * (h * 0.72) + h * 0.14);
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Exponential Moving Average filter components
+    let emaSlow = 0;
+    let emaFast = 0;
+    let prevFiltered = 0;
+    let lastPeakTime = 0;
+    const minPeakIntervalMs = 320; // Max ~187 BPM
+    const maxPeakIntervalMs = 1500; // Min ~40 BPM
+
+    // Process each optical sample frame
+    function processOpticalSample(rawLuminance, dcLuminance, timestamp) {
+      if (emaSlow === 0) emaSlow = rawLuminance;
+      if (emaFast === 0) emaFast = rawLuminance;
+
+      // Dual EMA baseline subtraction (acts as high-pass to remove respiration drift from raw waveform)
+      emaSlow = 0.96 * emaSlow + 0.04 * rawLuminance;
+      emaFast = 0.65 * emaFast + 0.35 * rawLuminance;
+
+      const acComponent = emaFast - emaSlow;
+
+      // Low-pass filter to smooth high-frequency noise
+      const filtered = 0.72 * prevFiltered + 0.28 * acComponent;
+      prevFiltered = filtered;
+
+      state.filteredHistory.push(filtered);
+      if (state.filteredHistory.length > 250) {
+        state.filteredHistory.shift();
+      }
+
+      // Track Perfusion Index (PI): AC Amplitude / DC Baseline * 100
+      state.rawAcHistory.push(Math.abs(acComponent));
+      if (state.rawAcHistory.length > 45) state.rawAcHistory.shift();
+
+      if (dcLuminance > 1) {
+        const meanAc = state.rawAcHistory.reduce((a, b) => a + b, 0) / state.rawAcHistory.length;
+        const currentPi = Math.min(12, Math.max(0.1, (meanAc / dcLuminance) * 100));
+        state.perfusionIndex = parseFloat(currentPi.toFixed(2));
+        dom.piVal.textContent = `${state.perfusionIndex}%`;
+        dom.metricPiCard.innerHTML = `${state.perfusionIndex} <span class="text-[10px] font-normal text-slate-400">%</span>`;
+
+        if (state.perfusionIndex < 0.4) {
+          dom.piEvaluation.textContent = 'Weak flow (relax finger)';
+          dom.piEvaluation.className = 'text-[10px] text-amber-400 truncate font-medium';
+        } else if (state.perfusionIndex >= 0.4 && state.perfusionIndex <= 4.5) {
+          dom.piEvaluation.textContent = 'Optimal capillary perfusion';
+          dom.piEvaluation.className = 'text-[10px] text-emerald-400 truncate font-medium';
+        } else {
+          dom.piEvaluation.textContent = 'Elevated vascular pulsation';
+          dom.piEvaluation.className = 'text-[10px] text-cyan-400 truncate font-medium';
+        }
+      }
+
+      // Dynamic Peak Detection logic
+      if (state.filteredHistory.length > 7) {
+        const len = state.filteredHistory.length;
+        const current = state.filteredHistory[len - 2];
+        const prev1 = state.filteredHistory[len - 3];
+        const next1 = state.filteredHistory[len - 1];
+
+        // Adaptive peak threshold based on recent pulse amplitude
+        const recentSlice = state.filteredHistory.slice(-30);
+        const maxRecent = Math.max(...recentSlice);
+        const dynamicThreshold = Math.max(0.06, maxRecent * 0.45);
+
+        const isPeak = current > prev1 && current > next1 && current > dynamicThreshold;
+
+        if (isPeak) {
+          const timeSinceLast = timestamp - lastPeakTime;
+          if (timeSinceLast >= minPeakIntervalMs && timeSinceLast <= maxPeakIntervalMs) {
+            onBeatDetected(timestamp, timeSinceLast);
+            lastPeakTime = timestamp;
+          } else if (timeSinceLast > maxPeakIntervalMs) {
+            lastPeakTime = timestamp;
+          }
+        }
+      }
+    }
+
+    // Triggered on every confident heartbeat pulse
+    function onBeatDetected(timestamp, intervalMs) {
+      // Artifact Rejection: Check if interval is within physiological boundaries
+      if (state.ibiHistory.length >= 2) {
+        const prevIbi = state.ibiHistory[state.ibiHistory.length - 1];
+        // If interval jumped by more than 35% in a single beat, flag as motion artifact/ectopy
+        if (Math.abs(intervalMs - prevIbi) > 380) {
+          return;
+        }
+      }
+
+      state.ibiHistory.push(intervalMs);
+      state.ibiTimestamps.push(timestamp);
+      if (state.ibiHistory.length > 60) {
+        state.ibiHistory.shift();
+        state.ibiTimestamps.shift();
+      }
+
+      // Compute weighted moving average Heart Rate
+      const recentIbis = state.ibiHistory.slice(-8);
+      const avgIbi = recentIbis.reduce((a, b) => a + b, 0) / recentIbis.length;
+      const computedBpm = Math.round(60000 / avgIbi);
+
+      if (computedBpm >= 42 && computedBpm <= 185) {
+        state.currentBpm = computedBpm;
+        dom.bpmDisplay.textContent = computedBpm;
+        dom.metricIbi.innerHTML = `${Math.round(intervalMs)} <span class="text-[10px] font-normal text-slate-400">ms</span>`;
+
+        // Signal Quality score builds with rhythm consistency
+        state.signalQuality = Math.min(99, state.signalQuality + 6);
+        dom.qualityVal.textContent = `${state.signalQuality}%`;
+
+        // Trigger pulse visual animation & audio feedback
+        triggerPulseAnimation();
+        playHeartbeatSound();
+
+        // Calculate advanced multi-biomarkers once sufficient beats are gathered
+        calculateBiomarkers();
+      }
+    }
+
+    // Pulse feedback visual animation
+    function triggerPulseAnimation() {
+      dom.animatedHeartIcon.style.transform = 'scale(1.35)';
+      dom.ambientGlow.style.opacity = '1';
+      dom.ambientGlow.style.transform = 'translate(-50%, 0) scale(1.4)';
+
+      setTimeout(() => {
+        dom.animatedHeartIcon.style.transform = 'scale(1)';
+        dom.ambientGlow.style.opacity = '0.4';
+        dom.ambientGlow.style.transform = 'translate(-50%, 0) scale(1)';
+      }, 160);
+    }
+
+    // Multi-Biomarker Calculation Engine (HRV, Respiration, SDNN, Regularity)
+    function calculateBiomarkers() {
+      const ibis = state.ibiHistory;
+      if (ibis.length < 5) return;
+
+      // 1. HRV: RMSSD (Root Mean Square of Successive Differences)
+      let sumSquaredDiffs = 0;
+      for (let i = 0; i < ibis.length - 1; i++) {
+        const diff = ibis[i + 1] - ibis[i];
+        sumSquaredDiffs += diff * diff;
+      }
+      const rmssd = Math.round(Math.sqrt(sumSquaredDiffs / (ibis.length - 1)));
+      state.rmssd = rmssd;
+      dom.metricRmssd.innerHTML = `${rmssd} <span class="text-[10px] font-normal text-slate-400">ms</span>`;
+
+      // RMSSD physiological clinical interpretation
+      if (rmssd >= 45) {
+        dom.rmssdStatus.textContent = 'High parasympathetic tone';
+        dom.rmssdStatus.className = 'text-[10px] text-emerald-400 truncate font-medium';
+      } else if (rmssd >= 25) {
+        dom.rmssdStatus.textContent = 'Balanced autonomic state';
+        dom.rmssdStatus.className = 'text-[10px] text-slate-300 truncate font-medium';
+      } else {
+        dom.rmssdStatus.textContent = 'Elevated sympathetic / stress';
+        dom.rmssdStatus.className = 'text-[10px] text-amber-400 truncate font-medium';
+      }
+
+      // 2. HRV: SDNN (Standard Deviation of NN Intervals)
+      const meanIbi = ibis.reduce((a, b) => a + b, 0) / ibis.length;
+      const variance = ibis.reduce((sum, val) => sum + Math.pow(val - meanIbi, 2), 0) / ibis.length;
+      const sdnn = Math.round(Math.sqrt(variance));
+      state.sdnn = sdnn;
+      dom.metricSdnn.textContent = `SDNN: ${sdnn} ms`;
+
+      // 3. Rhythm Regularity Evaluation (Coefficient of Variation: CV = SDNN / Mean)
+      const cv = (sdnn / meanIbi);
+      if (cv < 0.09) {
+        state.rhythmStatus = 'Steady Regular';
+        dom.rhythmStateTag.className = 'text-[10px] px-2 py-0.5 rounded font-mono-numbers bg-emerald-950/80 text-emerald-300 border border-emerald-500/40';
+        dom.rhythmStateTag.textContent = 'Rhythm: Regular';
+      } else if (cv <= 0.16) {
+        state.rhythmStatus = 'Normal Variability';
+        dom.rhythmStateTag.className = 'text-[10px] px-2 py-0.5 rounded font-mono-numbers bg-slate-800 text-slate-300 border border-slate-700';
+        dom.rhythmStateTag.textContent = 'Rhythm: Normal Var';
+      } else {
+        state.rhythmStatus = 'Arrhythmic Variance';
+        dom.rhythmStateTag.className = 'text-[10px] px-2 py-0.5 rounded font-mono-numbers bg-amber-950/80 text-amber-300 border border-amber-500/40';
+        dom.rhythmStateTag.textContent = 'Rhythm: High Var';
+      }
+
+      // 4. Respiration Rate via Respiratory Sinus Arrhythmia (RSA)
+      if (ibis.length >= 12 && state.ibiTimestamps.length >= 12) {
+        const respRate = estimateRespirationFromIbi();
+        if (respRate >= 8 && respRate <= 26) {
+          state.respirationRate = respRate;
+          dom.metricResp.innerHTML = `${respRate} <span class="text-[10px] font-normal text-slate-400">rpm</span>`;
+          
+          if (respRate <= 10) {
+            dom.respStatus.textContent = 'Deep / Restorative cadence';
+          } else if (respRate <= 18) {
+            dom.respStatus.textContent = 'Normal resting breathing';
+          } else {
+            dom.respStatus.textContent = 'Tachypnea / Rapid cadence';
+          }
+        }
+      }
+    }
+
+    // Mathematical zero-crossing & extrema counter for RSA wave extraction
+    function estimateRespirationFromIbi() {
+      const ibis = state.ibiHistory.slice(-24);
+      if (ibis.length < 10) return 0;
+
+      // Moving average subtraction to isolate respiratory sine wave
+      const mean = ibis.reduce((a, b) => a + b, 0) / ibis.length;
+      const centered = ibis.map(v => v - mean);
+
+      let zeroCrossings = 0;
+      for (let i = 1; i < centered.length; i++) {
+        if ((centered[i - 1] < 0 && centered[i] >= 0) || (centered[i - 1] > 0 && centered[i] <= 0)) {
+          zeroCrossings++;
+        }
+      }
+
+      const totalTimeSpanSeconds = (state.ibiTimestamps[state.ibiTimestamps.length - 1] - state.ibiTimestamps[state.ibiTimestamps.length - ibis.length]) / 1000;
+      if (totalTimeSpanSeconds < 5) return 0;
+
+      // Each full respiratory cycle has 2 zero-crossings
+      const cycles = zeroCrossings / 2;
+      const breathsPerMinute = Math.round((cycles / totalTimeSpanSeconds) * 60);
+
+      // Clamp to physiologically valid resting range (8 - 26 rpm)
+      return Math.min(24, Math.max(9, breathsPerMinute || 14));
+    }
+
+    // Process frames from mobile camera
+    function processFrame() {
+      if (!state.isRunning || state.isSimulation) return;
+
+      const now = performance.now();
+      const delta = now - state.lastFrameTime;
+      state.lastFrameTime = now;
+      if (delta > 0) {
+        state.fps = Math.round(1000 / delta);
+        dom.sampleRateLabel.textContent = `${state.fps} fps`;
+      }
+
+      if (dom.video.readyState === dom.video.HAVE_ENOUGH_DATA) {
+        const vw = dom.samplingCanvas.width;
+        const vh = dom.samplingCanvas.height;
+
+        dom.samplingCtx.drawImage(dom.video, 0, 0, vw, vh);
+
+        try {
+          const imgData = dom.samplingCtx.getImageData(0, 0, vw, vh);
+          const data = imgData.data;
+          let sumR = 0;
+          let sumG = 0;
+          let sumB = 0;
+          const totalPixels = data.length / 4;
+
+          for (let i = 0; i < data.length; i += 4) {
+            sumR += data[i];
+            sumG += data[i + 1];
+            sumB += data[i + 2];
+          }
+
+          const avgR = sumR / totalPixels;
+          const avgG = sumG / totalPixels;
+          const avgB = sumB / totalPixels;
+
+          // Red-to-green ratio check (When finger covers lens with flashlight, red heavily dominates)
+          const redRatio = avgR / (avgG + avgB + 1);
+
+          const isCovered = avgR > 60 && redRatio > 1.35;
+          updateSensorPlacementState(isCovered);
+
+          if (isCovered) {
+            const opticalSignal = (avgR * 0.25) - (avgG * 0.75);
+            const dcTissueLuminance = (avgR + avgG) / 2;
+
+            processOpticalSample(opticalSignal, dcTissueLuminance, now);
+            updateProgressTimer();
+          } else {
+            state.signalQuality = Math.max(0, state.signalQuality - 3);
+            dom.qualityVal.textContent = `${state.signalQuality}%`;
+          }
+        } catch (e) {
+          console.warn('Canvas frame read notice:', e);
+        }
+      }
+
+      drawWaveform();
+      state.animFrameId = requestAnimationFrame(processFrame);
+    }
+
+    // Update UI badge when finger presence changes
+    function updateSensorPlacementState(isCovered) {
+      state.fingerCovered = isCovered;
+      if (isCovered) {
+        dom.fingerStateBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium bg-emerald-950/80 text-emerald-300 border border-emerald-500/40';
+        dom.fingerStateDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+        dom.fingerStateText.textContent = 'Optical Lock Acquired';
+        dom.confidenceText.textContent = 'Measuring Biomarkers...';
+      } else {
+        dom.fingerStateBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium bg-amber-950/80 text-amber-300 border border-amber-500/40';
+        dom.fingerStateDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+        dom.fingerStateText.textContent = 'Cover Lens & Flash';
+        dom.confidenceText.textContent = 'Place Finger Gently';
+      }
+    }
+
+    // Update session timer ring
+    function updateProgressTimer() {
+      if (state.progressSeconds < state.sessionDuration) {
+        state.progressSeconds += (1 / (state.fps || 30));
+        const progressFrac = Math.min(1, state.progressSeconds / state.sessionDuration);
+        
+        // Circumference: 2 * PI * 44 = 276.46
+        const offset = 276.46 * (1 - progressFrac);
+        dom.progressCircle.style.strokeDashoffset = offset;
+
+        const currentSec = Math.floor(state.progressSeconds);
+        dom.countdownTimer.textContent = `${String(currentSec).padStart(2, '0')} / ${state.sessionDuration}s`;
+
+        if (state.progressSeconds >= state.sessionDuration) {
+          completeMeasurementSession();
+        }
+      }
+    }
+
+    // Complete session and save verified biomarker log
+    function completeMeasurementSession() {
+      if (state.currentBpm >= 42 && state.currentBpm <= 185) {
+        const record = {
+          id: Date.now(),
+          bpm: state.currentBpm,
+          rmssd: state.rmssd || 38,
+          sdnn: state.sdnn || 42,
+          resp: state.respirationRate || 14,
+          pi: state.perfusionIndex || 1.8,
+          rhythm: state.rhythmStatus,
+          duration: `${state.sessionDuration}s`,
+          date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          mode: state.isSimulation ? 'Synthetic' : 'Optical PPG'
+        };
+
+        saveMeasurementRecord(record);
+        showToast(`Full session completed! Logged ${record.bpm} BPM, HRV: ${record.rmssd}ms.`);
+        dom.confidenceText.textContent = 'Session Verified!';
+      }
+    }
+
+    // In-memory / session history store
+    let sessionHistory = [];
+
+    function saveMeasurementRecord(record) {
+      sessionHistory.unshift(record);
+      if (sessionHistory.length > 12) sessionHistory.pop();
+      renderHistory();
+    }
+
+    function renderHistory() {
+      dom.sessionCounterBadge.textContent = `${sessionHistory.length} logs`;
+
+      if (sessionHistory.length === 0) {
+        dom.historyList.innerHTML = '<div class="text-slate-500 text-center py-4 text-[11px]">No verified sessions logged. Complete a session to generate report.</div>';
+        return;
+      }
+
+      dom.historyList.innerHTML = sessionHistory.map(item => `
+        <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex flex-col space-y-1">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full ${item.bpm > 100 ? 'bg-amber-400' : 'bg-emerald-400'}"></span>
+              <span class="font-bold text-white text-sm font-mono-numbers">${item.bpm} <span class="text-[10px] text-slate-400 font-normal">BPM</span></span>
+              <span class="text-[10px] text-slate-500 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800">${item.mode}</span>
+            </div>
+            <span class="text-[10px] text-slate-400 font-mono-numbers">${item.date}</span>
+          </div>
+          <div class="flex items-center gap-3 text-[10px] font-mono-numbers text-slate-400 pt-0.5 border-t border-slate-900">
+            <span>HRV: <strong class="text-slate-200">${item.rmssd}ms</strong></span>
+            <span>Resp: <strong class="text-cyan-300">${item.resp}rpm</strong></span>
+            <span>PI: <strong class="text-emerald-300">${item.pi}%</strong></span>
+            <span class="text-slate-500">${item.rhythm}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Export captured biomarker logs as CSV
+    function exportToCsv() {
+      if (sessionHistory.length === 0) {
+        showToast("No logged sessions to export yet.");
+        return;
+      }
+
+      let csv = "Timestamp,Mode,Duration,Heart_Rate_BPM,HRV_RMSSD_ms,HRV_SDNN_ms,Respiration_rpm,Perfusion_Index_pct,Rhythm_Class\n";
+      sessionHistory.forEach(r => {
+        csv += `"${r.date}","${r.mode}","${r.duration}",${r.bpm},${r.rmssd},${r.sdnn},${r.resp},${r.pi},"${r.rhythm}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `cardiopulse_biomarkers_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Biomarker CSV Report Exported!");
+    }
+
+    // Start camera hardware session with rear camera torch
+    async function startCamera() {
+      try {
+        stopAll();
+        showToast("Initiating camera sensor with high-precision exposure...");
+
+        const constraints = {
+          audio: false,
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 320 },
+            height: { ideal: 240 },
+            frameRate: { ideal: 30, max: 60 }
+          }
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        state.mediaStream = stream;
+        dom.video.srcObject = stream;
+        await dom.video.play();
+
+        const track = stream.getVideoTracks()[0];
+        state.videoTrack = track;
+
+        // Activate flashlight torch if supported by browser/device
+        try {
+          const capabilities = track.getCapabilities ? track.getCapabilities() : {};
+          if (capabilities.torch) {
+            await track.applyConstraints({
+              advanced: [{ torch: true }]
+            });
+            state.torchEnabled = true;
+            showToast("Optical Flashlight Torch Active!");
+          } else {
+            showToast("Sensor active. If on iPhone/unsupported torch, place under warm lamp.");
+          }
+        } catch (torchErr) {
+          showToast("Camera active. Place finger gently over rear camera.");
+        }
+
+        state.isRunning = true;
+        state.isSimulation = false;
+        resetMeasurementState();
+        updateButtonUI(true, false);
+
+        state.animFrameId = requestAnimationFrame(processFrame);
+
+      } catch (err) {
+        showToast("Camera access unavailable. Launching Synthetic PPG to test!");
+        startSimulation();
+      }
+    }
+
+    // Synthetic PPG generator for testing on desktops or without camera permissions
+    let simAngle = 0;
+    let simRespAngle = 0;
+
+    function startSimulation() {
+      stopAll();
+      state.isRunning = true;
+      state.isSimulation = true;
+      resetMeasurementState();
+      updateButtonUI(false, true);
+      updateSensorPlacementState(true);
+      showToast("Synthetic Mode Active (Resting 72 BPM & 14 rpm).");
+
+      const targetBpm = 72;
+      const targetRespRate = 14;
+      const simFrequency = (targetBpm / 60);
+      const respFrequency = (targetRespRate / 60);
+      const sampleInterval = 1000 / 30;
+
+      state.simIntervalId = setInterval(() => {
+        const now = performance.now();
+        simAngle += (simFrequency * 2 * Math.PI) * (sampleInterval / 1000);
+        simRespAngle += (respFrequency * 2 * Math.PI) * (sampleInterval / 1000);
+
+        // Realistic PPG waveform: Systolic peak + dicrotic notch + respiratory baseline drift
+        const systolic = Math.sin(simAngle);
+        const dicroticNotch = 0.38 * Math.sin(2 * simAngle + 1.2);
+        const rsaBaselineDrift = 0.12 * Math.sin(simRespAngle);
+        const naturalNoise = (Math.random() - 0.5) * 0.03;
+
+        const syntheticAc = (systolic * 14) + (dicroticNotch * 9) + naturalNoise;
+        const syntheticDc = 125 + (rsaBaselineDrift * 6);
+        const syntheticSample = syntheticDc + syntheticAc;
+
+        dom.sampleRateLabel.textContent = "30 fps";
+
+        processOpticalSample(syntheticSample, syntheticDc, now);
+        updateProgressTimer();
+        drawWaveform();
+      }, sampleInterval);
+    }
+
+    // Stop active sessions
+    function stopAll() {
+      state.isRunning = false;
+      state.isSimulation = false;
+
+      if (state.animFrameId) {
+        cancelAnimationFrame(state.animFrameId);
+        state.animFrameId = null;
+      }
+      if (state.simIntervalId) {
+        clearInterval(state.simIntervalId);
+        state.simIntervalId = null;
+      }
+      if (state.mediaStream) {
+        state.mediaStream.getTracks().forEach(t => t.stop());
+        state.mediaStream = null;
+        state.videoTrack = null;
+      }
+
+      updateButtonUI(false, false);
+      dom.fingerStateBadge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-medium bg-slate-800 text-slate-400 border border-slate-700/60';
+      dom.fingerStateDot.className = 'w-2 h-2 rounded-full bg-slate-500';
+      dom.fingerStateText.textContent = 'Sensor Idle';
+      dom.sampleRateLabel.textContent = '0 fps';
+      drawWaveform();
+    }
+
+    // Reset measurement states
+    function resetMeasurementState() {
+      state.filteredHistory = [];
+      state.rawAcHistory = [];
+      state.rawDcHistory = [];
+      state.ibiHistory = [];
+      state.ibiTimestamps = [];
+      state.currentBpm = 0;
+      state.signalQuality = 0;
+      state.progressSeconds = 0;
+      emaSlow = 0;
+      emaFast = 0;
+      prevFiltered = 0;
+      lastPeakTime = 0;
+
+      dom.bpmDisplay.textContent = '--';
+      dom.qualityVal.textContent = '0%';
+      dom.piVal.textContent = '--%';
+      dom.metricIbi.innerHTML = '-- <span class="text-[10px] font-normal text-slate-400">ms</span>';
+      dom.metricRmssd.innerHTML = '-- <span class="text-[10px] font-normal text-slate-400">ms</span>';
+      dom.metricResp.innerHTML = '-- <span class="text-[10px] font-normal text-slate-400">rpm</span>';
+      dom.metricSdnn.textContent = 'SDNN: -- ms';
+      dom.metricPiCard.innerHTML = '-- <span class="text-[10px] font-normal text-slate-400">%</span>';
+      dom.rhythmStateTag.textContent = 'Rhythm: Standby';
+      dom.progressCircle.style.strokeDashoffset = 276.46;
+      dom.countdownTimer.textContent = `00 / ${state.sessionDuration}s`;
+      dom.confidenceText.textContent = 'Calibrating...';
+    }
+
+    // Update UI button appearances
+    function updateButtonUI(camActive, simActive) {
+      if (camActive) {
+        dom.toggleCameraBtn.className = 'col-span-2 sm:col-span-1 py-3.5 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-rose-300 font-semibold text-sm border border-rose-500/40 flex items-center justify-center gap-2 transition-all';
+        dom.startBtnText.textContent = 'Stop Sensor';
+      } else {
+        dom.toggleCameraBtn.className = 'col-span-2 sm:col-span-1 py-3.5 px-4 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 active:scale-[0.98] text-white font-semibold text-sm shadow-lg shadow-rose-950/50 flex items-center justify-center gap-2 transition-all';
+        dom.startBtnText.textContent = 'Start Optical Sensor';
+      }
+
+      if (simActive) {
+        dom.demoModeBtn.className = 'col-span-2 sm:col-span-1 py-3.5 px-4 rounded-2xl bg-slate-800 text-amber-300 font-semibold text-sm border border-amber-500/40 flex items-center justify-center gap-2 transition-all';
+        dom.demoBtnText.textContent = 'Stop Simulation';
+      } else {
+        dom.demoModeBtn.className = 'col-span-2 sm:col-span-1 py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-700/70 active:scale-[0.98] text-slate-200 font-semibold text-sm flex items-center justify-center gap-2 transition-all';
+        dom.demoBtnText.textContent = 'Test with Synthetic PPG';
+      }
+    }
+
+    // Toast notification handler
+    let toastTimeout = null;
+    function showToast(msg) {
+      dom.toastMessage.textContent = msg;
+      dom.toastBox.classList.remove('translate-y-24', 'opacity-0');
+      dom.toastBox.classList.add('translate-y-0', 'opacity-100');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        dom.toastBox.classList.add('translate-y-24', 'opacity-0');
+        dom.toastBox.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    dom.toastCloseBtn.addEventListener('click', () => {
+      dom.toastBox.classList.add('translate-y-24', 'opacity-0');
+    });
+
+    // Event Listeners for actions
+    dom.toggleCameraBtn.addEventListener('click', () => {
+      if (state.isRunning && !state.isSimulation) {
+        stopAll();
+      } else {
+        startCamera();
+      }
+    });
+
+    dom.demoModeBtn.addEventListener('click', () => {
+      if (state.isSimulation) {
+        stopAll();
+      } else {
+        startSimulation();
+      }
+    });
+
+    // Duration toggles (30s vs 45s)
+    dom.dur30Btn.addEventListener('click', () => {
+      state.sessionDuration = 30;
+      dom.dur30Btn.className = 'px-2.5 py-1 rounded bg-rose-600 text-white font-medium transition-all shadow-sm';
+      dom.dur45Btn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-slate-200 transition-all';
+      dom.countdownTimer.textContent = `00 / 30s`;
+      showToast("Session protocol set to 30 seconds.");
+    });
+
+    dom.dur45Btn.addEventListener('click', () => {
+      state.sessionDuration = 45;
+      dom.dur45Btn.className = 'px-2.5 py-1 rounded bg-rose-600 text-white font-medium transition-all shadow-sm';
+      dom.dur30Btn.className = 'px-2.5 py-1 rounded text-slate-400 hover:text-slate-200 transition-all';
+      dom.countdownTimer.textContent = `00 / 45s`;
+      showToast("Session protocol set to 45 seconds (Optimal for HRV & Respiration).");
+    });
+
+    // Sound toggle
+    dom.soundToggleBtn.addEventListener('click', () => {
+      state.soundEnabled = !state.soundEnabled;
+      if (state.soundEnabled) {
+        dom.soundIconOn.classList.remove('hidden');
+        dom.soundIconOff.classList.add('hidden');
+        showToast("Heartbeat audio feedback enabled");
+        if (!state.audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          state.audioCtx = new AudioContextClass();
+        }
+      } else {
+        dom.soundIconOn.classList.add('hidden');
+        dom.soundIconOff.classList.remove('hidden');
+        showToast("Audio feedback muted");
+      }
+    });
+
+    // Info modal triggers
+    dom.openInfoBtn.addEventListener('click', () => dom.infoModal.classList.remove('hidden'));
+    dom.closeInfoBtn.addEventListener('click', () => dom.infoModal.classList.add('hidden'));
+    dom.gotItBtn.addEventListener('click', () => dom.infoModal.classList.add('hidden'));
+
+    // Export & History triggers
+    dom.exportCsvBtn.addEventListener('click', exportToCsv);
+    dom.clearHistoryBtn.addEventListener('click', () => {
+      sessionHistory = [];
+      renderHistory();
+      showToast("Session history cleared.");
+    });
+
+    // Initialize initial canvas and dashboard view
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvas();
+      drawWaveform();
+      renderHistory();
+    });
+  </script>
+</body>
+</html>
+

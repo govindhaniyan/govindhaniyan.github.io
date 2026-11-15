@@ -1,0 +1,3226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oil Palm Harvest Allocation & Wage Reconciliation</title>
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <!-- SheetJS (XLSX) & html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --bg-app: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-header: #0f172a;
+      --border: #cbd5e1;
+      --border-light: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      --primary: #15803d;
+      --primary-hover: #166534;
+      --primary-soft: #dcfce7;
+      --accent: #0284c7;
+      --accent-soft: #e0f2fe;
+      --warn: #d97706;
+      --warn-soft: #fef3c7;
+      --danger: #dc2626;
+      --danger-soft: #fee2e2;
+      --radius: 6px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      font-size: 13px;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      vertical-align: middle;
+      user-select: none;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .num {
+      font-family: var(--font-mono);
+      text-align: right;
+    }
+
+    /* Top App Header */
+    .app-header {
+      background-color: var(--bg-header);
+      color: #ffffff;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      background: var(--primary);
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .save-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+
+    .save-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+    }
+
+    /* Global Config Bar */
+    .config-bar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 18px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .meta-inputs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .field-group label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="month"],
+    select {
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      padding: 6px 9px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.15);
+    }
+
+    .global-toggles {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .norm-switch {
+      display: inline-flex;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2px;
+    }
+
+    .norm-btn {
+      border: none;
+      background: transparent;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .norm-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toggle-check {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      background: var(--bg-subtle);
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      user-select: none;
+    }
+
+    .toggle-check input {
+      accent-color: var(--primary);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+      white-space: nowrap;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg-subtle);
+      border-color: #94a3b8;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-accent:hover:not(:disabled) {
+      background: #0369a1;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+
+    .btn-danger-outline {
+      background: rgba(220, 38, 38, 0.12);
+      border-color: rgba(220, 38, 38, 0.4);
+      color: #fca5a5;
+    }
+
+    .btn-danger-outline:hover:not(:disabled) {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    /* Navigation Tabs & KPI Strip */
+    .workspace-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px 0 18px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--primary);
+      border-color: var(--border);
+      position: relative;
+      bottom: -1px;
+      padding-bottom: 10px;
+    }
+
+    .kpi-strip {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .kpi-pill {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      padding: 4px 10px;
+      border-radius: var(--radius);
+      font-size: 11.5px;
+    }
+
+    .kpi-pill span.lbl {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .kpi-pill span.val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Main Content Container */
+    .main-container {
+      padding: 16px 18px 40px 18px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .module-panel {
+      display: none;
+    }
+
+    .module-panel.active {
+      display: block;
+    }
+
+    /* Cards & Panels */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 10px 14px;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+    }
+
+    .card-body {
+      padding: 14px;
+    }
+
+    /* High Density Data Tables */
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    table.data-table th,
+    table.data-table td {
+      padding: 6px 9px;
+      border: 1px solid var(--border-light);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    table.data-table thead th {
+      background: #f1f5f9;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    table.data-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    table.data-table tr.subtotal-row {
+      background-color: #f1f5f9;
+      font-weight: 700;
+    }
+
+    table.data-table tr.grandtotal-row {
+      background-color: #e2e8f0;
+      font-weight: 700;
+      font-size: 12.5px;
+      border-top: 2px solid #94a3b8;
+    }
+
+    table.data-table tr.section-banner td {
+      background-color: #0f172a;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 6px 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-cutter {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .badge-carrier {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .badge-configured {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .badge-pending {
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    /* Cutter Grid in Module 2 */
+    .cutter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 12px;
+    }
+
+    .cutter-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .cutter-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .cutter-card.configured {
+      border-left: 4px solid var(--primary);
+    }
+
+    .cutter-card.pending {
+      border-left: 4px solid #f59e0b;
+    }
+
+    .cutter-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .cutter-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg-subtle);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border-light);
+    }
+
+    .cutter-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .cutter-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: var(--bg-subtle);
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid var(--border-light);
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-box .lbl {
+      font-size: 10px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .stat-box .val {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .carrier-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .carrier-chip {
+      font-size: 11px;
+      background: var(--accent-soft);
+      color: #0369a1;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: var(--bg-surface);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 960px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-dialog.modal-sm {
+      max-width: 460px;
+    }
+
+    .modal-header {
+      padding: 12px 16px;
+      background: var(--bg-header);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-footer {
+      padding: 12px 16px;
+      background: var(--bg-subtle);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Ledger Grid inside Modal */
+    .ledger-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 10px;
+      background: var(--bg-subtle);
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .ledger-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ledger-item label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .ledger-net-box {
+      background: var(--primary-soft);
+      border: 1px solid #86efac;
+      border-radius: var(--radius);
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ledger-net-box .lbl {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    .ledger-net-box .val {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Reconciliation Summary Box in Module 4 */
+    .recon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .recon-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .recon-box-title {
+      background: #1e293b;
+      color: #fff;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      letter-spacing: 0.04em;
+    }
+
+    .recon-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .recon-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .recon-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .recon-table tr.highlight {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+
+    /* Signature Block for Print/PDF */
+    .signature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+      padding-top: 20px;
+    }
+
+    .sig-line {
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 4px solid var(--primary);
+    }
+
+    /* Inline inputs inside tables */
+    .inline-input {
+      width: 100%;
+      padding: 4px 6px;
+      font-size: 12px;
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: #ffffff;
+      }
+      .no-print,
+      .app-header,
+      .config-bar,
+      .workspace-bar {
+        display: none !important;
+      }
+      .main-container {
+        padding: 0;
+        max-width: 100%;
+      }
+      .module-panel {
+        display: none !important;
+      }
+      #module-4 {
+        display: block !important;
+      }
+      .card {
+        border: none;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Application Header -->
+  <header class="app-header no-print">
+    <div class="brand-group">
+      <div class="brand-icon">
+        <span class="material-symbols-outlined">agriculture</span>
+      </div>
+      <div>
+        <div class="brand-title">Oil Palm Harvest Allocation & Wage Reconciliation</div>
+        <div class="brand-sub">Estate Check-Roll Quota, Field Balance Ledger & Multi-Sheet Submission System</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="save-pill" id="saveStatusIndicator" title="All workspace changes are automatically saved to browser localStorage">
+        <span class="save-dot"></span>
+        <span id="saveStatusText">Saved locally</span>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="btnLoadDemo" title="Load realistic sample estate data">
+        <span class="material-symbols-outlined">dataset</span> Load Sample Estate
+      </button>
+      <button class="btn btn-danger-outline btn-sm" id="btnOpenClearModal">
+        <span class="material-symbols-outlined">delete_forever</span> Clear & Exit
+      </button>
+    </div>
+  </header>
+
+  <!-- Global Configuration Bar -->
+  <section class="config-bar no-print">
+    <div class="meta-inputs">
+      <div class="field-group">
+        <label for="metaEstate">Estate Name</label>
+        <input type="text" id="metaEstate" placeholder="e.g. Kalady Oil Palm Estate" style="width: 190px;">
+      </div>
+      <div class="field-group">
+        <label for="metaDivision">Division</label>
+        <input type="text" id="metaDivision" placeholder="e.g. Div II - Central" style="width: 140px;">
+      </div>
+      <div class="field-group">
+        <label for="metaField">Field No.</label>
+        <input type="text" id="metaField" placeholder="e.g. F-1998A" style="width: 110px;">
+      </div>
+      <div class="field-group">
+        <label for="metaMonth">Month / Year</label>
+        <input type="month" id="metaMonth" style="width: 145px;">
+      </div>
+    </div>
+
+    <div class="global-toggles">
+      <div class="field-group">
+        <label>Harvest Season Norm (Quota / Manday)</label>
+        <div class="norm-switch">
+          <button type="button" class="norm-btn" id="normBtn250" data-norm="250">Off-Season (250 kg)</button>
+          <button type="button" class="norm-btn" id="normBtn500" data-norm="500">Peak Season (500 kg)</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Carrier Rounding Rule</label>
+        <label class="toggle-check" title="When enabled, Carrier shares are rounded to the nearest multiple of 5 kg (MROUND 5) and Cutter absorbs the residual">
+          <input type="checkbox" id="toggleRound5">
+          <span>Round to Multiple of 5 (MROUND 5)</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Module Navigation & Live KPI Strip -->
+  <div class="workspace-bar no-print">
+    <nav class="nav-tabs" id="moduleTabs">
+      <button class="tab-btn active" data-target="module-1">
+        <span class="material-symbols-outlined">badge</span> 1. Personnel Master
+      </button>
+      <button class="tab-btn" data-target="module-2">
+        <span class="material-symbols-outlined">groups</span> 2. Cutter Group & Field Balance
+      </button>
+      <button class="tab-btn" data-target="module-3">
+        <span class="material-symbols-outlined">grid_on</span> 3. Live Matrices & Adjustments
+      </button>
+      <button class="tab-btn" data-target="module-4">
+        <span class="material-symbols-outlined">assignment_turned_in</span> 4. Final Submission & Exports
+      </button>
+    </nav>
+
+    <div class="kpi-strip">
+      <div class="kpi-pill">
+        <span class="lbl">Roster:</span>
+        <span class="val" id="kpiRosterCount">0 H / 0 FC</span>
+      </div>
+      <div class="kpi-pill">
+        <span class="lbl">Gross Transported:</span>
+        <span class="val" id="kpiTransported">0 kg</span>
+      </div>
+      <div class="kpi-pill">
+        <span class="lbl">Net Distributable:</span>
+        <span class="val" id="kpiNetDistributable">0 kg</span>
+      </div>
+      <div class="kpi-pill">
+        <span class="lbl">Total Mandays:</span>
+        <span class="val" id="kpiTotalMandays">0.0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Workspace -->
+  <main class="main-container">
+
+    <!-- ==========================================
+         MODULE 1: PERSONNEL MASTER & CSV MANAGEMENT
+         ========================================== -->
+    <section id="module-1" class="module-panel active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined">upload_file</span>
+            Master Worker Roster & CSV Management
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input type="file" id="csvFileInput" accept=".csv,.xlsx,.xls" style="display: none;">
+            <button class="btn btn-secondary" id="btnTriggerCsvUpload">
+              <span class="material-symbols-outlined">file_upload</span> Upload Roster (.CSV / .XLSX)
+            </button>
+            <button class="btn btn-secondary" id="btnDownloadSampleCsv">
+              <span class="material-symbols-outlined">download</span> Sample CSV Template
+            </button>
+            <button class="btn btn-primary" id="btnExportMasterCsv">
+              <span class="material-symbols-outlined">file_download</span> Export Cleaned Master (.CSV)
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Quick Add Worker Bar -->
+          <form id="quickAddWorkerForm" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; background: var(--bg-subtle); padding: 10px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 14px;">
+            <div class="field-group">
+              <label for="newWorkerRole">Role</label>
+              <select id="newWorkerRole" required style="width: 145px;">
+                <option value="Cutter">Cutter (H)</option>
+                <option value="Carrier">Carrier (FC)</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="newWorkerCode">Code No</label>
+              <input type="text" id="newWorkerCode" placeholder="e.g. H-109" required style="width: 120px;">
+            </div>
+            <div class="field-group" style="flex: 1; min-width: 180px;">
+              <label for="newWorkerName">Worker Full Name</label>
+              <input type="text" id="newWorkerName" placeholder="Enter worker name" required style="width: 100%;">
+            </div>
+            <div class="field-group">
+              <label for="newWorkerField">Field Code</label>
+              <input type="text" id="newWorkerField" placeholder="e.g. F-98A" style="width: 110px;">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <span class="material-symbols-outlined">person_add</span> Add Worker
+            </button>
+          </form>
+
+          <!-- Filter & Search Controls -->
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+            <div class="norm-switch" id="rosterRoleFilterGroup">
+              <button type="button" class="norm-btn active" data-filter="ALL">All Workers (<span id="countAllWorkers">0</span>)</button>
+              <button type="button" class="norm-btn" data-filter="Cutter">Cutters - H (<span id="countCutters">0</span>)</button>
+              <button type="button" class="norm-btn" data-filter="Carrier">Carriers - FC (<span id="countCarriers">0</span>)</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="text" id="rosterSearchInput" placeholder="Search by Code No, Name, or Field..." style="width: 260px;">
+            </div>
+          </div>
+
+          <!-- Editable Roster Table -->
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">Sl</th>
+                  <th style="width: 130px;">Role</th>
+                  <th style="width: 130px;">Code No</th>
+                  <th>Worker Name (Inline Editable)</th>
+                  <th style="width: 140px;">Field Code</th>
+                  <th style="width: 100px; text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="rosterTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MODULE 2: CUTTER GROUP ENTRY & FIELD BALANCE
+         ========================================== -->
+    <section id="module-2" class="module-panel">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined">agriculture</span>
+            Cutter Harvest Groups & Field Balance Allocation
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="cutterGridSearch" placeholder="Filter cutters by name or code..." style="width: 230px;">
+            <select id="cutterStatusFilter" style="width: 160px;">
+              <option value="ALL">All Statuses</option>
+              <option value="CONFIGURED">Configured Groups</option>
+              <option value="PENDING">Pending Setup</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="cutterSelectionGrid" class="cutter-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MODULE 3: LIVE ANALYTICAL MATRICES & ADJUSTMENTS
+         ========================================== -->
+    <section id="module-3" class="module-panel">
+      <!-- 3A. Cutter-Carrier Allocation Matrix -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined">pivot_table_chart</span>
+            Cutter–Carrier Allocation Matrix (Live Cross-Tabulation in kg)
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted);">
+            Rows: Active Cutters | Columns: Cutter Own Share + Individual Carrier Shares = Group Net Distributable Qty
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap" id="allocationMatrixContainer"></div>
+        </div>
+      </div>
+
+      <!-- 3B. Manual Cross-Worker Adjustment Tool -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined">swap_horiz</span>
+            Manual Cross-Worker Yield Adjustment Tool (Zero-Sum Estate Transfer)
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted);">
+            Transfer harvested kg between workers to normalize minor shortfalls/wage cuts while keeping Estate Grand Total constant.
+          </div>
+        </div>
+        <div class="card-body">
+          <form id="transferAdjustmentForm" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; background: var(--bg-subtle); padding: 10px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px;">
+            <div class="field-group" style="flex: 1; min-width: 190px;">
+              <label for="adjFromWorker">Transfer From (Donor Worker)</label>
+              <select id="adjFromWorker" required style="width: 100%;"></select>
+            </div>
+            <div class="field-group" style="flex: 1; min-width: 190px;">
+              <label for="adjToWorker">Transfer To (Recipient Worker)</label>
+              <select id="adjToWorker" required style="width: 100%;"></select>
+            </div>
+            <div class="field-group">
+              <label for="adjQtyKg">Transfer Qty (kg)</label>
+              <input type="number" id="adjQtyKg" step="1" min="1" placeholder="e.g. 15" required style="width: 120px;">
+            </div>
+            <div class="field-group" style="flex: 1; min-width: 160px;">
+              <label for="adjNote">Reason / Remark</label>
+              <input type="text" id="adjNote" placeholder="Shortfall normalization" style="width: 100%;">
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <span class="material-symbols-outlined">add_task</span> Apply Transfer
+            </button>
+          </form>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>From Worker (Deducted -kg)</th>
+                  <th>To Worker (Credited +kg)</th>
+                  <th style="width: 130px; text-align: right;">Quantity (kg)</th>
+                  <th>Remark</th>
+                  <th style="width: 90px; text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adjustmentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3C. Flattened Attendance & Balance Summary -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined">analytics</span>
+            Flattened Attendance & Target Balance Summary
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted);">
+            Active Norm: <strong id="lblSummaryNorm">250 kg / manday</strong>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 95px;">Code No</th>
+                  <th>Worker Name</th>
+                  <th style="width: 110px;">Role</th>
+                  <th style="width: 115px; text-align: right;">Total Att (Days)</th>
+                  <th style="width: 130px; text-align: right;">Target Qty (Att×Norm)</th>
+                  <th style="width: 130px; text-align: right;">Matrix Acquired (kg)</th>
+                  <th style="width: 125px; text-align: right;">Manual Adj (kg)</th>
+                  <th style="width: 135px; text-align: right;">Final Qty Harvested</th>
+                  <th style="width: 135px; text-align: right;">Net Balance (Harvested - Target)</th>
+                </tr>
+              </thead>
+              <tbody id="flattenedSummaryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MODULE 4: FINAL SUBMISSION CHART & EXPORTS
+         ========================================== -->
+    <section id="module-4" class="module-panel">
+      <div class="card">
+        <div class="card-header no-print">
+          <div class="card-title">
+            <span class="material-symbols-outlined">description</span>
+            Formal Check-Roll Submission Register & Estate Reconciliation Summary
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="btnExportExcel">
+              <span class="material-symbols-outlined">table_view</span> Download Multi-Sheet Excel (.XLSX)
+            </button>
+            <button class="btn btn-accent" id="btnExportPdf">
+              <span class="material-symbols-outlined">picture_as_pdf</span> Export Submission PDF
+            </button>
+            <button class="btn btn-secondary" id="btnPrintReport">
+              <span class="material-symbols-outlined">print</span> Print Register
+            </button>
+          </div>
+        </div>
+
+        <!-- Printable / PDF Report Wrapper -->
+        <div class="card-body" id="printableReportArea" style="background: #ffffff; padding: 18px;">
+          <!-- Formal Report Header -->
+          <div style="border-bottom: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <div style="font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em;" id="repHeaderEstate">ESTATE NAME</div>
+              <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
+                OIL PALM HARVEST ALLOCATION, CHECK-ROLL QUOTA & WAGE RECONCILIATION REGISTER
+              </div>
+            </div>
+            <div style="display: flex; gap: 18px; font-size: 12px; font-family: var(--font-mono);">
+              <div><strong>Division:</strong> <span id="repHeaderDiv">-</span></div>
+              <div><strong>Field No:</strong> <span id="repHeaderField">-</span></div>
+              <div><strong>Period:</strong> <span id="repHeaderMonth">-</span></div>
+              <div><strong>Norm:</strong> <span id="repHeaderNorm">-</span></div>
+            </div>
+          </div>
+
+          <!-- Main Submission Register Table -->
+          <div class="table-wrap">
+            <table class="data-table" id="finalSubmissionTable">
+              <thead>
+                <tr>
+                  <th rowspan="2" style="width: 42px; text-align: center;">Sl No</th>
+                  <th rowspan="2" style="width: 85px;">Code No</th>
+                  <th rowspan="2">Name of Worker</th>
+                  <th rowspan="2" style="width: 105px; text-align: right;">Total Qty Harvested (kg)</th>
+                  <th colspan="2" style="text-align: center;">Mandays</th>
+                  <th colspan="2" style="text-align: center;">Check-Roll Quantity (kg)</th>
+                  <th colspan="3" style="text-align: center;">Incentive Qty (kg)</th>
+                  <th rowspan="2" style="width: 95px; text-align: right;">Wage Cut Shortfall (kg)</th>
+                </tr>
+                <tr>
+                  <th style="width: 72px; text-align: right;">500<br><span style="font-size:9px; font-weight:500;">(250 Norm)</span></th>
+                  <th style="width: 72px; text-align: right;">1000<br><span style="font-size:9px; font-weight:500;">(500 Norm)</span></th>
+                  <th style="width: 88px; text-align: right;">Qty 500<br><span style="font-size:9px; font-weight:500;">(Capped)</span></th>
+                  <th style="width: 88px; text-align: right;">Qty 1000<br><span style="font-size:9px; font-weight:500;">(Capped)</span></th>
+                  <th style="width: 78px; text-align: right;">Inc I<br><span style="font-size:9px; font-weight:500;">(Cutter)</span></th>
+                  <th style="width: 78px; text-align: right;">Inc II<br><span style="font-size:9px; font-weight:500;">(Carrier)</span></th>
+                  <th style="width: 88px; text-align: right;">Total Incentive</th>
+                </tr>
+              </thead>
+              <tbody id="finalSubmissionBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Estate Reconciliation Summary Block -->
+          <div class="recon-grid">
+            <!-- Block 1: Attendance & Wage Reconciliation -->
+            <div class="recon-box">
+              <div class="recon-box-title">1. Attendance & Check-Roll Reconciliation</div>
+              <table class="recon-table">
+                <tbody>
+                  <tr>
+                    <td>Cutter (Mandays)</td>
+                    <td class="num" id="recCutterMandays">0.00</td>
+                  </tr>
+                  <tr>
+                    <td>Carrier (Mandays)</td>
+                    <td class="num" id="recCarrierMandays">0.00</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>Total (Mandays)</td>
+                    <td class="num" id="recTotalMandays">0.00</td>
+                  </tr>
+                  <tr>
+                    <td>Attendance Qty (Check-Roll Capped Sum)</td>
+                    <td class="num" id="recAttendanceQty">0 kg</td>
+                  </tr>
+                  <tr>
+                    <td>Incentive Qty (Total Incentive Sum)</td>
+                    <td class="num" id="recIncentiveQty">0 kg</td>
+                  </tr>
+                  <tr>
+                    <td>Wage Cut (Shortfall Below Quota)</td>
+                    <td class="num" id="recWageCutQty" style="color: var(--danger); font-weight: 700;">0 kg</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>Net Harvest Accounted (Attendance Qty + Incentive)</td>
+                    <td class="num" id="recTotalHarvestedCheck">0 kg</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Block 2: Field Balance & Transport Reconciliation -->
+            <div class="recon-box">
+              <div class="recon-box-title">2. Field Balance & Transport Ledger Reconciliation</div>
+              <table class="recon-table">
+                <tbody>
+                  <tr>
+                    <td>Opening Balance (Sum of Prev Month FB Opening)</td>
+                    <td class="num" id="recOpeningBalance">0 kg</td>
+                  </tr>
+                  <tr>
+                    <td>Total Transported (Gross Transported Qty)</td>
+                    <td class="num" id="recTotalTransported">0 kg</td>
+                  </tr>
+                  <tr>
+                    <td>Closing Balance (Current Month FB Closing)</td>
+                    <td class="num" id="recClosingBalance">0 kg</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>Net Distributable Harvest (Transported - Opening + Closing)</td>
+                    <td class="num" id="recNetDistributable">0 kg</td>
+                  </tr>
+                  <tr>
+                    <td>Closing Balance Verification Formula:<br><span style="font-size: 10.5px; color: var(--text-muted); font-family: var(--font-mono);">Closing = (Att Qty + Incentive + Opening) - Transported</span></td>
+                    <td class="num" id="recClosingFormulaVerify" style="color: var(--primary); font-weight: 700;">Verified</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Official Signature Block -->
+          <div class="signature-grid">
+            <div class="sig-line">Prepared By: Field Supervisor / Kangany</div>
+            <div class="sig-line">Verified By: Field Officer / Check-Roll Clerk</div>
+            <div class="sig-line">Approved By: Assistant Manager / Estate Manager</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL 1: CUTTER GROUP ALLOCATION & FIELD BALANCE
+       ========================================== -->
+  <div class="modal-backdrop" id="groupAllocationModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="material-symbols-outlined">groups</span>
+          <span id="modalCutterHeaderTitle">Cutter Group Allocation</span>
+        </div>
+        <button class="modal-close" id="btnCloseGroupModal" title="Close without saving">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 1. Transported Quantity & Field Balance Ledger -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="font-size: 12px; text-transform: uppercase; color: var(--text-muted);">
+              A. Transported Quantity & Field Balance Ledger (Group-Level)
+            </strong>
+            <span style="font-size: 11px; color: var(--text-light);">
+              Formula: Net Distributable = Transported Qty − Opening FB + Closing FB
+            </span>
+          </div>
+
+          <div class="ledger-grid">
+            <div class="ledger-item">
+              <label for="modTransportedInput">Gross Transported Qty (kg)</label>
+              <input type="number" id="modTransportedInput" class="num" step="1" min="0" placeholder="0">
+              <span style="font-size: 10.5px; color: var(--text-light);" id="modTripHelperText">Direct entry or summed from trips/carriers</span>
+            </div>
+            <div class="ledger-item">
+              <label for="modTripLoadsInput">Trip Loads Quick-Sum (Optional)</label>
+              <input type="text" id="modTripLoadsInput" class="mono" placeholder="e.g. 1200+1450+980">
+              <span style="font-size: 10.5px; color: var(--text-light);">Type trip loads separated by + or ,</span>
+            </div>
+            <div class="ledger-item">
+              <label for="modOpeningFbInput">Prev Month / Opening FB (− kg)</label>
+              <input type="number" id="modOpeningFbInput" class="num" step="1" min="0" placeholder="0">
+              <span style="font-size: 10.5px; color: var(--text-light);">Deducted from Transported Qty</span>
+            </div>
+            <div class="ledger-item">
+              <label for="modClosingFbInput">Curr Month / Closing FB (+ kg)</label>
+              <input type="number" id="modClosingFbInput" class="num" step="1" min="0" placeholder="0">
+              <span style="font-size: 10.5px; color: var(--text-light);">Added to Distributable Pool</span>
+            </div>
+            <div class="ledger-net-box">
+              <span class="lbl">Net Distributable Qty</span>
+              <span class="val" id="modNetDistributableDisplay">0 kg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Distribution Controls & Cutter Row -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 4px; border-top: 1px solid var(--border-light);">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <label class="toggle-check">
+              <input type="checkbox" id="modAutoSplitCheckbox" checked>
+              <span>Auto-Split Proportional by Mandays</span>
+            </label>
+            <span class="badge badge-cutter" id="modRoundingRuleBadge">MROUND 5 Active</span>
+          </div>
+
+          <button type="button" class="btn btn-accent btn-sm" id="btnAddCarrierRow">
+            <span class="material-symbols-outlined">person_add</span> Add Carrier to Group
+          </button>
+        </div>
+
+        <!-- 3. Group Members Table (Cutter + Assigned Carriers) -->
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 90px;">Role</th>
+                <th>Worker (Code & Name)</th>
+                <th style="width: 135px; text-align: right;">Attendance (Mandays)</th>
+                <th style="width: 145px; text-align: right;">Carrier Transported (kg)<br><span style="font-size:9px; font-weight:400;">(Optional load log)</span></th>
+                <th style="width: 110px; text-align: center;">Lock to Formula</th>
+                <th style="width: 145px; text-align: right;">Allocated Share (kg)</th>
+                <th style="width: 60px; text-align: center;">Del</th>
+              </tr>
+            </thead>
+            <tbody id="modalGroupMembersBody"></tbody>
+            <tfoot>
+              <tr class="subtotal-row">
+                <td colspan="2">Group Totals</td>
+                <td class="num" id="modTotalMandaysCell">0.0</td>
+                <td class="num" id="modTotalCarrierTransCell">0 kg</td>
+                <td style="text-align: center;" id="modDiffStatusCell">-</td>
+                <td class="num" id="modTotalAllocatedCell">0 kg</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div id="modalValidationMsg" style="font-size: 12px; font-weight: 600; color: var(--text-muted);">
+          Ensure Allocated Total equals Net Distributable Qty before saving.
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-secondary" id="btnCancelGroupModal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btnSaveGroupModal">
+            <span class="material-symbols-outlined">check_circle</span> Save Group Allocation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL 2: PROTECTED "CLEAR & EXIT" WORKFLOW
+       ========================================== -->
+  <div class="modal-backdrop" id="clearConfirmModal">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header" style="background: var(--danger);">
+        <div class="modal-title">
+          <span class="material-symbols-outlined">warning</span>
+          Protected Reset: Clear All Workspace Data
+        </div>
+        <button class="modal-close" id="btnCloseClearModal">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">
+          This action will permanently erase all locally saved <strong>worker rosters, cutter group allocations, field balances, and manual adjustments</strong> from your browser storage.
+        </p>
+        <div class="field-group" style="margin-top: 6px;">
+          <label for="clearConfirmInput" style="color: var(--danger);">Type <strong>CLEAR</strong> below to unlock confirmation:</label>
+          <input type="text" id="clearConfirmInput" placeholder="Type CLEAR" autocomplete="off" style="font-family: var(--font-mono); font-weight: 700; text-transform: uppercase;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="btnCancelClearModal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="btnExecuteClear" disabled>
+          <span class="material-symbols-outlined">delete_forever</span> Confirm & Clear
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ==========================================
+       APPLICATION JAVASCRIPT
+       ========================================== -->
+  <script>
+    const STORAGE_KEY = 'OIL_PALM_HARVEST_RECON_STATE_V1';
+    let allowUnprotectedUnload = false;
+
+    // Default Clean State Factory
+    function createEmptyState() {
+      return {
+        meta: {
+          estateName: '',
+          division: '',
+          fieldNo: '',
+          monthYear: new Date().toISOString().slice(0, 7),
+          norm: 250,          // 250 (Off-Season) or 500 (Peak Season)
+          roundMultiple5: true // Global toggle for MROUND(share, 5)
+        },
+        roster: [],
+        cutterGroups: {},
+        adjustments: []
+      };
+    }
+
+    // Realistic Sample Estate Dataset for Immediate Evaluation & Testing
+    function createSampleEstateState() {
+      return {
+        meta: {
+          estateName: 'Bharatheepuram Oil Palm Estate',
+          division: 'Division II - North Block',
+          fieldNo: 'FD-2014B',
+          monthYear: '2026-11',
+          norm: 250,
+          roundMultiple5: true
+        },
+        roster: [
+          { id: 'w_h1', role: 'Cutter', code: 'H-101', name: 'Rajan Pillai', fieldCode: 'FD-14B' },
+          { id: 'w_h2', role: 'Cutter', code: 'H-102', name: 'Suresh Kumar K', fieldCode: 'FD-14B' },
+          { id: 'w_h3', role: 'Cutter', code: 'H-103', name: 'Babuchan V', fieldCode: 'FD-14B' },
+          { id: 'w_h4', role: 'Cutter', code: 'H-104', name: 'Murugan S', fieldCode: 'FD-14B' },
+          { id: 'w_fc1', role: 'Carrier', code: 'FC-201', name: 'Santha Kumari', fieldCode: 'FD-14B' },
+          { id: 'w_fc2', role: 'Carrier', code: 'FC-202', name: 'Latha Nair', fieldCode: 'FD-14B' },
+          { id: 'w_fc3', role: 'Carrier', code: 'FC-203', name: 'Geetha Devi', fieldCode: 'FD-14B' },
+          { id: 'w_fc4', role: 'Carrier', code: 'FC-204', name: 'Mini Mol P', fieldCode: 'FD-14B' },
+          { id: 'w_fc5', role: 'Carrier', code: 'FC-205', name: 'Usha Rani', fieldCode: 'FD-14B' },
+          { id: 'w_fc6', role: 'Carrier', code: 'FC-206', name: 'Bindu Thomas', fieldCode: 'FD-14B' }
+        ],
+        cutterGroups: {
+          'w_h1': {
+            cutterId: 'w_h1',
+            configured: true,
+            transportedQty: 8650,
+            tripLoadsText: '2900+3100+2650',
+            openingFB: 450,
+            closingFB: 620,
+            cutterMandays: 12,
+            autoSplit: true,
+            cutterLocked: true,
+            cutterShare: 3630,
+            carriers: [
+              { carrierId: 'w_fc1', mandays: 10, transportedQty: 0, locked: true, share: 3025 },
+              { carrierId: 'w_fc2', mandays: 7.5, transportedQty: 0, locked: true, share: 2165 }
+            ]
+          },
+          'w_h2': {
+            cutterId: 'w_h2',
+            configured: true,
+            transportedQty: 7400,
+            tripLoadsText: '',
+            openingFB: 300,
+            closingFB: 280,
+            cutterMandays: 11,
+            autoSplit: true,
+            cutterLocked: true,
+            cutterShare: 3115,
+            carriers: [
+              { carrierId: 'w_fc3', mandays: 11, transportedQty: 0, locked: true, share: 3115 },
+              { carrierId: 'w_fc2', mandays: 4, transportedQty: 0, locked: true, share: 1150 }
+            ]
+          },
+          'w_h3': {
+            cutterId: 'w_h3',
+            configured: true,
+            transportedQty: 6120,
+            tripLoadsText: '',
+            openingFB: 220,
+            closingFB: 400,
+            cutterMandays: 10,
+            autoSplit: true,
+            cutterLocked: true,
+            cutterShare: 2425,
+            carriers: [
+              { carrierId: 'w_fc4', mandays: 9, transportedQty: 0, locked: true, share: 2180 },
+              { carrierId: 'w_fc5', mandays: 7, transportedQty: 0, locked: true, share: 1695 }
+            ]
+          },
+          'w_h4': {
+            cutterId: 'w_h4',
+            configured: false,
+            transportedQty: 0,
+            tripLoadsText: '',
+            openingFB: 0,
+            closingFB: 0,
+            cutterMandays: 0,
+            autoSplit: true,
+            cutterLocked: true,
+            cutterShare: 0,
+            carriers: []
+          }
+        },
+        adjustments: [
+          {
+            id: 'adj_1',
+            fromId: 'w_fc4',
+            toId: 'w_fc5',
+            qty: 55,
+            note: 'Shortfall normalization to avoid wage cut on FC-205'
+          }
+        ]
+      };
+    }
+
+    let appState = createEmptyState();
+    let rosterRoleFilter = 'ALL';
+    let activeModalCutterId = null;
+    let modalDraftGroup = null;
+
+    // ==========================================
+    // INITIALIZATION & PERSISTENCE
+    // ==========================================
+    function initApp() {
+      const rawSaved = localStorage.getItem(STORAGE_KEY);
+      if (rawSaved) {
+        try {
+          const parsed = JSON.parse(rawSaved);
+          appState = Object.assign(createEmptyState(), parsed);
+          appState.meta = Object.assign(createEmptyState().meta, parsed.meta || {});
+        } catch (err) {
+          console.error('Failed to parse saved state, loading sample estate:', err);
+          appState = createSampleEstateState();
+        }
+      } else {
+        // Pre-populate with sample estate data on first visit so user sees a rich working setup immediately
+        appState = createSampleEstateState();
+        saveStateToLocal(false);
+      }
+
+      recalculateAllGroupsInState();
+      bindEvents();
+      renderAll();
+    }
+
+    function hasActiveWorkspaceData() {
+      if (appState.roster.length > 0) return true;
+      if (appState.adjustments.length > 0) return true;
+      if (appState.meta.estateName || appState.meta.division || appState.meta.fieldNo) return true;
+      return false;
+    }
+
+    // Reload / Tab Close Confirmation Guard
+    window.addEventListener('beforeunload', (e) => {
+      if (!allowUnprotectedUnload && hasActiveWorkspaceData()) {
+        e.preventDefault();
+        e.returnValue = 'Are you sure you want to leave or reload? Active harvest workspace data exists.';
+        return e.returnValue;
+      }
+    });
+
+    function saveStateToLocal(showIndicator = true) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        if (showIndicator) {
+          const txt = document.getElementById('saveStatusText');
+          const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          txt.textContent = `Saved locally (${timeStr})`;
+        }
+      } catch (err) {
+        console.error('Error saving to localStorage:', err);
+      }
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span class="material-symbols-outlined" style="color:#4ade80;">check_circle</span><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // ==========================================
+    // CORE ESTATE ROUNDING & DISTRIBUTION ENGINE
+    // ==========================================
+    function roundShare(val, useRound5) {
+      if (!Number.isFinite(val)) return 0;
+      if (useRound5) {
+        return Math.round(val / 5) * 5;
+      }
+      return Math.round(val);
+    }
+
+    function computeNetDistributable(group) {
+      const trans = Number(group.transportedQty) || 0;
+      const openFb = Number(group.openingFB) || 0;
+      const closeFb = Number(group.closingFB) || 0;
+      return Math.round(trans - openFb + closeFb);
+    }
+
+    function distributeGroupShares(group, useRound5) {
+      const netQty = computeNetDistributable(group);
+      const cutterAtt = Math.max(0, Number(group.cutterMandays) || 0);
+      const carriers = group.carriers || [];
+
+      if (!group.autoSplit) {
+        // Even if autoSplit is off, if cutter is locked to formula, cutter absorbs residual
+        if (group.cutterLocked !== false) {
+          const sumCarriers = carriers.reduce((acc, c) => acc + (Number(c.share) || 0), 0);
+          group.cutterShare = netQty - sumCarriers;
+        }
+        return;
+      }
+
+      // Sum locked vs unlocked shares
+      let manualLockedTotal = 0;
+      let unlockedMandays = 0;
+
+      if (group.cutterLocked === false) {
+        manualLockedTotal += (Number(group.cutterShare) || 0);
+      } else {
+        unlockedMandays += cutterAtt;
+      }
+
+      carriers.forEach(c => {
+        const att = Math.max(0, Number(c.mandays) || 0);
+        if (c.locked === false) {
+          manualLockedTotal += (Number(c.share) || 0);
+        } else {
+          unlockedMandays += att;
+        }
+      });
+
+      const remainingPool = netQty - manualLockedTotal;
+
+      if (unlockedMandays <= 0) {
+        carriers.forEach(c => {
+          if (c.locked !== false) c.share = 0;
+        });
+        if (group.cutterLocked !== false) {
+          group.cutterShare = remainingPool;
+        }
+        return;
+      }
+
+      // First calculate locked (formula-driven) carriers with MROUND(share, 5) or integer rounding
+      let allocatedToUnlockedCarriers = 0;
+      const unlockedCarriers = carriers.filter(c => c.locked !== false);
+
+      unlockedCarriers.forEach((c, idx) => {
+        const att = Math.max(0, Number(c.mandays) || 0);
+        if (group.cutterLocked === false && idx === unlockedCarriers.length - 1) {
+          // If cutter is manually overridden, last unlocked carrier absorbs residual so sum = netQty
+          c.share = remainingPool - allocatedToUnlockedCarriers;
+        } else {
+          const rawShare = remainingPool * (att / unlockedMandays);
+          c.share = roundShare(rawShare, useRound5);
+          allocatedToUnlockedCarriers += c.share;
+        }
+      });
+
+      // Cutter's Own Share absorbs any rounding residual: NetQty - SUM(Carrier Shares)
+      if (group.cutterLocked !== false) {
+        const totalCarrierShares = carriers.reduce((acc, c) => acc + (Number(c.share) || 0), 0);
+        group.cutterShare = netQty - totalCarrierShares;
+      }
+    }
+
+    function recalculateAllGroupsInState() {
+      const useRound5 = !!appState.meta.roundMultiple5;
+      // Ensure every cutter in roster has a group entry
+      const cutters = appState.roster.filter(w => w.role === 'Cutter');
+      cutters.forEach(cutter => {
+        if (!appState.cutterGroups[cutter.id]) {
+          appState.cutterGroups[cutter.id] = {
+            cutterId: cutter.id,
+            configured: false,
+            transportedQty: 0,
+            tripLoadsText: '',
+            openingFB: 0,
+            closingFB: 0,
+            cutterMandays: 0,
+            autoSplit: true,
+            cutterLocked: true,
+            cutterShare: 0,
+            carriers: []
+          };
+        } else {
+          // Prune deleted carriers
+          appState.cutterGroups[cutter.id].carriers = (appState.cutterGroups[cutter.id].carriers || []).filter(
+            c => appState.roster.some(w => w.id === c.carrierId && w.role === 'Carrier')
+          );
+          if (appState.cutterGroups[cutter.id].configured) {
+            distributeGroupShares(appState.cutterGroups[cutter.id], useRound5);
+          }
+        }
+      });
+    }
+
+    // ==========================================
+    // ANALYTICAL ENGINE (AGGREGATION FOR MOD 3 & 4)
+    // ==========================================
+    function computeEstateAnalytics() {
+      const norm = Number(appState.meta.norm) || 250;
+      const cutters = appState.roster.filter(w => w.role === 'Cutter');
+      const carriers = appState.roster.filter(w => w.role === 'Carrier');
+
+      // Worker stats map
+      const workerMap = {};
+      appState.roster.forEach(w => {
+        workerMap[w.id] = {
+          id: w.id,
+          code: w.code,
+          name: w.name,
+          role: w.role,
+          fieldCode: w.fieldCode || '',
+          mandays: 0,
+          matrixQty: 0,
+          adjQty: 0,
+          finalHarvestedQty: 0,
+          targetQty: 0,
+          netBalance: 0,
+          cappedCheckRollQty: 0,
+          incentiveQty: 0,
+          wageCutQty: 0
+        };
+      });
+
+      let totalTransported = 0;
+      let totalOpeningFB = 0;
+      let totalClosingFB = 0;
+      let totalNetDistributable = 0;
+
+      // Matrix rows
+      const matrixRows = [];
+      const carrierColTotals = {};
+      carriers.forEach(fc => { carrierColTotals[fc.id] = 0; });
+      let totalCutterOwnShare = 0;
+
+      cutters.forEach(cutter => {
+        const grp = appState.cutterGroups[cutter.id];
+        const isConfigured = grp && grp.configured;
+        const trans = isConfigured ? (Number(grp.transportedQty) || 0) : 0;
+        const openFb = isConfigured ? (Number(grp.openingFB) || 0) : 0;
+        const closeFb = isConfigured ? (Number(grp.closingFB) || 0) : 0;
+        const netDist = isConfigured ? computeNetDistributable(grp) : 0;
+        const cAtt = isConfigured ? (Number(grp.cutterMandays) || 0) : 0;
+        const cOwn = isConfigured ? (Number(grp.cutterShare) || 0) : 0;
+
+        totalTransported += trans;
+        totalOpeningFB += openFb;
+        totalClosingFB += closeFb;
+        totalNetDistributable += netDist;
+        totalCutterOwnShare += cOwn;
+
+        if (workerMap[cutter.id]) {
+          workerMap[cutter.id].mandays += cAtt;
+          workerMap[cutter.id].matrixQty += cOwn;
+        }
+
+        const carrierCells = {};
+        carriers.forEach(fc => { carrierCells[fc.id] = 0; });
+
+        if (isConfigured && Array.isArray(grp.carriers)) {
+          grp.carriers.forEach(ass => {
+            const fcId = ass.carrierId;
+            const fcAtt = Number(ass.mandays) || 0;
+            const fcShare = Number(ass.share) || 0;
+            if (workerMap[fcId]) {
+              workerMap[fcId].mandays += fcAtt;
+              workerMap[fcId].matrixQty += fcShare;
+            }
+            if (carrierCells[fcId] !== undefined) {
+              carrierCells[fcId] += fcShare;
+              carrierColTotals[fcId] += fcShare;
+            }
+          });
+        }
+
+        matrixRows.push({
+          cutter,
+          configured: isConfigured,
+          ownShare: cOwn,
+          carrierCells,
+          rowTotal: netDist
+        });
+      });
+
+      // Apply Manual Adjustments
+      appState.adjustments.forEach(adj => {
+        const qty = Number(adj.qty) || 0;
+        if (workerMap[adj.fromId]) workerMap[adj.fromId].adjQty -= qty;
+        if (workerMap[adj.toId]) workerMap[adj.toId].adjQty += qty;
+      });
+
+      // Compute final targets, check-roll caps, incentives, and wage cuts
+      Object.values(workerMap).forEach(w => {
+        w.finalHarvestedQty = w.matrixQty + w.adjQty;
+        w.targetQty = Math.round(w.mandays * norm);
+        w.netBalance = w.finalHarvestedQty - w.targetQty;
+        w.cappedCheckRollQty = Math.min(w.finalHarvestedQty, w.targetQty);
+        w.incentiveQty = Math.max(0, w.finalHarvestedQty - w.targetQty);
+        w.wageCutQty = Math.max(0, w.targetQty - w.finalHarvestedQty);
+      });
+
+      const cutterSummaries = cutters.map(c => workerMap[c.id]);
+      const carrierSummaries = carriers.map(fc => workerMap[fc.id]);
+
+      const sumFields = (arr) => arr.reduce((acc, item) => {
+        acc.mandays += item.mandays;
+        acc.targetQty += item.targetQty;
+        acc.matrixQty += item.matrixQty;
+        acc.adjQty += item.adjQty;
+        acc.finalHarvestedQty += item.finalHarvestedQty;
+        acc.netBalance += item.netBalance;
+        acc.cappedCheckRollQty += item.cappedCheckRollQty;
+        acc.incentiveQty += item.incentiveQty;
+        acc.wageCutQty += item.wageCutQty;
+        return acc;
+      }, {
+        mandays: 0, targetQty: 0, matrixQty: 0, adjQty: 0,
+        finalHarvestedQty: 0, netBalance: 0, cappedCheckRollQty: 0,
+        incentiveQty: 0, wageCutQty: 0
+      });
+
+      const cutterTotals = sumFields(cutterSummaries);
+      const carrierTotals = sumFields(carrierSummaries);
+      const grandTotals = sumFields([...cutterSummaries, ...carrierSummaries]);
+
+      return {
+        norm,
+        cutters,
+        carriers,
+        matrixRows,
+        totalCutterOwnShare,
+        carrierColTotals,
+        cutterSummaries,
+        carrierSummaries,
+        cutterTotals,
+        carrierTotals,
+        grandTotals,
+        totalTransported,
+        totalOpeningFB,
+        totalClosingFB,
+        totalNetDistributable
+      };
+    }
+
+    // ==========================================
+    // UI RENDERING FUNCTIONS
+    // ==========================================
+    function renderAll() {
+      recalculateAllGroupsInState();
+      const analytics = computeEstateAnalytics();
+
+      // Sync Global Bar Inputs
+      document.getElementById('metaEstate').value = appState.meta.estateName || '';
+      document.getElementById('metaDivision').value = appState.meta.division || '';
+      document.getElementById('metaField').value = appState.meta.fieldNo || '';
+      document.getElementById('metaMonth').value = appState.meta.monthYear || '';
+
+      document.getElementById('normBtn250').classList.toggle('active', Number(appState.meta.norm) === 250);
+      document.getElementById('normBtn500').classList.toggle('active', Number(appState.meta.norm) === 500);
+      document.getElementById('toggleRound5').checked = !!appState.meta.roundMultiple5;
+
+      // Top KPI Strip
+      document.getElementById('kpiRosterCount').textContent = `${analytics.cutters.length} H / ${analytics.carriers.length} FC`;
+      document.getElementById('kpiTransported').textContent = `${analytics.totalTransported.toLocaleString()} kg`;
+      document.getElementById('kpiNetDistributable').textContent = `${analytics.totalNetDistributable.toLocaleString()} kg`;
+      document.getElementById('kpiTotalMandays').textContent = analytics.grandTotals.mandays.toFixed(1);
+
+      renderModule1Roster(analytics);
+      renderModule2CutterGrid(analytics);
+      renderModule3Matrices(analytics);
+      renderModule4Submission(analytics);
+    }
+
+    // MODULE 1: Roster Table
+    function renderModule1Roster(analytics) {
+      document.getElementById('countAllWorkers').textContent = appState.roster.length;
+      document.getElementById('countCutters').textContent = analytics.cutters.length;
+      document.getElementById('countCarriers').textContent = analytics.carriers.length;
+
+      const searchQ = (document.getElementById('rosterSearchInput').value || '').trim().toLowerCase();
+      const tbody = document.getElementById('rosterTableBody');
+      tbody.innerHTML = '';
+
+      const filtered = appState.roster.filter(w => {
+        if (rosterRoleFilter !== 'ALL' && w.role !== rosterRoleFilter) return false;
+        if (!searchQ) return true;
+        return (
+          w.code.toLowerCase().includes(searchQ) ||
+          w.name.toLowerCase().includes(searchQ) ||
+          (w.fieldCode || '').toLowerCase().includes(searchQ)
+        );
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 18px; color: var(--text-muted);">No workers match the current filter. Add a worker above or upload a CSV roster.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach((w, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="mono">${idx + 1}</td>
+          <td>
+            <select class="inline-input" data-action="edit-worker" data-id="${w.id}" data-field="role">
+              <option value="Cutter" ${w.role === 'Cutter' ? 'selected' : ''}>Cutter (H)</option>
+              <option value="Carrier" ${w.role === 'Carrier' ? 'selected' : ''}>Carrier (FC)</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" class="inline-input mono" value="${escapeHtml(w.code)}" data-action="edit-worker" data-id="${w.id}" data-field="code">
+          </td>
+          <td>
+            <input type="text" class="inline-input" value="${escapeHtml(w.name)}" data-action="edit-worker" data-id="${w.id}" data-field="name">
+          </td>
+          <td>
+            <input type="text" class="inline-input mono" value="${escapeHtml(w.fieldCode || '')}" data-action="edit-worker" data-id="${w.id}" data-field="fieldCode">
+          </td>
+          <td style="text-align: center;">
+            <button type="button" class="btn btn-secondary btn-sm" data-action="delete-worker" data-id="${w.id}" title="Remove worker" style="color: var(--danger);">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // MODULE 2: Cutter Cards Grid
+    function renderModule2CutterGrid(analytics) {
+      const container = document.getElementById('cutterSelectionGrid');
+      const searchQ = (document.getElementById('cutterGridSearch').value || '').trim().toLowerCase();
+      const statusFilter = document.getElementById('cutterStatusFilter').value;
+
+      container.innerHTML = '';
+
+      const filteredCutters = analytics.cutters.filter(cutter => {
+        const grp = appState.cutterGroups[cutter.id] || {};
+        const isConf = !!grp.configured;
+        if (statusFilter === 'CONFIGURED' && !isConf) return false;
+        if (statusFilter === 'PENDING' && isConf) return false;
+        if (searchQ) {
+          return cutter.code.toLowerCase().includes(searchQ) || cutter.name.toLowerCase().includes(searchQ);
+        }
+        return true;
+      });
+
+      if (filteredCutters.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; padding: 24px; text-align: center; color: var(--text-muted); background: #fff; border: 1px dashed var(--border); border-radius: var(--radius);">No Cutters found matching criteria.</div>`;
+        return;
+      }
+
+      filteredCutters.forEach(cutter => {
+        const grp = appState.cutterGroups[cutter.id] || {};
+        const isConf = !!grp.configured;
+        const netDist = isConf ? computeNetDistributable(grp) : 0;
+        const carrierList = grp.carriers || [];
+        const totalGroupMandays = isConf
+          ? (Number(grp.cutterMandays) || 0) + carrierList.reduce((acc, c) => acc + (Number(c.mandays) || 0), 0)
+          : 0;
+
+        const card = document.createElement('div');
+        card.className = `cutter-card ${isConf ? 'configured' : 'pending'}`;
+        card.setAttribute('data-cutter-id', cutter.id);
+
+        const carrierChipsHtml = carrierList.length > 0
+          ? carrierList.map(c => {
+              const fcObj = appState.roster.find(w => w.id === c.carrierId);
+              const label = fcObj ? `${fcObj.code} (${c.Share || c.share || 0}kg)` : c.carrierId;
+              return `<span class="carrier-chip">${escapeHtml(label)}</span>`;
+            }).join('')
+          : `<span style="font-size: 11px; color: var(--text-light);">No carriers assigned yet</span>`;
+
+        card.innerHTML = `
+          <div class="cutter-card-top">
+            <div>
+              <span class="cutter-code">${escapeHtml(cutter.code)}</span>
+              <div class="cutter-name">${escapeHtml(cutter.name)}</div>
+            </div>
+            <span class="badge ${isConf ? 'badge-configured' : 'badge-pending'}">
+              ${isConf ? 'Configured' : 'Pending'}
+            </span>
+          </div>
+
+          <div class="cutter-stats">
+            <div class="stat-box">
+              <span class="lbl">Transported</span>
+              <span class="val">${isConf ? Number(grp.transportedQty || 0).toLocaleString() : 0} kg</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Open / Close FB</span>
+              <span class="val">-${isConf ? (grp.openingFB || 0) : 0} / +${isConf ? (grp.closingFB || 0) : 0}</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Net Pool</span>
+              <span class="val" style="color: var(--primary);">${netDist.toLocaleString()} kg</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Cutter Own</span>
+              <span class="val">${isConf ? Number(grp.cutterShare || 0).toLocaleString() : 0} kg</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Group Att</span>
+              <span class="val">${totalGroupMandays.toFixed(1)} d</span>
+            </div>
+            <div class="stat-box">
+              <span class="lbl">Carriers</span>
+              <span class="val">${carrierList.length} FC</span>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <div class="carrier-chips">${carrierChipsHtml}</div>
+            <span class="material-symbols-outlined" style="color: var(--primary);">edit_square</span>
+          </div>
+        `;
+
+        card.addEventListener('click', () => openGroupAllocationModal(cutter.id));
+        container.appendChild(card);
+      });
+    }
+
+    // MODULE 3: Live Matrices & Adjustments
+    function renderModule3Matrices(analytics) {
+      document.getElementById('lblSummaryNorm').textContent = `${analytics.norm} kg / manday`;
+
+      // 3A. Cutter-Carrier Allocation Matrix
+      const matrixWrap = document.getElementById('allocationMatrixContainer');
+      const carriers = analytics.carriers;
+
+      let matrixHtml = `<table class="data-table"><thead><tr>
+        <th>Cutter (Code & Name)</th>
+        <th class="num">Own Share (kg)</th>`;
+
+      carriers.forEach(fc => {
+        matrixHtml += `<th class="num" title="${escapeHtml(fc.name)}">${escapeHtml(fc.code)}<br><span style="font-size:9.5px; font-weight:500;">${escapeHtml(fc.name.split(' ')[0])}</span></th>`;
+      });
+
+      matrixHtml += `<th class="num" style="background:#dcfce7; color:#166534;">Row Total (Net Pool)</th></tr></thead><tbody>`;
+
+      if (analytics.matrixRows.length === 0) {
+        matrixHtml += `<tr><td colspan="${carriers.length + 3}" style="text-align:center; padding:16px;">No Cutters available.</td></tr>`;
+      } else {
+        analytics.matrixRows.forEach(row => {
+          matrixHtml += `<tr>
+            <td><strong>${escapeHtml(row.cutter.code)}</strong> — ${escapeHtml(row.cutter.name)}</td>
+            <td class="num" style="font-weight:600;">${row.ownShare.toLocaleString()}</td>`;
+          carriers.forEach(fc => {
+            const val = row.carrierCells[fc.id] || 0;
+            matrixHtml += `<td class="num" style="${val > 0 ? 'font-weight:600; color:var(--accent);' : 'color:#cbd5e1;'}">${val > 0 ? val.toLocaleString() : '-'}</td>`;
+          });
+          matrixHtml += `<td class="num" style="font-weight:700; background:#f0fdf4;">${row.rowTotal.toLocaleString()}</td></tr>`;
+        });
+      }
+
+      // Bottom Column Totals Row
+      matrixHtml += `<tr class="grandtotal-row">
+        <td>Column Totals (Acquired in Matrix)</td>
+        <td class="num">${analytics.totalCutterOwnShare.toLocaleString()}</td>`;
+      carriers.forEach(fc => {
+        const colSum = analytics.carrierColTotals[fc.id] || 0;
+        matrixHtml += `<td class="num">${colSum.toLocaleString()}</td>`;
+      });
+      matrixHtml += `<td class="num" style="background:#bbf7d0; color:#14532d;">${analytics.totalNetDistributable.toLocaleString()}</td></tr></tbody></table>`;
+      matrixWrap.innerHTML = matrixHtml;
+
+      // 3B. Populate Transfer Dropdowns & Adjustment Table
+      const fromSel = document.getElementById('adjFromWorker');
+      const toSel = document.getElementById('adjToWorker');
+      const prevFrom = fromSel.value;
+      const prevTo = toSel.value;
+
+      const optionsHtml = appState.roster.map(w =>
+        `<option value="${w.id}">${escapeHtml(w.code)} - ${escapeHtml(w.name)} (${w.role})</option>`
+      ).join('');
+      fromSel.innerHTML = optionsHtml;
+      toSel.innerHTML = optionsHtml;
+      if (prevFrom && appState.roster.some(w => w.id === prevFrom)) fromSel.value = prevFrom;
+      if (prevTo && appState.roster.some(w => w.id === prevTo)) toSel.value = prevTo;
+
+      const adjBody = document.getElementById('adjustmentsTableBody');
+      adjBody.innerHTML = '';
+      if (appState.adjustments.length === 0) {
+        adjBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 12px;">No manual cross-worker transfers recorded.</td></tr>`;
+      } else {
+        appState.adjustments.forEach((adj, idx) => {
+          const fromW = appState.roster.find(w => w.id === adj.fromId);
+          const toW = appState.roster.find(w => w.id === adj.toId);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="mono">${idx + 1}</td>
+            <td><strong>${escapeHtml(fromW ? fromW.code : adj.fromId)}</strong> — ${escapeHtml(fromW ? fromW.name : '')}</td>
+            <td><strong>${escapeHtml(toW ? toW.code : adj.toId)}</strong> — ${escapeHtml(toW ? toW.name : '')}</td>
+            <td class="num" style="font-weight:700;">${Number(adj.qty).toLocaleString()} kg</td>
+            <td>${escapeHtml(adj.note || '-')}</td>
+            <td style="text-align:center;">
+              <button type="button" class="btn btn-secondary btn-sm" data-action="delete-adj" data-id="${adj.id}" style="color:var(--danger);">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          `;
+          adjBody.appendChild(tr);
+        });
+      }
+
+      // 3C. Flattened Attendance & Balance Summary
+      const flatBody = document.getElementById('flattenedSummaryBody');
+      flatBody.innerHTML = '';
+
+      const renderWorkerSummaryRow = (w) => {
+        const balColor = w.netBalance >= 0 ? 'var(--primary)' : 'var(--danger)';
+        const balPrefix = w.netBalance > 0 ? '+' : '';
+        return `<tr>
+          <td class="mono"><strong>${escapeHtml(w.code)}</strong></td>
+          <td>${escapeHtml(w.name)}</td>
+          <td><span class="badge ${w.role === 'Cutter' ? 'badge-cutter' : 'badge-carrier'}">${w.role}</span></td>
+          <td class="num">${w.mandays.toFixed(1)}</td>
+          <td class="num">${w.targetQty.toLocaleString()}</td>
+          <td class="num">${w.matrixQty.toLocaleString()}</td>
+          <td class="num" style="${w.adjQty !== 0 ? 'font-weight:700;' : 'color:var(--text-light);'}">${w.adjQty > 0 ? '+' + w.adjQty : w.adjQty}</td>
+          <td class="num" style="font-weight:700;">${w.finalHarvestedQty.toLocaleString()}</td>
+          <td class="num" style="font-weight:700; color:${balColor};">${balPrefix}${w.netBalance.toLocaleString()}</td>
+        </tr>`;
+      };
+
+      const renderSubtotalRow = (label, t, rowClass = 'subtotal-row') => {
+        const balPrefix = t.netBalance > 0 ? '+' : '';
+        return `<tr class="${rowClass}">
+          <td colspan="3">${escapeHtml(label)}</td>
+          <td class="num">${t.mandays.toFixed(1)}</td>
+          <td class="num">${t.targetQty.toLocaleString()}</td>
+          <td class="num">${t.matrixQty.toLocaleString()}</td>
+          <td class="num">${t.adjQty > 0 ? '+' + t.adjQty : t.adjQty}</td>
+          <td class="num">${t.finalHarvestedQty.toLocaleString()}</td>
+          <td class="num">${balPrefix}${t.netBalance.toLocaleString()}</td>
+        </tr>`;
+      };
+
+      let flatHtml = `<tr class="section-banner"><td colspan="9">Cutters Block (H)</td></tr>`;
+      analytics.cutterSummaries.forEach(w => { flatHtml += renderWorkerSummaryRow(w); });
+      flatHtml += renderSubtotalRow('Subtotal — Cutters (H)', analytics.cutterTotals);
+
+      flatHtml += `<tr class="section-banner"><td colspan="9">Carriers Block (FC)</td></tr>`;
+      analytics.carrierSummaries.forEach(w => { flatHtml += renderWorkerSummaryRow(w); });
+      flatHtml += renderSubtotalRow('Subtotal — Carriers (FC)', analytics.carrierTotals);
+
+      flatHtml += renderSubtotalRow('ESTATE GRAND TOTAL', analytics.grandTotals, 'grandtotal-row');
+      flatBody.innerHTML = flatHtml;
+    }
+
+    // MODULE 4: Final Submission Chart & Estate Reconciliation Summary
+    function renderModule4Submission(analytics) {
+      const isOffSeason = analytics.norm === 250;
+
+      // Update Print Report Header
+      document.getElementById('repHeaderEstate').textContent = appState.meta.estateName || 'UNNAMED OIL PALM ESTATE';
+      document.getElementById('repHeaderDiv').textContent = appState.meta.division || '-';
+      document.getElementById('repHeaderField').textContent = appState.meta.fieldNo || '-';
+      document.getElementById('repHeaderMonth').textContent = appState.meta.monthYear || '-';
+      document.getElementById('repHeaderNorm').textContent = isOffSeason ? '250 kg (500 Col)' : '500 kg (1000 Col)';
+
+      const tbody = document.getElementById('finalSubmissionBody');
+
+      const buildSectionRows = (workers, isCutterSection) => {
+        return workers.map((w, idx) => {
+          const att500 = isOffSeason ? w.mandays.toFixed(1) : '-';
+          const att1000 = !isOffSeason ? w.mandays.toFixed(1) : '-';
+          const qty500 = isOffSeason ? w.cappedCheckRollQty.toLocaleString() : '-';
+          const qty1000 = !isOffSeason ? w.cappedCheckRollQty.toLocaleString() : '-';
+          const inc1 = isCutterSection ? w.incentiveQty.toLocaleString() : '-';
+          const inc2 = !isCutterSection ? w.incentiveQty.toLocaleString() : '-';
+
+          return `<tr>
+            <td class="mono" style="text-align:center;">${idx + 1}</td>
+            <td class="mono"><strong>${escapeHtml(w.code)}</strong></td>
+            <td>${escapeHtml(w.name)}</td>
+            <td class="num" style="font-weight:700;">${w.finalHarvestedQty.toLocaleString()}</td>
+            <td class="num">${att500}</td>
+            <td class="num">${att1000}</td>
+            <td class="num">${qty500}</td>
+            <td class="num">${qty1000}</td>
+            <td class="num">${inc1}</td>
+            <td class="num">${inc2}</td>
+            <td class="num" style="font-weight:700; color:var(--primary);">${w.incentiveQty.toLocaleString()}</td>
+            <td class="num" style="${w.wageCutQty > 0 ? 'color:var(--danger); font-weight:700;' : 'color:var(--text-light);'}">${w.wageCutQty.toLocaleString()}</td>
+          </tr>`;
+        }).join('');
+      };
+
+      const buildTotalRow = (label, totals, roleType, rowClass) => {
+        const att500 = isOffSeason ? totals.mandays.toFixed(1) : '-';
+        const att1000 = !isOffSeason ? totals.mandays.toFixed(1) : '-';
+        const qty500 = isOffSeason ? totals.cappedCheckRollQty.toLocaleString() : '-';
+        const qty1000 = !isOffSeason ? totals.cappedCheckRollQty.toLocaleString() : '-';
+
+        let inc1 = '-';
+        let inc2 = '-';
+        if (roleType === 'CUTTER') {
+          inc1 = totals.incentiveQty.toLocaleString();
+        } else if (roleType === 'CARRIER') {
+          inc2 = totals.incentiveQty.toLocaleString();
+        } else {
+          inc1 = analytics.cutterTotals.incentiveQty.toLocaleString();
+          inc2 = analytics.carrierTotals.incentiveQty.toLocaleString();
+        }
+
+        return `<tr class="${rowClass}">
+          <td colspan="3">${escapeHtml(label)}</td>
+          <td class="num">${totals.finalHarvestedQty.toLocaleString()}</td>
+          <td class="num">${att500}</td>
+          <td class="num">${att1000}</td>
+          <td class="num">${qty500}</td>
+          <td class="num">${qty1000}</td>
+          <td class="num">${inc1}</td>
+          <td class="num">${inc2}</td>
+          <td class="num">${totals.incentiveQty.toLocaleString()}</td>
+          <td class="num">${totals.wageCutQty.toLocaleString()}</td>
+        </tr>`;
+      };
+
+      let subHtml = `<tr class="section-banner"><td colspan="12">Section A: Men (Cutters - H)</td></tr>`;
+      subHtml += buildSectionRows(analytics.cutterSummaries, true);
+      subHtml += buildTotalRow('Subtotal — Section A: Men (Cutters)', analytics.cutterTotals, 'CUTTER', 'subtotal-row');
+
+      subHtml += `<tr class="section-banner"><td colspan="12">Section B: Women (Carriers - FC)</td></tr>`;
+      subHtml += buildSectionRows(analytics.carrierSummaries, false);
+      subHtml += buildTotalRow('Subtotal — Section B: Women (Carriers)', analytics.carrierTotals, 'CARRIER', 'subtotal-row');
+
+      subHtml += buildTotalRow('GRAND TOTAL (SECTION A + SECTION B)', analytics.grandTotals, 'ALL', 'grandtotal-row');
+      tbody.innerHTML = subHtml;
+
+      // Populate Estate Reconciliation Summary Block
+      document.getElementById('recCutterMandays').textContent = analytics.cutterTotals.mandays.toFixed(2);
+      document.getElementById('recCarrierMandays').textContent = analytics.carrierTotals.mandays.toFixed(2);
+      document.getElementById('recTotalMandays').textContent = analytics.grandTotals.mandays.toFixed(2);
+      document.getElementById('recAttendanceQty').textContent = `${analytics.grandTotals.cappedCheckRollQty.toLocaleString()} kg`;
+      document.getElementById('recIncentiveQty').textContent = `${analytics.grandTotals.incentiveQty.toLocaleString()} kg`;
+      document.getElementById('recWageCutQty').textContent = `${analytics.grandTotals.wageCutQty.toLocaleString()} kg`;
+
+      const accountedHarvest = analytics.grandTotals.cappedCheckRollQty + analytics.grandTotals.incentiveQty;
+      document.getElementById('recTotalHarvestedCheck').textContent = `${accountedHarvest.toLocaleString()} kg`;
+
+      document.getElementById('recOpeningBalance').textContent = `${analytics.totalOpeningFB.toLocaleString()} kg`;
+      document.getElementById('recTotalTransported').textContent = `${analytics.totalTransported.toLocaleString()} kg`;
+      document.getElementById('recClosingBalance').textContent = `${analytics.totalClosingFB.toLocaleString()} kg`;
+      document.getElementById('recNetDistributable').textContent = `${analytics.totalNetDistributable.toLocaleString()} kg`;
+
+      // Verify Closing Balance formula: Closing = (Attendance Qty + Incentive Qty + Opening Balance) - Total Transported
+      const formulaClosing = (accountedHarvest + analytics.totalOpeningFB) - analytics.totalTransported;
+      const verifyEl = document.getElementById('recClosingFormulaVerify');
+      if (formulaClosing === analytics.totalClosingFB) {
+        verifyEl.style.color = 'var(--primary)';
+        verifyEl.textContent = `${formulaClosing.toLocaleString()} kg (Reconciled ✓)`;
+      } else {
+        verifyEl.style.color = 'var(--danger)';
+        verifyEl.textContent = `Formula: ${formulaClosing.toLocaleString()} kg vs Actual: ${analytics.totalClosingFB.toLocaleString()} kg`;
+      }
+    }
+
+    // ==========================================
+    // MODULE 2 MODAL: CUTTER GROUP ALLOCATION
+    // ==========================================
+    function openGroupAllocationModal(cutterId) {
+      const cutter = appState.roster.find(w => w.id === cutterId);
+      if (!cutter) return;
+
+      activeModalCutterId = cutterId;
+      const existing = appState.cutterGroups[cutterId] || {
+        cutterId,
+        configured: false,
+        transportedQty: 0,
+        tripLoadsText: '',
+        openingFB: 0,
+        closingFB: 0,
+        cutterMandays: 0,
+        autoSplit: true,
+        cutterLocked: true,
+        cutterShare: 0,
+        carriers: []
+      };
+
+      // Deep clone into modal draft
+      modalDraftGroup = JSON.parse(JSON.stringify(existing));
+
+      document.getElementById('modalCutterHeaderTitle').textContent =
+        `Group Allocation & Field Balance — ${cutter.code}: ${cutter.name}`;
+
+      document.getElementById('modTransportedInput').value = modalDraftGroup.transportedQty || 0;
+      document.getElementById('modTripLoadsInput').value = modalDraftGroup.tripLoadsText || '';
+      document.getElementById('modOpeningFbInput').value = modalDraftGroup.openingFB || 0;
+      document.getElementById('modClosingFbInput').value = modalDraftGroup.closingFB || 0;
+      document.getElementById('modAutoSplitCheckbox').checked = modalDraftGroup.autoSplit !== false;
+
+      const badge = document.getElementById('modRoundingRuleBadge');
+      badge.textContent = appState.meta.roundMultiple5 ? 'MROUND 5 Active' : 'Exact Integer Rounding';
+
+      recalcAndRenderModalTable();
+      document.getElementById('groupAllocationModal').classList.add('open');
+    }
+
+    function parseTripLoadsSum(expr) {
+      if (!expr || !expr.trim()) return null;
+      const parts = expr.split(/[+,;\s]+/).map(s => parseFloat(s)).filter(n => !isNaN(n) && n >= 0);
+      if (parts.length === 0) return null;
+      return Math.round(parts.reduce((a, b) => a + b, 0));
+    }
+
+    function recalcAndRenderModalTable() {
+      if (!modalDraftGroup) return;
+
+      // Check if carrier transported loads are entered; if so or if tripLoadsText exists, sync Transported Qty
+      const sumCarrierTrans = (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.transportedQty) || 0), 0);
+      const tripSum = parseTripLoadsSum(modalDraftGroup.tripLoadsText);
+
+      if (tripSum !== null) {
+        modalDraftGroup.transportedQty = tripSum;
+        document.getElementById('modTransportedInput').value = tripSum;
+        document.getElementById('modTripHelperText').textContent = `Auto-summed from trip loads (${tripSum} kg)`;
+      } else if (sumCarrierTrans > 0) {
+        modalDraftGroup.transportedQty = sumCarrierTrans;
+        document.getElementById('modTransportedInput').value = sumCarrierTrans;
+        document.getElementById('modTripHelperText').textContent = `Auto-summed from carrier loads (${sumCarrierTrans} kg)`;
+      } else {
+        document.getElementById('modTripHelperText').textContent = `Direct entry or summed from trips/carriers`;
+      }
+
+      distributeGroupShares(modalDraftGroup, !!appState.meta.roundMultiple5);
+
+      const netPool = computeNetDistributable(modalDraftGroup);
+      document.getElementById('modNetDistributableDisplay').textContent = `${netPool.toLocaleString()} kg`;
+
+      const cutter = appState.roster.find(w => w.id === activeModalCutterId);
+      const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
+      const tbody = document.getElementById('modalGroupMembersBody');
+      tbody.innerHTML = '';
+
+      // Row 1: Cutter Own Row
+      const cutterTr = document.createElement('tr');
+      cutterTr.style.background = '#f0fdf4';
+      cutterTr.innerHTML = `
+        <td><span class="badge badge-cutter">Cutter (H)</span></td>
+        <td><strong>${escapeHtml(cutter.code)} — ${escapeHtml(cutter.name)}</strong> <span style="font-size:11px; color:var(--primary);">(Residual Absorber)</span></td>
+        <td>
+          <input type="number" class="inline-input num" step="0.5" min="0" value="${modalDraftGroup.cutterMandays ?? 0}" data-mod-role="cutter" data-mod-field="mandays">
+        </td>
+        <td class="num" style="color:var(--text-light);">-</td>
+        <td style="text-align:center;">
+          <input type="checkbox" ${modalDraftGroup.cutterLocked !== false ? 'checked' : ''} data-mod-role="cutter" data-mod-field="locked" title="Lock Cutter share to absorb residual">
+        </td>
+        <td>
+          <input type="number" class="inline-input num" step="5" value="${modalDraftGroup.cutterShare ?? 0}" ${modalDraftGroup.cutterLocked !== false ? 'readonly style="background:#e2e8f0; font-weight:700;"' : 'style="font-weight:700;"'} data-mod-role="cutter" data-mod-field="share">
+        </td>
+        <td style="text-align:center;">-</td>
+      `;
+      tbody.appendChild(cutterTr);
+
+      // Carrier Rows
+      (modalDraftGroup.carriers || []).forEach((cRow, idx) => {
+        const tr = document.createElement('tr');
+        const carrierOpts = allCarriers.map(fc =>
+          `<option value="${fc.id}" ${fc.id === cRow.carrierId ? 'selected' : ''}>${escapeHtml(fc.code)} — ${escapeHtml(fc.name)}</option>`
+        ).join('');
+
+        tr.innerHTML = `
+          <td><span class="badge badge-carrier">Carrier (FC)</span></td>
+          <td>
+            <select class="inline-input" data-mod-role="carrier" data-idx="${idx}" data-mod-field="carrierId">
+              ${carrierOpts}
+            </select>
+          </td>
+          <td>
+            <input type="number" class="inline-input num" step="0.5" min="0" value="${cRow.mandays ?? 0}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="mandays">
+          </td>
+          <td>
+            <input type="number" class="inline-input num" step="1" min="0" value="${cRow.transportedQty ?? 0}" placeholder="0" data-mod-role="carrier" data-idx="${idx}" data-mod-field="transportedQty">
+          </td>
+          <td style="text-align:center;">
+            <input type="checkbox" ${cRow.locked !== false ? 'checked' : ''} data-mod-role="carrier" data-idx="${idx}" data-mod-field="locked" title="Uncheck to manually override quantity">
+          </td>
+          <td>
+            <input type="number" class="inline-input num" step="5" value="${cRow.share ?? 0}" ${cRow.locked !== false ? 'readonly style="background:#f1f5f9; font-weight:600;"' : 'style="font-weight:700; border-color:var(--accent);"'} data-mod-role="carrier" data-idx="${idx}" data-mod-field="share">
+          </td>
+          <td style="text-align:center;">
+            <button type="button" class="btn btn-secondary btn-sm" data-mod-action="remove-carrier" data-idx="${idx}" style="color:var(--danger);">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Totals & Validation
+      const totalAtt = (Number(modalDraftGroup.cutterMandays) || 0) +
+        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.mandays) || 0), 0);
+      const totalAllocated = (Number(modalDraftGroup.cutterShare) || 0) +
+        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.share) || 0), 0);
+      const diff = netPool - totalAllocated;
+
+      document.getElementById('modTotalMandaysCell').textContent = totalAtt.toFixed(1);
+      document.getElementById('modTotalCarrierTransCell').textContent = `${sumCarrierTrans.toLocaleString()} kg`;
+      document.getElementById('modTotalAllocatedCell').textContent = `${totalAllocated.toLocaleString()} kg`;
+
+      const diffCell = document.getElementById('modDiffStatusCell');
+      const msgEl = document.getElementById('modalValidationMsg');
+      const saveBtn = document.getElementById('btnSaveGroupModal');
+
+      if (diff === 0) {
+        diffCell.innerHTML = `<span class="badge badge-configured">Balanced ✓</span>`;
+        msgEl.style.color = 'var(--primary)';
+        msgEl.textContent = `Group allocation is 100% balanced (${totalAllocated.toLocaleString()} kg = Net Distributable Qty).`;
+        saveBtn.disabled = false;
+      } else {
+        diffCell.innerHTML = `<span class="badge badge-pending">Diff: ${diff > 0 ? '+' + diff : diff} kg</span>`;
+        msgEl.style.color = 'var(--danger)';
+        msgEl.textContent = `Allocation mismatch! Total allocated (${totalAllocated} kg) differs from Net Distributable (${netPool} kg) by ${diff} kg.`;
+        saveBtn.disabled = true;
+      }
+    }
+
+    // ==========================================
+    // CSV & MULTI-SHEET EXCEL / PDF EXPORTS
+    // ==========================================
+    function parseUploadedRosterFile(file) {
+      const reader = new FileReader();
+      const isExcel = /\.(xlsx|xls)$/i.test(file.name);
+
+      reader.onload = (e) => {
+        try {
+          let rows = [];
+          if (isExcel && typeof XLSX !== 'undefined') {
+            const wb = XLSX.read(e.target.result, { type: 'binary' });
+            const firstSheet = wb.Sheets[wb.SheetNames[0]];
+            rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+          } else {
+            const text = e.target.result;
+            rows = text.split(/\r?\n/).map(line => line.split(',').map(cell => cell.trim().replace(/^"|"$/g, '')));
+          }
+
+          if (rows.length < 2) {
+            showToast('Uploaded file appears empty or missing rows.');
+            return;
+          }
+
+          // Detect header indices
+          const header = rows[0].map(h => String(h || '').toLowerCase());
+          const roleIdx = header.findIndex(h => h.includes('role') || h.includes('cat') || h.includes('type'));
+          const codeIdx = header.findIndex(h => h.includes('code') || h.includes('id') || h.includes('no'));
+          const nameIdx = header.findIndex(h => h.includes('name') || h.includes('worker'));
+          const fieldIdx = header.findIndex(h => h.includes('field'));
+
+          let importedCount = 0;
+          for (let i = 1; i < rows.length; i++) {
+            const r = rows[i];
+            if (!r || r.length === 0) continue;
+            const rawRole = String(r[roleIdx >= 0 ? roleIdx : 0] || '').trim();
+            const rawCode = String(r[codeIdx >= 0 ? codeIdx : 1] || '').trim();
+            const rawName = String(r[nameIdx >= 0 ? nameIdx : 2] || '').trim();
+            const rawField = String(r[fieldIdx >= 0 ? fieldIdx : 3] || '').trim();
+
+            if (!rawCode && !rawName) continue;
+
+            const normalizedRole = (/carrier|fc|women|female/i.test(rawRole) || /^fc/i.test(rawCode))
+              ? 'Carrier'
+              : 'Cutter';
+
+            // Update existing by code or add new
+            const existing = appState.roster.find(w => w.code.toLowerCase() === rawCode.toLowerCase());
+            if (existing) {
+              existing.role = normalizedRole;
+              existing.name = rawName || existing.name;
+              existing.fieldCode = rawField || existing.fieldCode;
+            } else {
+              appState.roster.push({
+                id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                role: normalizedRole,
+                code: rawCode || `W-${appState.roster.length + 1}`,
+                name: rawName || 'Unnamed Worker',
+                fieldCode: rawField || appState.meta.fieldNo || ''
+              });
+            }
+            importedCount++;
+          }
+
+          saveStateToLocal();
+          renderAll();
+          showToast(`Successfully imported/updated ${importedCount} workers from ${file.name}`);
+        } catch (err) {
+          console.error('CSV/Excel Import Error:', err);
+          showToast('Error parsing file. Please check column format: Role, Code No, Name, Field Code.');
+        }
+      };
+
+      if (isExcel) {
+        reader.readAsBinaryString(file);
+      } else {
+        reader.readAsText(file);
+      }
+    }
+
+    function exportMasterRosterCsv() {
+      const headers = ['Role', 'Code No', 'Name', 'Field Code'];
+      const lines = [headers.join(',')];
+      appState.roster.forEach(w => {
+        const row = [
+          `"${w.role}"`,
+          `"${w.code}"`,
+          `"${w.name.replace(/"/g, '""')}"`,
+          `"${(w.fieldCode || '').replace(/"/g, '""')}"`
+        ];
+        lines.push(row.join(','));
+      });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Master_Roster_${appState.meta.fieldNo || 'Estate'}_${appState.meta.monthYear || ''}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Master Roster exported as CSV.');
+    }
+
+    function downloadSampleCsvTemplate() {
+      const sample = [
+        'Role,Code No,Name,Field Code',
+        'Cutter,H-101,Rajan Pillai,FD-2014B',
+        'Cutter,H-102,Suresh Kumar K,FD-2014B',
+        'Carrier,FC-201,Santha Kumari,FD-2014B',
+        'Carrier,FC-202,Latha Nair,FD-2014B'
+      ].join('\n');
+      const blob = new Blob([sample], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Oil_Palm_Roster_Template.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Multi-Sheet Workbook (.XLSX) Export with Live Excel Formulas
+    function exportMultiSheetWorkbook() {
+      if (typeof XLSX === 'undefined') {
+        showToast('SheetJS library not loaded yet.');
+        return;
+      }
+
+      const analytics = computeEstateAnalytics();
+      const wb = XLSX.utils.book_new();
+
+      // SHEET 1: Master Roster
+      const rosterAoA = [
+        ['Estate Name', appState.meta.estateName || '-', 'Division', appState.meta.division || '-', 'Field No', appState.meta.fieldNo || '-', 'Period', appState.meta.monthYear || '-'],
+        [],
+        ['Sl No', 'Role', 'Code No', 'Worker Name', 'Field Code']
+      ];
+      appState.roster.forEach((w, i) => {
+        rosterAoA.push([i + 1, w.role, w.code, w.name, w.fieldCode || '']);
+      });
+      const wsRoster = XLSX.utils.aoa_to_sheet(rosterAoA);
+      XLSX.utils.book_append_sheet(wb, wsRoster, '1_Master_Roster');
+
+      // SHEET 2: Allocation Matrix (with live SUM formulas)
+      const carriers = analytics.carriers;
+      const matrixHeader = ['Cutter Code', 'Cutter Name', 'Own Share (kg)', ...carriers.map(c => `${c.code} (${c.name})`), 'Row Total (Net Pool)'];
+      const matrixAoA = [
+        ['CUTTER-CARRIER HARVEST ALLOCATION MATRIX (KG)'],
+        matrixHeader
+      ];
+
+      const startRow = 3; // 1-indexed in Excel
+      analytics.matrixRows.forEach((row, rIdx) => {
+        const excelRow = startRow + rIdx;
+        const lastCarrierColLetter = XLSX.utils.encode_col(2 + carriers.length);
+        const rArr = [
+          row.cutter.code,
+          row.cutter.name,
+          row.ownShare
+        ];
+        carriers.forEach(fc => {
+          rArr.push(row.carrierCells[fc.id] || 0);
+        });
+        // Live Excel Row Sum formula
+        rArr.push({ t: 'n', f: `SUM(C${excelRow}:${lastCarrierColLetter}${excelRow})`, v: row.rowTotal });
+        matrixAoA.push(rArr);
+      });
+
+      const totalExcelRow = startRow + analytics.matrixRows.length;
+      const lastDataRow = totalExcelRow - 1;
+      const totalRowArr = ['TOTAL', 'Column Sums'];
+      const totalColsCount = 1 + carriers.length + 1; // Own Share + Carriers + Grand Total
+      for (let c = 0; c < totalColsCount; c++) {
+        const colLetter = XLSX.utils.encode_col(2 + c);
+        if (analytics.matrixRows.length > 0) {
+          totalRowArr.push({ t: 'n', f: `SUM(${colLetter}${startRow}:${colLetter}${lastDataRow})` });
+        } else {
+          totalRowArr.push(0);
+        }
+      }
+      matrixAoA.push(totalRowArr);
+      const wsMatrix = XLSX.utils.aoa_to_sheet(matrixAoA);
+      XLSX.utils.book_append_sheet(wb, wsMatrix, '2_Allocation_Matrix');
+
+      // SHEET 3: Flattened Attendance & Summary Balances
+      const summaryAoA = [
+        ['FLATTENED ATTENDANCE & TARGET BALANCE SUMMARY', `Active Norm: ${analytics.norm} kg/manday`],
+        ['Code No', 'Worker Name', 'Role', 'Total Att (Days)', 'Target Qty (kg)', 'Matrix Acquired (kg)', 'Manual Adj (kg)', 'Final Harvested (kg)', 'Net Balance (kg)']
+      ];
+      let sRow = 3;
+      const appendWorkerSummaryWithFormulas = (w) => {
+        summaryAoA.push([
+          w.code,
+          w.name,
+          w.role,
+          w.mandays,
+          { t: 'n', f: `ROUND(D${sRow}*${analytics.norm},0)`, v: w.targetQty },
+          w.matrixQty,
+          w.adjQty,
+          { t: 'n', f: `F${sRow}+G${sRow}`, v: w.finalHarvestedQty },
+          { t: 'n', f: `H${sRow}-E${sRow}`, v: w.netBalance }
+        ]);
+        sRow++;
+      };
+      analytics.cutterSummaries.forEach(appendWorkerSummaryWithFormulas);
+      analytics.carrierSummaries.forEach(appendWorkerSummaryWithFormulas);
+      const wsSummary = XLSX.utils.aoa_to_sheet(summaryAoA);
+      XLSX.utils.book_append_sheet(wb, wsSummary, '3_Summary_Balances');
+
+      // SHEET 4: Final Submission Chart & Estate Reconciliation Summary
+      const isOff = analytics.norm === 250;
+      const subAoA = [
+        [appState.meta.estateName || 'OIL PALM ESTATE', `Division: ${appState.meta.division || '-'}`, `Field: ${appState.meta.fieldNo || '-'}`, `Month: ${appState.meta.monthYear || '-'}`],
+        ['FINAL CHECK-ROLL SUBMISSION REGISTER & WAGE RECONCILIATION'],
+        ['Sl No', 'Code No', 'Name', 'Total Qty Harvested', 'Mandays 500 (250 Norm)', 'Mandays 1000 (500 Norm)', 'Check-Roll Qty 500', 'Check-Roll Qty 1000', 'Incentive I (Cutter)', 'Incentive II (Carrier)', 'Total Incentive', 'Wage Cut Shortfall']
+      ];
+
+      analytics.cutterSummaries.forEach((w, idx) => {
+        subAoA.push([
+          idx + 1, w.code, w.name, w.finalHarvestedQty,
+          isOff ? w.mandays : 0, !isOff ? w.mandays : 0,
+          isOff ? w.cappedCheckRollQty : 0, !isOff ? w.cappedCheckRollQty : 0,
+          w.incentiveQty, 0, w.incentiveQty, w.wageCutQty
+        ]);
+      });
+
+      subAoA.push([
+        '', 'SUBTOTAL', 'Section A: Men (Cutters)', analytics.cutterTotals.finalHarvestedQty,
+        isOff ? analytics.cutterTotals.mandays : 0, !isOff ? analytics.cutterTotals.mandays : 0,
+        isOff ? analytics.cutterTotals.cappedCheckRollQty : 0, !isOff ? analytics.cutterTotals.cappedCheckRollQty : 0,
+        analytics.cutterTotals.incentiveQty, 0, analytics.cutterTotals.incentiveQty, analytics.cutterTotals.wageCutQty
+      ]);
+
+      analytics.carrierSummaries.forEach((w, idx) => {
+        subAoA.push([
+          idx + 1, w.code, w.name, w.finalHarvestedQty,
+          isOff ? w.mandays : 0, !isOff ? w.mandays : 0,
+          isOff ? w.cappedCheckRollQty : 0, !isOff ? w.cappedCheckRollQty : 0,
+          0, w.incentiveQty, w.incentiveQty, w.wageCutQty
+        ]);
+      });
+
+      subAoA.push([
+        '', 'SUBTOTAL', 'Section B: Women (Carriers)', analytics.carrierTotals.finalHarvestedQty,
+        isOff ? analytics.carrierTotals.mandays : 0, !isOff ? analytics.carrierTotals.mandays : 0,
+        isOff ? analytics.carrierTotals.cappedCheckRollQty : 0, !isOff ? analytics.carrierTotals.cappedCheckRollQty : 0,
+        0, analytics.carrierTotals.incentiveQty, analytics.carrierTotals.incentiveQty, analytics.carrierTotals.wageCutQty
+      ]);
+
+      subAoA.push([
+        '', 'GRAND TOTAL', 'All Workers (A + B)', analytics.grandTotals.finalHarvestedQty,
+        isOff ? analytics.grandTotals.mandays : 0, !isOff ? analytics.grandTotals.mandays : 0,
+        isOff ? analytics.grandTotals.cappedCheckRollQty : 0, !isOff ? analytics.grandTotals.cappedCheckRollQty : 0,
+        analytics.cutterTotals.incentiveQty, analytics.carrierTotals.incentiveQty, analytics.grandTotals.incentiveQty, analytics.grandTotals.wageCutQty
+      ]);
+
+      // Append Estate Reconciliation Summary Block
+      subAoA.push([]);
+      subAoA.push(['ESTATE RECONCILIATION SUMMARY BLOCK', 'VALUE']);
+      subAoA.push(['Cutter (Mandays)', analytics.cutterTotals.mandays]);
+      subAoA.push(['Carrier (Mandays)', analytics.carrierTotals.mandays]);
+      subAoA.push(['Total (Mandays)', analytics.grandTotals.mandays]);
+      subAoA.push(['Attendance Qty (Check-Roll Capped)', analytics.grandTotals.cappedCheckRollQty]);
+      subAoA.push(['Incentive Qty', analytics.grandTotals.incentiveQty]);
+      subAoA.push(['Wage Cut', analytics.grandTotals.wageCutQty]);
+      subAoA.push(['Opening Balance (Prev Month FB)', analytics.totalOpeningFB]);
+      subAoA.push(['Total Transported (Gross)', analytics.totalTransported]);
+      subAoA.push(['Closing Balance (Curr Month FB)', analytics.totalClosingFB]);
+
+      const wsSub = XLSX.utils.aoa_to_sheet(subAoA);
+      XLSX.utils.book_append_sheet(wb, wsSub, '4_Final_Submission');
+
+      const fileName = `OilPalm_Submission_${appState.meta.fieldNo || 'Estate'}_${appState.meta.monthYear || 'Report'}.xlsx`;
+      XLSX.writeFile(wb, fileName);
+      showToast(`Exported multi-sheet Excel workbook: ${fileName}`);
+    }
+
+    function exportSubmissionPdf() {
+      const element = document.getElementById('printableReportArea');
+      if (typeof html2pdf === 'undefined') {
+        window.print();
+        return;
+      }
+      const opt = {
+        margin: [8, 8, 8, 8],
+        filename: `OilPalm_Submission_Register_${appState.meta.fieldNo || 'Estate'}_${appState.meta.monthYear || ''}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+      };
+      showToast('Generating print-ready A4 Landscape PDF...');
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // ==========================================
+    // EVENT BINDINGS
+    // ==========================================
+    function bindEvents() {
+      // Module Navigation Tabs
+      document.getElementById('moduleTabs').addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (!btn) return;
+        const targetId = btn.getAttribute('data-target');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('.module-panel').forEach(p => p.classList.toggle('active', p.id === targetId));
+      });
+
+      // Global Metadata Inputs
+      const bindMeta = (id, key) => {
+        document.getElementById(id).addEventListener('input', (e) => {
+          appState.meta[key] = e.target.value;
+          saveStateToLocal();
+          renderModule4Submission(computeEstateAnalytics());
+        });
+      };
+      bindMeta('metaEstate', 'estateName');
+      bindMeta('metaDivision', 'division');
+      bindMeta('metaField', 'fieldNo');
+      bindMeta('metaMonth', 'monthYear');
+
+      // Global Norm Toggle (250 vs 500)
+      document.querySelectorAll('.norm-switch [data-norm]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          appState.meta.norm = Number(btn.getAttribute('data-norm'));
+          saveStateToLocal();
+          renderAll();
+          showToast(`Global Harvest Norm switched to ${appState.meta.norm} kg / manday.`);
+        });
+      });
+
+      // Global Round to Multiple of 5 Toggle
+      document.getElementById('toggleRound5').addEventListener('change', (e) => {
+        appState.meta.roundMultiple5 = e.target.checked;
+        recalculateAllGroupsInState();
+        saveStateToLocal();
+        renderAll();
+        showToast(appState.meta.roundMultiple5
+          ? 'Rounding to nearest multiple of 5 kg (MROUND 5) enabled.'
+          : 'MROUND 5 disabled — using exact integer rounding.');
+      });
+
+      // Load Demo Button
+      document.getElementById('btnLoadDemo').addEventListener('click', () => {
+        appState = createSampleEstateState();
+        recalculateAllGroupsInState();
+        saveStateToLocal();
+        renderAll();
+        showToast('Loaded sample Oil Palm Estate roster and cutter groups.');
+      });
+
+      // Protected "Clear & Exit" Modal Workflow
+      const clearModal = document.getElementById('clearConfirmModal');
+      const clearInput = document.getElementById('clearConfirmInput');
+      const btnExecClear = document.getElementById('btnExecuteClear');
+
+      document.getElementById('btnOpenClearModal').addEventListener('click', () => {
+        clearInput.value = '';
+        btnExecClear.disabled = true;
+        clearModal.classList.add('open');
+        clearInput.focus();
+      });
+
+      const closeClearModal = () => clearModal.classList.remove('open');
+      document.getElementById('btnCloseClearModal').addEventListener('click', closeClearModal);
+      document.getElementById('btnCancelClearModal').addEventListener('click', closeClearModal);
+
+      clearInput.addEventListener('input', () => {
+        btnExecClear.disabled = clearInput.value.trim().toUpperCase() !== 'CLEAR';
+      });
+
+      btnExecClear.addEventListener('click', () => {
+        if (clearInput.value.trim().toUpperCase() !== 'CLEAR') return;
+        allowUnprotectedUnload = true;
+        localStorage.removeItem(STORAGE_KEY);
+        appState = createEmptyState();
+        closeClearModal();
+        renderAll();
+        document.getElementById('saveStatusText').textContent = 'Workspace cleared';
+        showToast('All local data erased and workspace reset to clean state.');
+        setTimeout(() => { allowUnprotectedUnload = false; }, 500);
+      });
+
+      // Module 1: Quick Add Worker
+      document.getElementById('quickAddWorkerForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const role = document.getElementById('newWorkerRole').value;
+        const code = document.getElementById('newWorkerCode').value.trim();
+        const name = document.getElementById('newWorkerName').value.trim();
+        const fieldCode = document.getElementById('newWorkerField').value.trim() || appState.meta.fieldNo || '';
+
+        if (!code || !name) return;
+
+        appState.roster.push({
+          id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          role,
+          code,
+          name,
+          fieldCode
+        });
+
+        document.getElementById('newWorkerCode').value = '';
+        document.getElementById('newWorkerName').value = '';
+        recalculateAllGroupsInState();
+        saveStateToLocal();
+        renderAll();
+        showToast(`Added ${role} ${code} (${name}) to Master Roster.`);
+      });
+
+      // Module 1: Role Filter & Search
+      document.getElementById('rosterRoleFilterGroup').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-filter]');
+        if (!btn) return;
+        rosterRoleFilter = btn.getAttribute('data-filter');
+        document.querySelectorAll('#rosterRoleFilterGroup .norm-btn').forEach(b => b.classList.toggle('active', b === btn));
+        renderModule1Roster(computeEstateAnalytics());
+      });
+
+      document.getElementById('rosterSearchInput').addEventListener('input', () => {
+        renderModule1Roster(computeEstateAnalytics());
+      });
+
+      // Module 1: Inline Edit & Delete Worker
+      document.getElementById('rosterTableBody').addEventListener('change', (e) => {
+        const el = e.target;
+        if (el.getAttribute('data-action') !== 'edit-worker') return;
+        const id = el.getAttribute('data-id');
+        const field = el.getAttribute('data-field');
+        const worker = appState.roster.find(w => w.id === id);
+        if (!worker) return;
+        worker[field] = el.value.trim();
+        recalculateAllGroupsInState();
+        saveStateToLocal();
+        renderAll();
+      });
+
+      document.getElementById('rosterTableBody').addEventListener('click', (e) => {
+        const delBtn = e.target.closest('[data-action="delete-worker"]');
+        if (!delBtn) return;
+        const id = delBtn.getAttribute('data-id');
+        appState.roster = appState.roster.filter(w => w.id !== id);
+        delete appState.cutterGroups[id];
+        appState.adjustments = appState.adjustments.filter(a => a.fromId !== id && a.toId !== id);
+        recalculateAllGroupsInState();
+        saveStateToLocal();
+        renderAll();
+        showToast('Worker removed from roster.');
+      });
+
+      // Module 1: CSV Upload & Export
+      document.getElementById('btnTriggerCsvUpload').addEventListener('click', () => {
+        document.getElementById('csvFileInput').click();
+      });
+      document.getElementById('csvFileInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) parseUploadedRosterFile(file);
+        e.target.value = '';
+      });
+      document.getElementById('btnExportMasterCsv').addEventListener('click', exportMasterRosterCsv);
+      document.getElementById('btnDownloadSampleCsv').addEventListener('click', downloadSampleCsvTemplate);
+
+      // Module 2: Filter Cutter Grid
+      document.getElementById('cutterGridSearch').addEventListener('input', () => renderModule2CutterGrid(computeEstateAnalytics()));
+      document.getElementById('cutterStatusFilter').addEventListener('change', () => renderModule2CutterGrid(computeEstateAnalytics()));
+
+      // Module 2 Modal Events
+      const closeGroupModal = () => {
+        document.getElementById('groupAllocationModal').classList.remove('open');
+        activeModalCutterId = null;
+        modalDraftGroup = null;
+      };
+      document.getElementById('btnCloseGroupModal').addEventListener('click', closeGroupModal);
+      document.getElementById('btnCancelGroupModal').addEventListener('click', closeGroupModal);
+
+      document.getElementById('modTransportedInput').addEventListener('input', (e) => {
+        if (!modalDraftGroup) return;
+        modalDraftGroup.tripLoadsText = '';
+        document.getElementById('modTripLoadsInput').value = '';
+        modalDraftGroup.transportedQty = Math.max(0, Number(e.target.value) || 0);
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('modTripLoadsInput').addEventListener('input', (e) => {
+        if (!modalDraftGroup) return;
+        modalDraftGroup.tripLoadsText = e.target.value;
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('modOpeningFbInput').addEventListener('input', (e) => {
+        if (!modalDraftGroup) return;
+        modalDraftGroup.openingFB = Math.max(0, Number(e.target.value) || 0);
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('modClosingFbInput').addEventListener('input', (e) => {
+        if (!modalDraftGroup) return;
+        modalDraftGroup.closingFB = Math.max(0, Number(e.target.value) || 0);
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('modAutoSplitCheckbox').addEventListener('change', (e) => {
+        if (!modalDraftGroup) return;
+        modalDraftGroup.autoSplit = e.target.checked;
+        if (modalDraftGroup.autoSplit) {
+          modalDraftGroup.cutterLocked = true;
+          (modalDraftGroup.carriers || []).forEach(c => { c.locked = true; });
+        }
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('btnAddCarrierRow').addEventListener('click', () => {
+        if (!modalDraftGroup) return;
+        const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
+        if (allCarriers.length === 0) {
+          showToast('Please add Carriers (FC) in Module 1 first.');
+          return;
+        }
+        // Pick first unassigned carrier if available
+        const usedIds = new Set((modalDraftGroup.carriers || []).map(c => c.carrierId));
+        const nextCarrier = allCarriers.find(fc => !usedIds.has(fc.id)) || allCarriers[0];
+
+        modalDraftGroup.carriers.push({
+          carrierId: nextCarrier.id,
+          mandays: 1,
+          transportedQty: 0,
+          locked: true,
+          share: 0
+        });
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('modalGroupMembersBody').addEventListener('input', (e) => {
+        if (!modalDraftGroup) return;
+        const el = e.target;
+        const role = el.getAttribute('data-mod-role');
+        const field = el.getAttribute('data-mod-field');
+        if (!role || !field) return;
+
+        if (role === 'cutter') {
+          if (field === 'mandays') {
+            modalDraftGroup.cutterMandays = Math.max(0, parseFloat(el.value) || 0);
+            recalcAndRenderModalTable();
+          } else if (field === 'share') {
+            modalDraftGroup.cutterShare = Math.round(Number(el.value) || 0);
+            recalcAndRenderModalTable();
+          }
+        } else if (role === 'carrier') {
+          const idx = Number(el.getAttribute('data-idx'));
+          const cRow = modalDraftGroup.carriers[idx];
+          if (!cRow) return;
+          if (field === 'mandays') {
+            cRow.mandays = Math.max(0, parseFloat(el.value) || 0);
+            recalcAndRenderModalTable();
+          } else if (field === 'transportedQty') {
+            cRow.transportedQty = Math.max(0, Math.round(Number(el.value) || 0));
+            recalcAndRenderModalTable();
+          } else if (field === 'share') {
+            cRow.share = Math.round(Number(el.value) || 0);
+            recalcAndRenderModalTable();
+          }
+        }
+      });
+
+      document.getElementById('modalGroupMembersBody').addEventListener('change', (e) => {
+        if (!modalDraftGroup) return;
+        const el = e.target;
+        const role = el.getAttribute('data-mod-role');
+        const field = el.getAttribute('data-mod-field');
+
+        if (role === 'cutter' && field === 'locked') {
+          modalDraftGroup.cutterLocked = el.checked;
+          recalcAndRenderModalTable();
+        } else if (role === 'carrier') {
+          const idx = Number(el.getAttribute('data-idx'));
+          const cRow = modalDraftGroup.carriers[idx];
+          if (!cRow) return;
+          if (field === 'carrierId') {
+            cRow.carrierId = el.value;
+            recalcAndRenderModalTable();
+          } else if (field === 'locked') {
+            cRow.locked = el.checked;
+            recalcAndRenderModalTable();
+          }
+        }
+      });
+
+      document.getElementById('modalGroupMembersBody').addEventListener('click', (e) => {
+        const rmBtn = e.target.closest('[data-mod-action="remove-carrier"]');
+        if (!rmBtn || !modalDraftGroup) return;
+        const idx = Number(rmBtn.getAttribute('data-idx'));
+        modalDraftGroup.carriers.splice(idx, 1);
+        recalcAndRenderModalTable();
+      });
+
+      document.getElementById('btnSaveGroupModal').addEventListener('click', () => {
+        if (!modalDraftGroup || !activeModalCutterId) return;
+        const netPool = computeNetDistributable(modalDraftGroup);
+        const totalAllocated = (Number(modalDraftGroup.cutterShare) || 0) +
+          (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.share) || 0), 0);
+
+        if (netPool !== totalAllocated) {
+          showToast('Cannot save: Allocated total must equal Net Distributable Qty.');
+          return;
+        }
+
+        modalDraftGroup.configured = true;
+        appState.cutterGroups[activeModalCutterId] = JSON.parse(JSON.stringify(modalDraftGroup));
+        saveStateToLocal();
+        closeGroupModal();
+        renderAll();
+        showToast('Cutter group allocation and field balance saved.');
+      });
+
+      // Module 3: Manual Cross-Worker Adjustment Form
+      document.getElementById('transferAdjustmentForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fromId = document.getElementById('adjFromWorker').value;
+        const toId = document.getElementById('adjToWorker').value;
+        const qty = Math.round(Number(document.getElementById('adjQtyKg').value) || 0);
+        const note = document.getElementById('adjNote').value.trim();
+
+        if (!fromId || !toId || fromId === toId) {
+          showToast('Please select two different workers for transfer.');
+          return;
+        }
+        if (qty <= 0) return;
+
+        appState.adjustments.push({
+          id: 'adj_' + Date.now(),
+          fromId,
+          toId,
+          qty,
+          note
+        });
+
+        document.getElementById('adjQtyKg').value = '';
+        document.getElementById('adjNote').value = '';
+        saveStateToLocal();
+        renderAll();
+        showToast(`Transferred ${qty} kg adjustment.`);
+      });
+
+      document.getElementById('adjustmentsTableBody').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-action="delete-adj"]');
+        if (!btn) return;
+        const id = btn.getAttribute('data-id');
+        appState.adjustments = appState.adjustments.filter(a => a.id !== id);
+        saveStateToLocal();
+        renderAll();
+        showToast('Transfer adjustment removed.');
+      });
+
+      // Module 4: Export Actions
+      document.getElementById('btnExportExcel').addEventListener('click', exportMultiSheetWorkbook);
+      document.getElementById('btnExportPdf').addEventListener('click', exportSubmissionPdf);
+      document.getElementById('btnPrintReport').addEventListener('click', () => window.print());
+    }
+
+    // Boot Application on DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

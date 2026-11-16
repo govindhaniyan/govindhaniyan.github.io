@@ -30,6 +30,8 @@
       --primary-soft: #dcfce7;
       --accent: #0284c7;
       --accent-soft: #e0f2fe;
+      --purple: #7c3aed;
+      --purple-soft: #ede9fe;
       --warn: #d97706;
       --warn-soft: #fef3c7;
       --danger: #dc2626;
@@ -118,7 +120,7 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
 
@@ -140,6 +142,19 @@
       border-radius: 50%;
       background: #22c55e;
       box-shadow: 0 0 6px #22c55e;
+    }
+
+    .json-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(2, 132, 199, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: #bae6fd;
+      font-family: var(--font-mono);
     }
 
     /* Global Config Bar */
@@ -179,6 +194,7 @@
     input[type="text"],
     input[type="number"],
     input[type="month"],
+    input[type="date"],
     select {
       font-family: var(--font-sans);
       font-size: 12.5px;
@@ -303,6 +319,15 @@
       background: #0369a1;
     }
 
+    .btn-purple {
+      background: var(--purple);
+      color: #ffffff;
+    }
+
+    .btn-purple:hover:not(:disabled) {
+      background: #6d28d9;
+    }
+
     .btn-danger {
       background: var(--danger);
       color: #ffffff;
@@ -342,16 +367,16 @@
 
     .nav-tabs {
       display: flex;
-      gap: 4px;
+      gap: 3px;
       overflow-x: auto;
     }
 
     .tab-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 9px 14px;
-      font-size: 12.5px;
+      gap: 5px;
+      padding: 8px 12px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
       background: transparent;
@@ -360,6 +385,7 @@
       border-radius: 6px 6px 0 0;
       cursor: pointer;
       transition: all 0.15s;
+      white-space: nowrap;
     }
 
     .tab-btn:hover {
@@ -373,13 +399,13 @@
       border-color: var(--border);
       position: relative;
       bottom: -1px;
-      padding-bottom: 10px;
+      padding-bottom: 9px;
     }
 
     .kpi-strip {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       padding-bottom: 8px;
       flex-wrap: wrap;
     }
@@ -409,7 +435,7 @@
     /* Main Content Container */
     .main-container {
       padding: 16px 18px 40px 18px;
-      max-width: 1600px;
+      max-width: 1650px;
       margin: 0 auto;
     }
 
@@ -542,10 +568,46 @@
       color: var(--warn);
     }
 
-    /* Cutter Grid in Module 2 */
+    .badge-purple {
+      background: var(--purple-soft);
+      color: var(--purple);
+    }
+
+    /* Daily Pairing Matrix Grid (Module 2) */
+    .pairing-cell {
+      min-width: 58px;
+      height: 44px;
+      cursor: pointer;
+      text-align: center !important;
+      padding: 3px 4px !important;
+      font-size: 10.5px;
+      transition: background-color 0.12s, transform 0.1s;
+      user-select: none;
+    }
+
+    .pairing-cell:hover {
+      background-color: #e0f2fe !important;
+      outline: 2px solid var(--accent);
+      z-index: 2;
+      position: relative;
+    }
+
+    .pairing-cell.has-full {
+      background-color: #dcfce7;
+    }
+
+    .pairing-cell.has-half {
+      background-color: #fef3c7;
+    }
+
+    .pairing-cell.has-absent {
+      background-color: #fee2e2;
+    }
+
+    /* Cutter Grid in Module 4 */
     .cutter-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 12px;
     }
 
@@ -670,11 +732,15 @@
       border: 1px solid var(--border);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
       width: 100%;
-      max-width: 960px;
+      max-width: 1040px;
       max-height: 92vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+    }
+
+    .modal-dialog.modal-md {
+      max-width: 680px;
     }
 
     .modal-dialog.modal-sm {
@@ -781,7 +847,7 @@
       color: var(--primary);
     }
 
-    /* Reconciliation Summary Box in Module 4 */
+    /* Reconciliation Summary Box in Final Submission */
     .recon-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -869,7 +935,6 @@
       border-left: 4px solid var(--primary);
     }
 
-    /* Inline inputs inside tables */
     .inline-input {
       width: 100%;
       padding: 4px 6px;
@@ -894,7 +959,7 @@
       .module-panel {
         display: none !important;
       }
-      #module-4 {
+      #module-6 {
         display: block !important;
       }
       .card {
@@ -914,17 +979,32 @@
       </div>
       <div>
         <div class="brand-title">Oil Palm Harvest Allocation & Wage Reconciliation</div>
-        <div class="brand-sub">Estate Check-Roll Quota, Field Balance Ledger & Multi-Sheet Submission System</div>
+        <div class="brand-sub">Daily Pairing, Transport Bunch Splitter, Check-Roll Quotas (500 / 1000 / Both) & JSON Sync</div>
       </div>
     </div>
 
     <div class="header-actions">
+      <div class="json-meta-pill" id="jsonWorkspaceBanner" title="Active Field & Last Saved Timestamp">
+        <span class="material-symbols-outlined" style="font-size:15px;">folder_managed</span>
+        <span id="jsonWorkspaceText">Field: -</span>
+      </div>
+
       <div class="save-pill" id="saveStatusIndicator" title="All workspace changes are automatically saved to browser localStorage">
         <span class="save-dot"></span>
         <span id="saveStatusText">Saved locally</span>
       </div>
+
+      <!-- JSON Export / Import Controls -->
+      <input type="file" id="jsonFileInput" accept=".json" style="display: none;">
+      <button class="btn btn-accent btn-sm" id="btnExportJson" title="Download complete workspace state as a portable JSON file with Field & Timestamp">
+        <span class="material-symbols-outlined">download</span> Save JSON
+      </button>
+      <button class="btn btn-secondary btn-sm" id="btnTriggerImportJson" title="Load a previously saved JSON file to resume work on any device">
+        <span class="material-symbols-outlined">upload_file</span> Load JSON
+      </button>
+
       <button class="btn btn-secondary btn-sm" id="btnLoadDemo" title="Load realistic sample estate data">
-        <span class="material-symbols-outlined">dataset</span> Load Sample Estate
+        <span class="material-symbols-outlined">dataset</span> Sample Data
       </button>
       <button class="btn btn-danger-outline btn-sm" id="btnOpenClearModal">
         <span class="material-symbols-outlined">delete_forever</span> Clear & Exit
@@ -937,28 +1017,29 @@
     <div class="meta-inputs">
       <div class="field-group">
         <label for="metaEstate">Estate Name</label>
-        <input type="text" id="metaEstate" placeholder="e.g. Kalady Oil Palm Estate" style="width: 190px;">
+        <input type="text" id="metaEstate" placeholder="e.g. Bharatheepuram Estate" style="width: 185px;">
       </div>
       <div class="field-group">
         <label for="metaDivision">Division</label>
-        <input type="text" id="metaDivision" placeholder="e.g. Div II - Central" style="width: 140px;">
+        <input type="text" id="metaDivision" placeholder="e.g. Div II - North" style="width: 135px;">
       </div>
       <div class="field-group">
         <label for="metaField">Field No.</label>
-        <input type="text" id="metaField" placeholder="e.g. F-1998A" style="width: 110px;">
+        <input type="text" id="metaField" placeholder="e.g. FD-2014B" style="width: 105px;">
       </div>
       <div class="field-group">
         <label for="metaMonth">Month / Year</label>
-        <input type="month" id="metaMonth" style="width: 145px;">
+        <input type="month" id="metaMonth" style="width: 140px;">
       </div>
     </div>
 
     <div class="global-toggles">
       <div class="field-group">
-        <label>Harvest Season Norm (Quota / Manday)</label>
-        <div class="norm-switch">
-          <button type="button" class="norm-btn" id="normBtn250" data-norm="250">Off-Season (250 kg)</button>
-          <button type="button" class="norm-btn" id="normBtn500" data-norm="500">Peak Season (500 kg)</button>
+        <label>Harvest Season Norm Mode (500 [250kg] / 1000 [500kg] / Both Split Month)</label>
+        <div class="norm-switch" id="globalNormSwitch">
+          <button type="button" class="norm-btn" id="normBtn250" data-norm="250">Off-Season 250 kg (500)</button>
+          <button type="button" class="norm-btn" id="normBtn500" data-norm="500">Peak Season 500 kg (1000)</button>
+          <button type="button" class="norm-btn" id="normBtnBoth" data-norm="BOTH">Both (500 & 1000 Split)</button>
         </div>
       </div>
 
@@ -976,16 +1057,22 @@
   <div class="workspace-bar no-print">
     <nav class="nav-tabs" id="moduleTabs">
       <button class="tab-btn active" data-target="module-1">
-        <span class="material-symbols-outlined">badge</span> 1. Personnel Master
+        <span class="material-symbols-outlined">badge</span> 1. Roster
       </button>
       <button class="tab-btn" data-target="module-2">
-        <span class="material-symbols-outlined">groups</span> 2. Cutter Group & Field Balance
+        <span class="material-symbols-outlined">calendar_month</span> 2. Daily Pairing (Opt)
       </button>
       <button class="tab-btn" data-target="module-3">
-        <span class="material-symbols-outlined">grid_on</span> 3. Live Matrices & Adjustments
+        <span class="material-symbols-outlined">local_shipping</span> 3. Transport Loads (Opt)
       </button>
       <button class="tab-btn" data-target="module-4">
-        <span class="material-symbols-outlined">assignment_turned_in</span> 4. Final Submission & Exports
+        <span class="material-symbols-outlined">groups</span> 4. Cutter Groups & FB
+      </button>
+      <button class="tab-btn" data-target="module-5">
+        <span class="material-symbols-outlined">grid_on</span> 5. Matrices & Adj
+      </button>
+      <button class="tab-btn" data-target="module-6">
+        <span class="material-symbols-outlined">assignment_turned_in</span> 6. Final Submission
       </button>
     </nav>
 
@@ -995,16 +1082,16 @@
         <span class="val" id="kpiRosterCount">0 H / 0 FC</span>
       </div>
       <div class="kpi-pill">
-        <span class="lbl">Gross Transported:</span>
+        <span class="lbl">Transported:</span>
         <span class="val" id="kpiTransported">0 kg</span>
       </div>
       <div class="kpi-pill">
-        <span class="lbl">Net Distributable:</span>
+        <span class="lbl">Net Pool:</span>
         <span class="val" id="kpiNetDistributable">0 kg</span>
       </div>
       <div class="kpi-pill">
-        <span class="lbl">Total Mandays:</span>
-        <span class="val" id="kpiTotalMandays">0.0</span>
+        <span class="lbl">Mandays (500 / 1000):</span>
+        <span class="val" id="kpiTotalMandays">0.0 / 0.0</span>
       </div>
     </div>
   </div>
@@ -1020,7 +1107,7 @@
         <div class="card-header">
           <div class="card-title">
             <span class="material-symbols-outlined">upload_file</span>
-            Master Worker Roster & CSV Management
+            Module 1: Master Worker Roster & CSV Management
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <input type="file" id="csvFileInput" accept=".csv,.xlsx,.xls" style="display: none;">
@@ -1056,7 +1143,7 @@
             </div>
             <div class="field-group">
               <label for="newWorkerField">Field Code</label>
-              <input type="text" id="newWorkerField" placeholder="e.g. F-98A" style="width: 110px;">
+              <input type="text" id="newWorkerField" placeholder="e.g. FD-14B" style="width: 110px;">
             </div>
             <button type="submit" class="btn btn-primary">
               <span class="material-symbols-outlined">person_add</span> Add Worker
@@ -1096,14 +1183,255 @@
     </section>
 
     <!-- ==========================================
-         MODULE 2: CUTTER GROUP ENTRY & FIELD BALANCE
+         MODULE 2: DAILY CUTTER-CARRIER PAIRING GRID (OPTIONAL)
          ========================================== -->
     <section id="module-2" class="module-panel">
       <div class="card">
         <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="material-symbols-outlined">calendar_month</span>
+              Module 2 (Optional): Day-Wise Cutter–Carrier Attendance & Pairing Grid
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+              Click any Cutter × Date cell to mark Full (1.0), Half (0.5), or Absent (0) and pair Carriers for that day. Automatically syncs mandays & carriers into Cutter Groups!
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary" id="btnSyncPairingToGroups" title="Push accumulated daily mandays and paired carriers into Module 4 Cutter Groups">
+              <span class="material-symbols-outlined">sync</span> Sync Attendance to Cutter Groups
+            </button>
+            <button type="button" class="btn btn-secondary" id="btnClearPairings">
+              <span class="material-symbols-outlined">restart_alt</span> Clear Daily Grid
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div style="margin-bottom: 10px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; font-size: 11.5px;">
+            <span><strong>Legend:</strong></span>
+            <span class="badge badge-configured">F = Full Day (1.0)</span>
+            <span class="badge badge-pending">H = Half Day (0.5)</span>
+            <span class="badge" style="background:#fee2e2; color:#b91c1c;">A = Absent (0.0)</span>
+            <span class="badge badge-carrier">+N FC = Paired Carriers Count</span>
+            <span class="badge badge-purple">1000 = Peak Norm Day</span>
+          </div>
+
+          <div class="table-wrap" id="dailyPairingGridWrap" style="max-height: 440px; overflow: auto;"></div>
+        </div>
+      </div>
+
+      <!-- Attendance Name-Wise Summary Table from Daily Pairing -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="material-symbols-outlined">summarize</span>
+            Daily Pairing — Worker-Wise Attendance Summary (Cutters & Carriers)
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted);">
+            Live tally of Full Days, Half Days, 500-Norm Mandays, 1000-Norm Mandays & Total Mandays logged in the Daily Grid
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">Sl</th>
+                  <th style="width: 100px;">Code No</th>
+                  <th>Worker Name</th>
+                  <th style="width: 110px;">Role</th>
+                  <th class="num" style="width: 110px;">Full Days (1.0)</th>
+                  <th class="num" style="width: 110px;">Half Days (0.5)</th>
+                  <th class="num" style="width: 135px;">Mandays 500 (250 Norm)</th>
+                  <th class="num" style="width: 135px;">Mandays 1000 (500 Norm)</th>
+                  <th class="num" style="width: 130px;">Total Mandays</th>
+                </tr>
+              </thead>
+              <tbody id="dailyPairingSummaryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MODULE 3: TRANSPORTING LOAD LEDGER & BUNCH SPLITTER (OPTIONAL)
+         ========================================== -->
+    <section id="module-3" class="module-panel">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="material-symbols-outlined">local_shipping</span>
+              Module 3 (Optional): Transporting Load Entry & Multi-Cutter Bunch/Ratio Splitter
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+              Log date-wise transported loads and split weight across one or multiple cutters equally or by bunch ratio (e.g. Rajesh 20, Binu 50, Satheesh 60). Auto-populates Cutter Group Transported Qty!
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-primary" id="btnSyncLoadsToGroups">
+              <span class="material-symbols-outlined">sync</span> Sync Loads to Cutter Groups
+            </button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Load Builder Form -->
+          <div style="background: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 16px;">
+            <div style="font-weight: 700; font-size: 12.5px; margin-bottom: 10px; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+              <span class="material-symbols-outlined">add_box</span> Create / Edit Transport Load
+            </div>
+
+            <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 12px;">
+              <div class="field-group">
+                <label for="loadDateInput">Load Date</label>
+                <input type="date" id="loadDateInput" style="width: 150px;">
+              </div>
+              <div class="field-group">
+                <label for="loadRefInput">Load / Trip Name or Vehicle</label>
+                <input type="text" id="loadRefInput" placeholder="e.g. Load #1 - Tractor KL-01" style="width: 190px;">
+              </div>
+              <div class="field-group">
+                <label for="loadWeightInput">Total Load Weight (kg)</label>
+                <input type="number" id="loadWeightInput" class="num" min="1" step="1" placeholder="e.g. 3900" style="width: 150px; font-weight: 700;">
+              </div>
+              <div class="field-group">
+                <label for="loadSplitMode">Weight Split Mode</label>
+                <select id="loadSplitMode" style="width: 210px;">
+                  <option value="RATIO">Bunch / Ratio Split (e.g. 20 : 50 : 60)</option>
+                  <option value="EQUAL">Equal Split Across Cutters</option>
+                  <option value="MANUAL">Manual Exact Weight (kg)</option>
+                </select>
+              </div>
+              <button type="button" class="btn btn-accent btn-sm" id="btnAddCutterToLoadDraft">
+                <span class="material-symbols-outlined">person_add</span> Add Cutter to Load
+              </button>
+            </div>
+
+            <!-- Cutters in Current Draft Load -->
+            <div class="table-wrap" style="margin-bottom: 10px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Select Cutter (H)</th>
+                    <th style="width: 180px; text-align: right;" id="loadDraftRatioHeader">Bunches / Ratio Value</th>
+                    <th style="width: 140px; text-align: right;">Share %</th>
+                    <th style="width: 180px; text-align: right;">Allocated Load Qty (kg)</th>
+                    <th style="width: 70px; text-align: center;">Del</th>
+                  </tr>
+                </thead>
+                <tbody id="loadDraftCuttersBody"></tbody>
+                <tfoot>
+                  <tr class="subtotal-row">
+                    <td colspan="2">Draft Load Totals</td>
+                    <td class="num" id="loadDraftTotalBunches">0</td>
+                    <td class="num">100%</td>
+                    <td class="num" id="loadDraftTotalAllocated">0 kg</td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <span id="loadDraftStatusText" style="font-size: 11.5px; color: var(--text-muted);">
+                Add participating cutters and enter their bunches/ratio to split the load weight automatically.
+              </span>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnResetLoadDraft">Reset Form</button>
+                <button type="button" class="btn btn-primary" id="btnSaveTransportLoad">
+                  <span class="material-symbols-outlined">save</span> Save Load & Auto-Update Cutters
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recorded Transport Loads List (Load-Wise & People-Wise Breakdown) -->
+          <div style="font-weight: 700; font-size: 12.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <span class="material-symbols-outlined">receipt_long</span> Recorded Transport Loads (Date-Wise, Load-Wise & Cutter Breakdown)
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">Sl</th>
+                  <th style="width: 110px;">Date</th>
+                  <th style="width: 170px;">Load / Trip Ref</th>
+                  <th style="width: 120px;">Split Mode</th>
+                  <th>Cutter-Wise Bunches / Ratio & Allocated Weight Breakdown</th>
+                  <th class="num" style="width: 140px;">Load Total (kg)</th>
+                  <th style="width: 85px; text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="recordedLoadsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transport Summary Tables: Date-Wise & Cutter-Wise -->
+      <div class="recon-grid" style="margin-top: 0;">
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="material-symbols-outlined">event_note</span>
+              Date-Wise Transport Summary
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th class="num">No. of Loads</th>
+                    <th class="num">Date Total Weight (kg)</th>
+                  </tr>
+                </thead>
+                <tbody id="transportDateSummaryBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 0;">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="material-symbols-outlined">person_pin</span>
+              Cutter-Wise Transported Load Summary
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cutter Code & Name</th>
+                    <th class="num">Loads Participated</th>
+                    <th class="num">Total Bunches/Ratio</th>
+                    <th class="num">Total Transported Qty (kg)</th>
+                  </tr>
+                </thead>
+                <tbody id="transportCutterSummaryBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         MODULE 4: CUTTER GROUP ENTRY & FIELD BALANCE
+         ========================================== -->
+    <section id="module-4" class="module-panel">
+      <div class="card">
+        <div class="card-header">
           <div class="card-title">
             <span class="material-symbols-outlined">agriculture</span>
-            Cutter Harvest Groups & Field Balance Allocation
+            Module 4: Cutter Harvest Groups, Field Balance & Carrier Distribution
           </div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <input type="text" id="cutterGridSearch" placeholder="Filter cutters by name or code..." style="width: 230px;">
@@ -1121,10 +1449,10 @@
     </section>
 
     <!-- ==========================================
-         MODULE 3: LIVE ANALYTICAL MATRICES & ADJUSTMENTS
+         MODULE 5: LIVE ANALYTICAL MATRICES & ADJUSTMENTS
          ========================================== -->
-    <section id="module-3" class="module-panel">
-      <!-- 3A. Cutter-Carrier Allocation Matrix -->
+    <section id="module-5" class="module-panel">
+      <!-- 5A. Cutter-Carrier Allocation Matrix -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -1140,7 +1468,7 @@
         </div>
       </div>
 
-      <!-- 3B. Manual Cross-Worker Adjustment Tool -->
+      <!-- 5B. Manual Cross-Worker Adjustment Tool -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -1192,7 +1520,7 @@
         </div>
       </div>
 
-      <!-- 3C. Flattened Attendance & Balance Summary -->
+      <!-- 5C. Flattened Attendance & Balance Summary -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -1200,7 +1528,7 @@
             Flattened Attendance & Target Balance Summary
           </div>
           <div style="font-size: 11.5px; color: var(--text-muted);">
-            Active Norm: <strong id="lblSummaryNorm">250 kg / manday</strong>
+            Active Norm Mode: <strong id="lblSummaryNorm">Off-Season (250 kg)</strong>
           </div>
         </div>
         <div class="card-body">
@@ -1208,15 +1536,17 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width: 95px;">Code No</th>
+                  <th style="width: 90px;">Code No</th>
                   <th>Worker Name</th>
-                  <th style="width: 110px;">Role</th>
-                  <th style="width: 115px; text-align: right;">Total Att (Days)</th>
-                  <th style="width: 130px; text-align: right;">Target Qty (Att×Norm)</th>
-                  <th style="width: 130px; text-align: right;">Matrix Acquired (kg)</th>
-                  <th style="width: 125px; text-align: right;">Manual Adj (kg)</th>
-                  <th style="width: 135px; text-align: right;">Final Qty Harvested</th>
-                  <th style="width: 135px; text-align: right;">Net Balance (Harvested - Target)</th>
+                  <th style="width: 95px;">Role</th>
+                  <th style="width: 95px; text-align: right;">Att 500<br><span style="font-size:9px;font-weight:400;">(250 Norm)</span></th>
+                  <th style="width: 95px; text-align: right;">Att 1000<br><span style="font-size:9px;font-weight:400;">(500 Norm)</span></th>
+                  <th style="width: 95px; text-align: right;">Total Att</th>
+                  <th style="width: 120px; text-align: right;">Target Qty</th>
+                  <th style="width: 120px; text-align: right;">Matrix Qty</th>
+                  <th style="width: 105px; text-align: right;">Manual Adj</th>
+                  <th style="width: 125px; text-align: right;">Final Harvested</th>
+                  <th style="width: 125px; text-align: right;">Net Balance</th>
                 </tr>
               </thead>
               <tbody id="flattenedSummaryBody"></tbody>
@@ -1227,14 +1557,14 @@
     </section>
 
     <!-- ==========================================
-         MODULE 4: FINAL SUBMISSION CHART & EXPORTS
+         MODULE 6: FINAL SUBMISSION CHART & EXPORTS
          ========================================== -->
-    <section id="module-4" class="module-panel">
+    <section id="module-6" class="module-panel">
       <div class="card">
         <div class="card-header no-print">
           <div class="card-title">
             <span class="material-symbols-outlined">description</span>
-            Formal Check-Roll Submission Register & Estate Reconciliation Summary
+            Module 6: Formal Check-Roll Submission Register & Estate Reconciliation Summary
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button class="btn btn-primary" id="btnExportExcel">
@@ -1259,11 +1589,11 @@
                 OIL PALM HARVEST ALLOCATION, CHECK-ROLL QUOTA & WAGE RECONCILIATION REGISTER
               </div>
             </div>
-            <div style="display: flex; gap: 18px; font-size: 12px; font-family: var(--font-mono);">
+            <div style="display: flex; gap: 16px; font-size: 12px; font-family: var(--font-mono); flex-wrap: wrap;">
               <div><strong>Division:</strong> <span id="repHeaderDiv">-</span></div>
               <div><strong>Field No:</strong> <span id="repHeaderField">-</span></div>
               <div><strong>Period:</strong> <span id="repHeaderMonth">-</span></div>
-              <div><strong>Norm:</strong> <span id="repHeaderNorm">-</span></div>
+              <div><strong>Norm Mode:</strong> <span id="repHeaderNorm">-</span></div>
             </div>
           </div>
 
@@ -1282,13 +1612,13 @@
                   <th rowspan="2" style="width: 95px; text-align: right;">Wage Cut Shortfall (kg)</th>
                 </tr>
                 <tr>
-                  <th style="width: 72px; text-align: right;">500<br><span style="font-size:9px; font-weight:500;">(250 Norm)</span></th>
-                  <th style="width: 72px; text-align: right;">1000<br><span style="font-size:9px; font-weight:500;">(500 Norm)</span></th>
+                  <th style="width: 74px; text-align: right;">500<br><span style="font-size:9px; font-weight:500;">(250 Norm)</span></th>
+                  <th style="width: 74px; text-align: right;">1000<br><span style="font-size:9px; font-weight:500;">(500 Norm)</span></th>
                   <th style="width: 88px; text-align: right;">Qty 500<br><span style="font-size:9px; font-weight:500;">(Capped)</span></th>
                   <th style="width: 88px; text-align: right;">Qty 1000<br><span style="font-size:9px; font-weight:500;">(Capped)</span></th>
-                  <th style="width: 78px; text-align: right;">Inc I<br><span style="font-size:9px; font-weight:500;">(Cutter)</span></th>
-                  <th style="width: 78px; text-align: right;">Inc II<br><span style="font-size:9px; font-weight:500;">(Carrier)</span></th>
-                  <th style="width: 88px; text-align: right;">Total Incentive</th>
+                  <th style="width: 82px; text-align: right;">Incentive 1<br><span style="font-size:9px; font-weight:500;">(For 500)</span></th>
+                  <th style="width: 82px; text-align: right;">Incentive 2<br><span style="font-size:9px; font-weight:500;">(For 1000)</span></th>
+                  <th style="width: 90px; text-align: right;">Total Incentive</th>
                 </tr>
               </thead>
               <tbody id="finalSubmissionBody"></tbody>
@@ -1303,11 +1633,11 @@
               <table class="recon-table">
                 <tbody>
                   <tr>
-                    <td>Cutter (Mandays)</td>
+                    <td>Cutter (Mandays — 500 / 1000 / Total)</td>
                     <td class="num" id="recCutterMandays">0.00</td>
                   </tr>
                   <tr>
-                    <td>Carrier (Mandays)</td>
+                    <td>Carrier (Mandays — 500 / 1000 / Total)</td>
                     <td class="num" id="recCarrierMandays">0.00</td>
                   </tr>
                   <tr class="highlight">
@@ -1315,11 +1645,11 @@
                     <td class="num" id="recTotalMandays">0.00</td>
                   </tr>
                   <tr>
-                    <td>Attendance Qty (Check-Roll Capped Sum)</td>
+                    <td>Attendance Qty (Check-Roll Capped: Qty 500 + Qty 1000)</td>
                     <td class="num" id="recAttendanceQty">0 kg</td>
                   </tr>
                   <tr>
-                    <td>Incentive Qty (Total Incentive Sum)</td>
+                    <td>Incentive Qty (Inc 1 [500] + Inc 2 [1000] = Total Incentive)</td>
                     <td class="num" id="recIncentiveQty">0 kg</td>
                   </tr>
                   <tr>
@@ -1394,7 +1724,7 @@
       <div class="modal-body">
         <!-- 1. Transported Quantity & Field Balance Ledger -->
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
             <strong style="font-size: 12px; text-transform: uppercase; color: var(--text-muted);">
               A. Transported Quantity & Field Balance Ledger (Group-Level)
             </strong>
@@ -1407,7 +1737,7 @@
             <div class="ledger-item">
               <label for="modTransportedInput">Gross Transported Qty (kg)</label>
               <input type="number" id="modTransportedInput" class="num" step="1" min="0" placeholder="0">
-              <span style="font-size: 10.5px; color: var(--text-light);" id="modTripHelperText">Direct entry or summed from trips/carriers</span>
+              <span style="font-size: 10.5px; color: var(--text-light);" id="modTripHelperText">Direct entry or summed from loads</span>
             </div>
             <div class="ledger-item">
               <label for="modTripLoadsInput">Trip Loads Quick-Sum (Optional)</label>
@@ -1429,48 +1759,47 @@
               <span class="val" id="modNetDistributableDisplay">0 kg</span>
             </div>
           </div>
+
+          <!-- Transport Section Load Attribution Details Box (Shown when Transport Loads exist for this cutter) -->
+          <div id="modalTransportLoadsBreakdownBox" style="display: none; margin-top: 10px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius); padding: 9px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <strong style="font-size: 11.5px; color: #0369a1; display: flex; align-items: center; gap: 5px;">
+                <span class="material-symbols-outlined" style="font-size: 16px;">local_shipping</span>
+                Transport Loads Credited to This Cutter (From Module 3 Transport Section)
+              </strong>
+              <button type="button" class="btn btn-accent btn-sm" id="btnUseTransportLoadsSum">
+                Apply Sum to Transported Qty
+              </button>
+            </div>
+            <div id="modalTransportLoadsList" style="font-size: 11.5px; font-family: var(--font-mono); color: #0c4a6e;"></div>
+          </div>
         </div>
 
-        <!-- 2. Distribution Controls & Cutter Row -->
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 4px; border-top: 1px solid var(--border-light);">
-          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <!-- 2. Distribution Controls & Carrier Assignment -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 6px; border-top: 1px solid var(--border-light);">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <label class="toggle-check">
               <input type="checkbox" id="modAutoSplitCheckbox" checked>
-              <span>Auto-Split Proportional by Mandays</span>
+              <span>Auto-Split Proportional by Total Mandays</span>
             </label>
             <span class="badge badge-cutter" id="modRoundingRuleBadge">MROUND 5 Active</span>
+            <span class="badge badge-purple" id="modActiveNormBadge">Norm Mode</span>
           </div>
 
-          <button type="button" class="btn btn-accent btn-sm" id="btnAddCarrierRow">
-            <span class="material-symbols-outlined">person_add</span> Add Carrier to Group
-          </button>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="modCarrierFilterInput" placeholder="Filter carrier dropdown..." style="width: 170px; padding: 4px 8px; font-size: 11.5px;">
+            <button type="button" class="btn btn-accent btn-sm" id="btnAddCarrierRow">
+              <span class="material-symbols-outlined">person_add</span> Add Carrier to Group
+            </button>
+          </div>
         </div>
 
         <!-- 3. Group Members Table (Cutter + Assigned Carriers) -->
         <div class="table-wrap">
           <table class="data-table">
-            <thead>
-              <tr>
-                <th style="width: 90px;">Role</th>
-                <th>Worker (Code & Name)</th>
-                <th style="width: 135px; text-align: right;">Attendance (Mandays)</th>
-                <th style="width: 145px; text-align: right;">Carrier Transported (kg)<br><span style="font-size:9px; font-weight:400;">(Optional load log)</span></th>
-                <th style="width: 110px; text-align: center;">Lock to Formula</th>
-                <th style="width: 145px; text-align: right;">Allocated Share (kg)</th>
-                <th style="width: 60px; text-align: center;">Del</th>
-              </tr>
-            </thead>
+            <thead id="modalGroupMembersThead"></thead>
             <tbody id="modalGroupMembersBody"></tbody>
-            <tfoot>
-              <tr class="subtotal-row">
-                <td colspan="2">Group Totals</td>
-                <td class="num" id="modTotalMandaysCell">0.0</td>
-                <td class="num" id="modTotalCarrierTransCell">0 kg</td>
-                <td style="text-align: center;" id="modDiffStatusCell">-</td>
-                <td class="num" id="modTotalAllocatedCell">0 kg</td>
-                <td></td>
-              </tr>
-            </tfoot>
+            <tfoot id="modalGroupMembersTfoot"></tfoot>
           </table>
         </div>
       </div>
@@ -1490,7 +1819,76 @@
   </div>
 
   <!-- ==========================================
-       MODAL 2: PROTECTED "CLEAR & EXIT" WORKFLOW
+       MODAL 2: DAILY CELL PAIRING EDITOR (CUTTER x DATE)
+       ========================================== -->
+  <div class="modal-backdrop" id="dailyCellPairingModal">
+    <div class="modal-dialog modal-md">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span class="material-symbols-outlined">event_available</span>
+          <span id="cellModalTitle">Day-Wise Cutter & Carrier Pairing</span>
+        </div>
+        <button class="modal-close" id="btnCloseCellModal">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Day Norm & Cutter Attendance -->
+        <div class="ledger-grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="ledger-item">
+            <label for="cellDayNormSelect">Norm Regime for This Day</label>
+            <select id="cellDayNormSelect">
+              <option value="250">500 Norm Column (250 kg / manday)</option>
+              <option value="500">1000 Norm Column (500 kg / manday)</option>
+            </select>
+          </div>
+          <div class="ledger-item">
+            <label for="cellCutterAttSelect">Cutter Attendance Status</label>
+            <select id="cellCutterAttSelect" style="font-weight: 700;">
+              <option value="0">Absent (0.0 Manday)</option>
+              <option value="1">Full Day (1.0 Manday)</option>
+              <option value="0.5">Half Day (0.5 Manday)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Paired Carriers List for This Cutter on This Day -->
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong style="font-size: 12px; text-transform: uppercase; color: var(--text-muted);">
+            Assigned Carriers (FC) Working with Cutter on This Day
+          </strong>
+          <button type="button" class="btn btn-accent btn-sm" id="btnAddCarrierToCell">
+            <span class="material-symbols-outlined">person_add</span> Add Carrier
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Carrier (Code & Name)</th>
+                <th style="width: 180px;">Attendance Status</th>
+                <th style="width: 65px; text-align: center;">Del</th>
+              </tr>
+            </thead>
+            <tbody id="cellCarriersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" id="btnClearCellEntry">Clear Day Cell</button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn btn-secondary" id="btnCancelCellModal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btnSaveCellModal">
+            <span class="material-symbols-outlined">check</span> Save Day Pairing
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL 3: PROTECTED "CLEAR & EXIT" WORKFLOW
        ========================================== -->
   <div class="modal-backdrop" id="clearConfirmModal">
     <div class="modal-dialog modal-sm">
@@ -1505,7 +1903,7 @@
       </div>
       <div class="modal-body">
         <p style="font-size: 13px; color: var(--text-main); line-height: 1.5;">
-          This action will permanently erase all locally saved <strong>worker rosters, cutter group allocations, field balances, and manual adjustments</strong> from your browser storage.
+          This action will permanently erase all locally saved <strong>worker rosters, daily pairings, transport loads, cutter group allocations, field balances, and manual adjustments</strong> from your browser storage.
         </p>
         <div class="field-group" style="margin-top: 6px;">
           <label for="clearConfirmInput" style="color: var(--danger);">Type <strong>CLEAR</strong> below to unlock confirmation:</label>
@@ -1528,27 +1926,31 @@
        APPLICATION JAVASCRIPT
        ========================================== -->
   <script>
-    const STORAGE_KEY = 'OIL_PALM_HARVEST_RECON_STATE_V1';
+    const STORAGE_KEY = 'OIL_PALM_HARVEST_RECON_STATE_V2';
     let allowUnprotectedUnload = false;
 
     // Default Clean State Factory
     function createEmptyState() {
+      const currentMonth = new Date().toISOString().slice(0, 7);
       return {
         meta: {
           estateName: '',
           division: '',
           fieldNo: '',
-          monthYear: new Date().toISOString().slice(0, 7),
-          norm: 250,          // 250 (Off-Season) or 500 (Peak Season)
-          roundMultiple5: true // Global toggle for MROUND(share, 5)
+          monthYear: currentMonth,
+          norm: '250',          // '250' (500 col), '500' (1000 col), or 'BOTH' (Split Month)
+          roundMultiple5: true, // Global toggle for MROUND(share, 5)
+          lastSavedAt: new Date().toISOString()
         },
         roster: [],
+        dailyPairings: {},   // key: "YYYY-MM-DD__cutterId" -> { date, cutterId, normType: 250|500, cutterAtt: 0|0.5|1, carriers: [{ carrierId, att: 0.5|1 }] }
+        transportLoads: [],  // array of { id, date, loadRef, totalWeight, splitMode: 'RATIO'|'EQUAL'|'MANUAL', allocations: [{ cutterId, bunches, weight }] }
         cutterGroups: {},
         adjustments: []
       };
     }
 
-    // Realistic Sample Estate Dataset for Immediate Evaluation & Testing
+    // Realistic Sample Estate Dataset showcasing Both (500 & 1000) Support, Daily Pairings & Transport Bunch Splitting
     function createSampleEstateState() {
       return {
         meta: {
@@ -1556,52 +1958,115 @@
           division: 'Division II - North Block',
           fieldNo: 'FD-2014B',
           monthYear: '2026-11',
-          norm: 250,
-          roundMultiple5: true
+          norm: 'BOTH',
+          roundMultiple5: true,
+          lastSavedAt: new Date().toISOString()
         },
         roster: [
-          { id: 'w_h1', role: 'Cutter', code: 'H-101', name: 'Rajan Pillai', fieldCode: 'FD-14B' },
-          { id: 'w_h2', role: 'Cutter', code: 'H-102', name: 'Suresh Kumar K', fieldCode: 'FD-14B' },
-          { id: 'w_h3', role: 'Cutter', code: 'H-103', name: 'Babuchan V', fieldCode: 'FD-14B' },
-          { id: 'w_h4', role: 'Cutter', code: 'H-104', name: 'Murugan S', fieldCode: 'FD-14B' },
-          { id: 'w_fc1', role: 'Carrier', code: 'FC-201', name: 'Santha Kumari', fieldCode: 'FD-14B' },
-          { id: 'w_fc2', role: 'Carrier', code: 'FC-202', name: 'Latha Nair', fieldCode: 'FD-14B' },
-          { id: 'w_fc3', role: 'Carrier', code: 'FC-203', name: 'Geetha Devi', fieldCode: 'FD-14B' },
-          { id: 'w_fc4', role: 'Carrier', code: 'FC-204', name: 'Mini Mol P', fieldCode: 'FD-14B' },
-          { id: 'w_fc5', role: 'Carrier', code: 'FC-205', name: 'Usha Rani', fieldCode: 'FD-14B' },
-          { id: 'w_fc6', role: 'Carrier', code: 'FC-206', name: 'Bindu Thomas', fieldCode: 'FD-14B' }
+          { id: 'w_h1', role: 'Cutter', code: 'H-101', name: 'Rajesh Pillai', fieldCode: 'FD-2014B' },
+          { id: 'w_h2', role: 'Cutter', code: 'H-102', name: 'Binu Kumar K', fieldCode: 'FD-2014B' },
+          { id: 'w_h3', role: 'Cutter', code: 'H-103', name: 'Satheesh V', fieldCode: 'FD-2014B' },
+          { id: 'w_h4', role: 'Cutter', code: 'H-104', name: 'Murugan S', fieldCode: 'FD-2014B' },
+          { id: 'w_fc1', role: 'Carrier', code: 'FC-201', name: 'Santha Kumari', fieldCode: 'FD-2014B' },
+          { id: 'w_fc2', role: 'Carrier', code: 'FC-202', name: 'Latha Nair', fieldCode: 'FD-2014B' },
+          { id: 'w_fc3', role: 'Carrier', code: 'FC-203', name: 'Geetha Devi', fieldCode: 'FD-2014B' },
+          { id: 'w_fc4', role: 'Carrier', code: 'FC-204', name: 'Mini Mol P', fieldCode: 'FD-2014B' },
+          { id: 'w_fc5', role: 'Carrier', code: 'FC-205', name: 'Usha Rani', fieldCode: 'FD-2014B' },
+          { id: 'w_fc6', role: 'Carrier', code: 'FC-206', name: 'Bindu Thomas', fieldCode: 'FD-2014B' }
+        ],
+        dailyPairings: {
+          '2026-11-01__w_h1': {
+            date: '2026-11-01', cutterId: 'w_h1', normType: 250, cutterAtt: 1,
+            carriers: [{ carrierId: 'w_fc1', att: 1 }, { carrierId: 'w_fc2', att: 1 }]
+          },
+          '2026-11-02__w_h1': {
+            date: '2026-11-02', cutterId: 'w_h1', normType: 500, cutterAtt: 1,
+            carriers: [{ carrierId: 'w_fc1', att: 1 }, { carrierId: 'w_fc2', att: 0.5 }]
+          },
+          '2026-11-01__w_h2': {
+            date: '2026-11-01', cutterId: 'w_h2', normType: 250, cutterAtt: 1,
+            carriers: [{ carrierId: 'w_fc3', att: 1 }]
+          },
+          '2026-11-02__w_h2': {
+            date: '2026-11-02', cutterId: 'w_h2', normType: 500, cutterAtt: 1,
+            carriers: [{ carrierId: 'w_fc3', att: 1 }, { carrierId: 'w_fc2', att: 0.5 }]
+          },
+          '2026-11-01__w_h3': {
+            date: '2026-11-01', cutterId: 'w_h3', normType: 250, cutterAtt: 1,
+            carriers: [{ carrierId: 'w_fc4', att: 1 }, { carrierId: 'w_fc5', att: 1 }]
+          }
+        },
+        transportLoads: [
+          {
+            id: 'ld_101',
+            date: '2026-11-05',
+            loadRef: 'Load #1 - Tractor KL-02',
+            totalWeight: 6500,
+            splitMode: 'RATIO',
+            allocations: [
+              { cutterId: 'w_h1', bunches: 20, weight: 1000 },
+              { cutterId: 'w_h2', bunches: 50, weight: 2500 },
+              { cutterId: 'w_h3', bunches: 60, weight: 3000 }
+            ]
+          },
+          {
+            id: 'ld_102',
+            date: '2026-11-12',
+            loadRef: 'Load #2 - Lorry Central',
+            totalWeight: 9650,
+            splitMode: 'RATIO',
+            allocations: [
+              { cutterId: 'w_h1', bunches: 75, weight: 4650 },
+              { cutterId: 'w_h2', bunches: 80, weight: 5000 }
+            ]
+          },
+          {
+            id: 'ld_103',
+            date: '2026-11-18',
+            loadRef: 'Load #3 - Tractor North',
+            totalWeight: 6120,
+            splitMode: 'RATIO',
+            allocations: [
+              { cutterId: 'w_h1', bunches: 45, weight: 3000 },
+              { cutterId: 'w_h3', bunches: 47, weight: 3120 }
+            ]
+          }
         ],
         cutterGroups: {
           'w_h1': {
             cutterId: 'w_h1',
             configured: true,
             transportedQty: 8650,
-            tripLoadsText: '2900+3100+2650',
+            tripLoadsText: '',
             openingFB: 450,
             closingFB: 620,
+            cutterMandays250: 8,
+            cutterMandays500: 4,
             cutterMandays: 12,
             autoSplit: true,
             cutterLocked: true,
             cutterShare: 3630,
             carriers: [
-              { carrierId: 'w_fc1', mandays: 10, transportedQty: 0, locked: true, share: 3025 },
-              { carrierId: 'w_fc2', mandays: 7.5, transportedQty: 0, locked: true, share: 2165 }
+              { carrierId: 'w_fc1', mandays250: 7, mandays500: 3, mandays: 10, transportedQty: 0, locked: true, share: 3025 },
+              { carrierId: 'w_fc2', mandays250: 5.5, mandays500: 2, mandays: 7.5, transportedQty: 0, locked: true, share: 2165 }
             ]
           },
           'w_h2': {
             cutterId: 'w_h2',
             configured: true,
-            transportedQty: 7400,
+            transportedQty: 7500,
             tripLoadsText: '',
             openingFB: 300,
             closingFB: 280,
+            cutterMandays250: 7,
+            cutterMandays500: 4,
             cutterMandays: 11,
             autoSplit: true,
             cutterLocked: true,
-            cutterShare: 3115,
+            cutterShare: 3160,
             carriers: [
-              { carrierId: 'w_fc3', mandays: 11, transportedQty: 0, locked: true, share: 3115 },
-              { carrierId: 'w_fc2', mandays: 4, transportedQty: 0, locked: true, share: 1150 }
+              { carrierId: 'w_fc3', mandays250: 7, mandays500: 4, mandays: 11, transportedQty: 0, locked: true, share: 3155 },
+              { carrierId: 'w_fc2', mandays250: 3, mandays500: 1, mandays: 4, transportedQty: 0, locked: true, share: 1165 }
             ]
           },
           'w_h3': {
@@ -1611,13 +2076,15 @@
             tripLoadsText: '',
             openingFB: 220,
             closingFB: 400,
+            cutterMandays250: 7,
+            cutterMandays500: 3,
             cutterMandays: 10,
             autoSplit: true,
             cutterLocked: true,
             cutterShare: 2425,
             carriers: [
-              { carrierId: 'w_fc4', mandays: 9, transportedQty: 0, locked: true, share: 2180 },
-              { carrierId: 'w_fc5', mandays: 7, transportedQty: 0, locked: true, share: 1695 }
+              { carrierId: 'w_fc4', mandays250: 6, mandays500: 3, mandays: 9, transportedQty: 0, locked: true, share: 2180 },
+              { carrierId: 'w_fc5', mandays250: 5, mandays500: 2, mandays: 7, transportedQty: 0, locked: true, share: 1695 }
             ]
           },
           'w_h4': {
@@ -1627,6 +2094,8 @@
             tripLoadsText: '',
             openingFB: 0,
             closingFB: 0,
+            cutterMandays250: 0,
+            cutterMandays500: 0,
             cutterMandays: 0,
             autoSplit: true,
             cutterLocked: true,
@@ -1651,6 +2120,21 @@
     let activeModalCutterId = null;
     let modalDraftGroup = null;
 
+    // Daily Pairing Cell Modal State
+    let activeCellKey = null;
+    let activeCellDate = null;
+    let activeCellCutterId = null;
+    let cellDraft = null;
+
+    // Transport Load Builder Draft State
+    let loadDraft = {
+      date: '',
+      loadRef: '',
+      totalWeight: 0,
+      splitMode: 'RATIO',
+      allocations: []
+    };
+
     // ==========================================
     // INITIALIZATION & PERSISTENCE
     // ==========================================
@@ -1659,25 +2143,38 @@
       if (rawSaved) {
         try {
           const parsed = JSON.parse(rawSaved);
-          appState = Object.assign(createEmptyState(), parsed);
-          appState.meta = Object.assign(createEmptyState().meta, parsed.meta || {});
+          normalizeAndLoadState(parsed);
         } catch (err) {
           console.error('Failed to parse saved state, loading sample estate:', err);
           appState = createSampleEstateState();
         }
       } else {
-        // Pre-populate with sample estate data on first visit so user sees a rich working setup immediately
         appState = createSampleEstateState();
         saveStateToLocal(false);
       }
 
+      resetLoadBuilderDraft();
       recalculateAllGroupsInState();
       bindEvents();
       renderAll();
     }
 
+    function normalizeAndLoadState(parsed) {
+      const base = createEmptyState();
+      appState = Object.assign(base, parsed);
+      appState.meta = Object.assign(base.meta, parsed.meta || {});
+      appState.meta.norm = String(appState.meta.norm || '250');
+      appState.dailyPairings = parsed.dailyPairings || {};
+      appState.transportLoads = Array.isArray(parsed.transportLoads) ? parsed.transportLoads : [];
+      appState.roster = Array.isArray(parsed.roster) ? parsed.roster : [];
+      appState.adjustments = Array.isArray(parsed.adjustments) ? parsed.adjustments : [];
+      appState.cutterGroups = parsed.cutterGroups || {};
+    }
+
     function hasActiveWorkspaceData() {
       if (appState.roster.length > 0) return true;
+      if (appState.transportLoads.length > 0) return true;
+      if (Object.keys(appState.dailyPairings).length > 0) return true;
       if (appState.adjustments.length > 0) return true;
       if (appState.meta.estateName || appState.meta.division || appState.meta.fieldNo) return true;
       return false;
@@ -1694,7 +2191,9 @@
 
     function saveStateToLocal(showIndicator = true) {
       try {
+        appState.meta.lastSavedAt = new Date().toISOString();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        updateWorkspaceBanner();
         if (showIndicator) {
           const txt = document.getElementById('saveStatusText');
           const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -1705,6 +2204,21 @@
       }
     }
 
+    function updateWorkspaceBanner() {
+      const bannerEl = document.getElementById('jsonWorkspaceText');
+      if (!bannerEl) return;
+      const fName = appState.meta.fieldNo || 'Unassigned Field';
+      const est = appState.meta.estateName ? `${appState.meta.estateName} • ` : '';
+      let tsLabel = '';
+      if (appState.meta.lastSavedAt) {
+        const dt = new Date(appState.meta.lastSavedAt);
+        if (!isNaN(dt.getTime())) {
+          tsLabel = ` | ${dt.toLocaleDateString()} ${dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+      }
+      bannerEl.textContent = `${est}Field: ${fName} (${appState.meta.monthYear || '-'})${tsLabel}`;
+    }
+
     function showToast(message) {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -1713,7 +2227,7 @@
       container.appendChild(toast);
       setTimeout(() => {
         toast.remove();
-      }, 3200);
+      }, 3400);
     }
 
     function escapeHtml(str) {
@@ -1722,6 +2236,70 @@
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+    }
+
+    // ==========================================
+    // JSON EXPORT & IMPORT (MULTI-DEVICE / MULTI-FIELD)
+    // ==========================================
+    function exportWorkspaceJson() {
+      appState.meta.lastSavedAt = new Date().toISOString();
+      const exportPayload = {
+        appVersion: 'OilPalmHarvestReconciliation_v2.0',
+        exportedAt: appState.meta.lastSavedAt,
+        estateName: appState.meta.estateName || 'Unnamed_Estate',
+        division: appState.meta.division || '',
+        fieldNo: appState.meta.fieldNo || 'Unnamed_Field',
+        monthYear: appState.meta.monthYear || '',
+        state: appState
+      };
+
+      const jsonString = JSON.stringify(exportPayload, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const safeEstate = (appState.meta.estateName || 'Estate').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const safeField = (appState.meta.fieldNo || 'Field').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const safeMonth = (appState.meta.monthYear || 'Month').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 16);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `OilPalm_${safeEstate}_${safeField}_${safeMonth}_${stamp}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      saveStateToLocal();
+      showToast(`Saved JSON workspace for Field ${appState.meta.fieldNo || '-'} (${new Date(appState.meta.lastSavedAt).toLocaleString()})`);
+    }
+
+    function importWorkspaceJson(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const incomingState = parsed.state ? parsed.state : parsed;
+          if (!incomingState || typeof incomingState !== 'object') {
+            showToast('Invalid JSON workspace file.');
+            return;
+          }
+          normalizeAndLoadState(incomingState);
+          if (parsed.exportedAt) {
+            appState.meta.lastSavedAt = parsed.exportedAt;
+          }
+          recalculateAllGroupsInState();
+          saveStateToLocal();
+          resetLoadBuilderDraft();
+          renderAll();
+
+          const fInfo = `${appState.meta.estateName || 'Estate'} — Field ${appState.meta.fieldNo || '-'}`;
+          const tInfo = parsed.exportedAt ? new Date(parsed.exportedAt).toLocaleString() : 'Restored';
+          showToast(`Loaded JSON: ${fInfo} (Saved: ${tInfo})`);
+        } catch (err) {
+          console.error('JSON Import Error:', err);
+          showToast('Failed to parse JSON file. Ensure it is a valid Oil Palm workspace export.');
+        }
+      };
+      reader.readAsText(file);
     }
 
     // ==========================================
@@ -1742,13 +2320,54 @@
       return Math.round(trans - openFb + closeFb);
     }
 
+    // Sync group mandays fields based on active global norm mode ('250', '500', 'BOTH')
+    function normalizeGroupMandays(group) {
+      const mode = String(appState.meta.norm || '250');
+
+      // Cutter mandays normalization
+      if (group.cutterMandays250 === undefined && group.cutterMandays500 === undefined) {
+        const legacy = Number(group.cutterMandays) || 0;
+        group.cutterMandays250 = mode === '500' ? 0 : legacy;
+        group.cutterMandays500 = mode === '500' ? legacy : 0;
+      }
+      group.cutterMandays250 = Math.max(0, Number(group.cutterMandays250) || 0);
+      group.cutterMandays500 = Math.max(0, Number(group.cutterMandays500) || 0);
+
+      if (mode === '250') {
+        group.cutterMandays = group.cutterMandays250;
+      } else if (mode === '500') {
+        group.cutterMandays = group.cutterMandays500;
+      } else {
+        group.cutterMandays = group.cutterMandays250 + group.cutterMandays500;
+      }
+
+      // Carriers mandays normalization
+      (group.carriers || []).forEach(c => {
+        if (c.mandays250 === undefined && c.mandays500 === undefined) {
+          const legacyC = Number(c.mandays) || 0;
+          c.mandays250 = mode === '500' ? 0 : legacyC;
+          c.mandays500 = mode === '500' ? legacyC : 0;
+        }
+        c.mandays250 = Math.max(0, Number(c.mandays250) || 0);
+        c.mandays500 = Math.max(0, Number(c.mandays500) || 0);
+
+        if (mode === '250') {
+          c.mandays = c.mandays250;
+        } else if (mode === '500') {
+          c.mandays = c.mandays500;
+        } else {
+          c.mandays = c.mandays250 + c.mandays500;
+        }
+      });
+    }
+
     function distributeGroupShares(group, useRound5) {
+      normalizeGroupMandays(group);
       const netQty = computeNetDistributable(group);
       const cutterAtt = Math.max(0, Number(group.cutterMandays) || 0);
       const carriers = group.carriers || [];
 
       if (!group.autoSplit) {
-        // Even if autoSplit is off, if cutter is locked to formula, cutter absorbs residual
         if (group.cutterLocked !== false) {
           const sumCarriers = carriers.reduce((acc, c) => acc + (Number(c.share) || 0), 0);
           group.cutterShare = netQty - sumCarriers;
@@ -1756,7 +2375,6 @@
         return;
       }
 
-      // Sum locked vs unlocked shares
       let manualLockedTotal = 0;
       let unlockedMandays = 0;
 
@@ -1787,14 +2405,12 @@
         return;
       }
 
-      // First calculate locked (formula-driven) carriers with MROUND(share, 5) or integer rounding
       let allocatedToUnlockedCarriers = 0;
       const unlockedCarriers = carriers.filter(c => c.locked !== false);
 
       unlockedCarriers.forEach((c, idx) => {
         const att = Math.max(0, Number(c.mandays) || 0);
         if (group.cutterLocked === false && idx === unlockedCarriers.length - 1) {
-          // If cutter is manually overridden, last unlocked carrier absorbs residual so sum = netQty
           c.share = remainingPool - allocatedToUnlockedCarriers;
         } else {
           const rawShare = remainingPool * (att / unlockedMandays);
@@ -1803,16 +2419,34 @@
         }
       });
 
-      // Cutter's Own Share absorbs any rounding residual: NetQty - SUM(Carrier Shares)
       if (group.cutterLocked !== false) {
         const totalCarrierShares = carriers.reduce((acc, c) => acc + (Number(c.share) || 0), 0);
         group.cutterShare = netQty - totalCarrierShares;
       }
     }
 
+    function getTransportLoadsForCutter(cutterId) {
+      const list = [];
+      (appState.transportLoads || []).forEach(ld => {
+        (ld.allocations || []).forEach(al => {
+          if (al.cutterId === cutterId && Number(al.weight) > 0) {
+            list.push({
+              loadId: ld.id,
+              date: ld.date,
+              loadRef: ld.loadRef,
+              totalLoadWeight: ld.totalWeight,
+              splitMode: ld.splitMode,
+              bunches: al.bunches,
+              weight: Number(al.weight) || 0
+            });
+          }
+        });
+      });
+      return list;
+    }
+
     function recalculateAllGroupsInState() {
       const useRound5 = !!appState.meta.roundMultiple5;
-      // Ensure every cutter in roster has a group entry
       const cutters = appState.roster.filter(w => w.role === 'Cutter');
       cutters.forEach(cutter => {
         if (!appState.cutterGroups[cutter.id]) {
@@ -1823,6 +2457,8 @@
             tripLoadsText: '',
             openingFB: 0,
             closingFB: 0,
+            cutterMandays250: 0,
+            cutterMandays500: 0,
             cutterMandays: 0,
             autoSplit: true,
             cutterLocked: true,
@@ -1830,10 +2466,10 @@
             carriers: []
           };
         } else {
-          // Prune deleted carriers
           appState.cutterGroups[cutter.id].carriers = (appState.cutterGroups[cutter.id].carriers || []).filter(
             c => appState.roster.some(w => w.id === c.carrierId && w.role === 'Carrier')
           );
+          normalizeGroupMandays(appState.cutterGroups[cutter.id]);
           if (appState.cutterGroups[cutter.id].configured) {
             distributeGroupShares(appState.cutterGroups[cutter.id], useRound5);
           }
@@ -1842,14 +2478,13 @@
     }
 
     // ==========================================
-    // ANALYTICAL ENGINE (AGGREGATION FOR MOD 3 & 4)
+    // ANALYTICAL ENGINE (MOD 5 & MOD 6 WITH 500 / 1000 / BOTH)
     // ==========================================
     function computeEstateAnalytics() {
-      const norm = Number(appState.meta.norm) || 250;
+      const normMode = String(appState.meta.norm || '250'); // '250', '500', 'BOTH'
       const cutters = appState.roster.filter(w => w.role === 'Cutter');
       const carriers = appState.roster.filter(w => w.role === 'Carrier');
 
-      // Worker stats map
       const workerMap = {};
       appState.roster.forEach(w => {
         workerMap[w.id] = {
@@ -1858,14 +2493,22 @@
           name: w.name,
           role: w.role,
           fieldCode: w.fieldCode || '',
-          mandays: 0,
+          mandays250: 0, // 500 column (250 kg norm)
+          mandays500: 0, // 1000 column (500 kg norm)
+          mandays: 0,    // active total mandays
           matrixQty: 0,
           adjQty: 0,
           finalHarvestedQty: 0,
+          target250: 0,
+          target500: 0,
           targetQty: 0,
           netBalance: 0,
+          qty500Capped: 0,  // Capped Check-roll Qty for 500 (250 norm)
+          qty1000Capped: 0, // Capped Check-roll Qty for 1000 (500 norm)
           cappedCheckRollQty: 0,
-          incentiveQty: 0,
+          inc500: 0,        // Incentive 1 (for 500 [250 norm])
+          inc1000: 0,       // Incentive 2 (for 1000 [500 norm])
+          incentiveQty: 0,  // Total Incentive (inc500 + inc1000)
           wageCutQty: 0
         };
       });
@@ -1875,7 +2518,6 @@
       let totalClosingFB = 0;
       let totalNetDistributable = 0;
 
-      // Matrix rows
       const matrixRows = [];
       const carrierColTotals = {};
       carriers.forEach(fc => { carrierColTotals[fc.id] = 0; });
@@ -1884,11 +2526,15 @@
       cutters.forEach(cutter => {
         const grp = appState.cutterGroups[cutter.id];
         const isConfigured = grp && grp.configured;
+        if (grp) normalizeGroupMandays(grp);
+
         const trans = isConfigured ? (Number(grp.transportedQty) || 0) : 0;
         const openFb = isConfigured ? (Number(grp.openingFB) || 0) : 0;
         const closeFb = isConfigured ? (Number(grp.closingFB) || 0) : 0;
         const netDist = isConfigured ? computeNetDistributable(grp) : 0;
-        const cAtt = isConfigured ? (Number(grp.cutterMandays) || 0) : 0;
+
+        const cAtt250 = isConfigured ? (Number(grp.cutterMandays250) || 0) : 0;
+        const cAtt500 = isConfigured ? (Number(grp.cutterMandays500) || 0) : 0;
         const cOwn = isConfigured ? (Number(grp.cutterShare) || 0) : 0;
 
         totalTransported += trans;
@@ -1898,7 +2544,14 @@
         totalCutterOwnShare += cOwn;
 
         if (workerMap[cutter.id]) {
-          workerMap[cutter.id].mandays += cAtt;
+          if (normMode === '250') {
+            workerMap[cutter.id].mandays250 += cAtt250;
+          } else if (normMode === '500') {
+            workerMap[cutter.id].mandays500 += cAtt500;
+          } else {
+            workerMap[cutter.id].mandays250 += cAtt250;
+            workerMap[cutter.id].mandays500 += cAtt500;
+          }
           workerMap[cutter.id].matrixQty += cOwn;
         }
 
@@ -1908,10 +2561,19 @@
         if (isConfigured && Array.isArray(grp.carriers)) {
           grp.carriers.forEach(ass => {
             const fcId = ass.carrierId;
-            const fcAtt = Number(ass.mandays) || 0;
+            const fcAtt250 = Number(ass.mandays250) || 0;
+            const fcAtt500 = Number(ass.mandays500) || 0;
             const fcShare = Number(ass.share) || 0;
+
             if (workerMap[fcId]) {
-              workerMap[fcId].mandays += fcAtt;
+              if (normMode === '250') {
+                workerMap[fcId].mandays250 += fcAtt250;
+              } else if (normMode === '500') {
+                workerMap[fcId].mandays500 += fcAtt500;
+              } else {
+                workerMap[fcId].mandays250 += fcAtt250;
+                workerMap[fcId].mandays500 += fcAtt500;
+              }
               workerMap[fcId].matrixQty += fcShare;
             }
             if (carrierCells[fcId] !== undefined) {
@@ -1937,13 +2599,55 @@
         if (workerMap[adj.toId]) workerMap[adj.toId].adjQty += qty;
       });
 
-      // Compute final targets, check-roll caps, incentives, and wage cuts
+      // Compute Targets, Check-Roll Caps (500 & 1000), Incentive 1 (500), Incentive 2 (1000), and Wage Cuts
       Object.values(workerMap).forEach(w => {
+        w.mandays = w.mandays250 + w.mandays500;
         w.finalHarvestedQty = w.matrixQty + w.adjQty;
-        w.targetQty = Math.round(w.mandays * norm);
+
+        w.target250 = Math.round(w.mandays250 * 250);
+        w.target500 = Math.round(w.mandays500 * 500);
+        w.targetQty = w.target250 + w.target500;
         w.netBalance = w.finalHarvestedQty - w.targetQty;
-        w.cappedCheckRollQty = Math.min(w.finalHarvestedQty, w.targetQty);
-        w.incentiveQty = Math.max(0, w.finalHarvestedQty - w.targetQty);
+
+        if (normMode === '250' || (w.mandays250 > 0 && w.mandays500 === 0)) {
+          // Pure 500 (250 kg) Norm
+          w.qty500Capped = Math.min(w.finalHarvestedQty, w.target250);
+          w.qty1000Capped = 0;
+          w.inc500 = Math.max(0, w.finalHarvestedQty - w.target250);
+          w.inc1000 = 0;
+        } else if (normMode === '500' || (w.mandays500 > 0 && w.mandays250 === 0)) {
+          // Pure 1000 (500 kg) Norm
+          w.qty500Capped = 0;
+          w.qty1000Capped = Math.min(w.finalHarvestedQty, w.target500);
+          w.inc500 = 0;
+          w.inc1000 = Math.max(0, w.finalHarvestedQty - w.target500);
+        } else if (w.targetQty > 0) {
+          // Split Month: Worker has both 500 (250kg) and 1000 (500kg) attendance
+          if (w.finalHarvestedQty >= w.targetQty) {
+            w.qty500Capped = w.target250;
+            w.qty1000Capped = w.target500;
+            const totalSurplus = w.finalHarvestedQty - w.targetQty;
+            // Split surplus proportionally by target quota share (or mandays) so Inc 1 + Inc 2 = Total Incentive
+            w.inc500 = Math.round(totalSurplus * (w.target250 / w.targetQty));
+            w.inc1000 = totalSurplus - w.inc500;
+          } else {
+            // Shortfall below combined target: split harvested check-roll capped qty proportionally
+            w.qty500Capped = Math.min(w.target250, Math.round(w.finalHarvestedQty * (w.target250 / w.targetQty)));
+            w.qty1000Capped = Math.max(0, w.finalHarvestedQty - w.qty500Capped);
+            w.inc500 = 0;
+            w.inc1000 = 0;
+          }
+        } else {
+          // 0 target mandays but has harvested qty
+          if (normMode === '500') {
+            w.inc1000 = Math.max(0, w.finalHarvestedQty);
+          } else {
+            w.inc500 = Math.max(0, w.finalHarvestedQty);
+          }
+        }
+
+        w.cappedCheckRollQty = w.qty500Capped + w.qty1000Capped;
+        w.incentiveQty = w.inc500 + w.inc1000;
         w.wageCutQty = Math.max(0, w.targetQty - w.finalHarvestedQty);
       });
 
@@ -1951,20 +2655,30 @@
       const carrierSummaries = carriers.map(fc => workerMap[fc.id]);
 
       const sumFields = (arr) => arr.reduce((acc, item) => {
+        acc.mandays250 += item.mandays250;
+        acc.mandays500 += item.mandays500;
         acc.mandays += item.mandays;
+        acc.target250 += item.target250;
+        acc.target500 += item.target500;
         acc.targetQty += item.targetQty;
         acc.matrixQty += item.matrixQty;
         acc.adjQty += item.adjQty;
         acc.finalHarvestedQty += item.finalHarvestedQty;
         acc.netBalance += item.netBalance;
+        acc.qty500Capped += item.qty500Capped;
+        acc.qty1000Capped += item.qty1000Capped;
         acc.cappedCheckRollQty += item.cappedCheckRollQty;
+        acc.inc500 += item.inc500;
+        acc.inc1000 += item.inc1000;
         acc.incentiveQty += item.incentiveQty;
         acc.wageCutQty += item.wageCutQty;
         return acc;
       }, {
-        mandays: 0, targetQty: 0, matrixQty: 0, adjQty: 0,
-        finalHarvestedQty: 0, netBalance: 0, cappedCheckRollQty: 0,
-        incentiveQty: 0, wageCutQty: 0
+        mandays250: 0, mandays500: 0, mandays: 0,
+        target250: 0, target500: 0, targetQty: 0,
+        matrixQty: 0, adjQty: 0, finalHarvestedQty: 0, netBalance: 0,
+        qty500Capped: 0, qty1000Capped: 0, cappedCheckRollQty: 0,
+        inc500: 0, inc1000: 0, incentiveQty: 0, wageCutQty: 0
       });
 
       const cutterTotals = sumFields(cutterSummaries);
@@ -1972,7 +2686,7 @@
       const grandTotals = sumFields([...cutterSummaries, ...carrierSummaries]);
 
       return {
-        norm,
+        normMode,
         cutters,
         carriers,
         matrixRows,
@@ -1991,7 +2705,7 @@
     }
 
     // ==========================================
-    // UI RENDERING FUNCTIONS
+    // MASTER RENDER DISPATCHER
     // ==========================================
     function renderAll() {
       recalculateAllGroupsInState();
@@ -2003,23 +2717,32 @@
       document.getElementById('metaField').value = appState.meta.fieldNo || '';
       document.getElementById('metaMonth').value = appState.meta.monthYear || '';
 
-      document.getElementById('normBtn250').classList.toggle('active', Number(appState.meta.norm) === 250);
-      document.getElementById('normBtn500').classList.toggle('active', Number(appState.meta.norm) === 500);
+      const nMode = String(appState.meta.norm || '250');
+      document.getElementById('normBtn250').classList.toggle('active', nMode === '250');
+      document.getElementById('normBtn500').classList.toggle('active', nMode === '500');
+      document.getElementById('normBtnBoth').classList.toggle('active', nMode === 'BOTH');
       document.getElementById('toggleRound5').checked = !!appState.meta.roundMultiple5;
+
+      updateWorkspaceBanner();
 
       // Top KPI Strip
       document.getElementById('kpiRosterCount').textContent = `${analytics.cutters.length} H / ${analytics.carriers.length} FC`;
       document.getElementById('kpiTransported').textContent = `${analytics.totalTransported.toLocaleString()} kg`;
       document.getElementById('kpiNetDistributable').textContent = `${analytics.totalNetDistributable.toLocaleString()} kg`;
-      document.getElementById('kpiTotalMandays').textContent = analytics.grandTotals.mandays.toFixed(1);
+      document.getElementById('kpiTotalMandays').textContent =
+        `${analytics.grandTotals.mandays250.toFixed(1)} / ${analytics.grandTotals.mandays500.toFixed(1)} (Tot ${analytics.grandTotals.mandays.toFixed(1)})`;
 
       renderModule1Roster(analytics);
-      renderModule2CutterGrid(analytics);
-      renderModule3Matrices(analytics);
-      renderModule4Submission(analytics);
+      renderModule2DailyPairing(analytics);
+      renderModule3TransportLoads(analytics);
+      renderModule4CutterGrid(analytics);
+      renderModule5Matrices(analytics);
+      renderModule6Submission(analytics);
     }
 
-    // MODULE 1: Roster Table
+    // ==========================================
+    // MODULE 1: ROSTER TABLE
+    // ==========================================
     function renderModule1Roster(analytics) {
       document.getElementById('countAllWorkers').textContent = appState.roster.length;
       document.getElementById('countCutters').textContent = analytics.cutters.length;
@@ -2073,8 +2796,560 @@
       });
     }
 
-    // MODULE 2: Cutter Cards Grid
-    function renderModule2CutterGrid(analytics) {
+    // ==========================================
+    // MODULE 2: DAILY CUTTER-CARRIER PAIRING GRID & SUMMARY
+    // ==========================================
+    function getDaysInSelectedMonth() {
+      const ym = appState.meta.monthYear || new Date().toISOString().slice(0, 7);
+      const parts = ym.split('-');
+      const year = parseInt(parts[0], 10) || 2026;
+      const month = parseInt(parts[1], 10) || 11;
+      const numDays = new Date(year, month, 0).getDate();
+      const dates = [];
+      for (let d = 1; d <= numDays; d++) {
+        const dayStr = String(d).padStart(2, '0');
+        dates.push({
+          dayNum: d,
+          dateStr: `${year}-${String(month).padStart(2, '0')}-${dayStr}`
+        });
+      }
+      return dates;
+    }
+
+    function renderModule2DailyPairing(analytics) {
+      const wrap = document.getElementById('dailyPairingGridWrap');
+      const dates = getDaysInSelectedMonth();
+      const cutters = analytics.cutters;
+
+      if (cutters.length === 0) {
+        wrap.innerHTML = `<div style="padding:18px; text-align:center; color:var(--text-muted);">No Cutters in roster. Add Cutters in Module 1 first.</div>`;
+        document.getElementById('dailyPairingSummaryBody').innerHTML = '';
+        return;
+      }
+
+      let html = `<table class="data-table"><thead><tr>
+        <th style="position:sticky; left:0; z-index:5; background:#0f172a; color:#fff; min-width:170px;">Cutter (Code & Name)</th>`;
+      dates.forEach(d => {
+        html += `<th style="text-align:center; min-width:58px;">Day ${d.dayNum}<br><span style="font-size:9px; font-weight:400;">${d.dateStr.slice(5)}</span></th>`;
+      });
+      html += `<th class="num" style="min-width:90px; background:#dcfce7; color:#166534;">Row Total Att</th></tr></thead><tbody>`;
+
+      cutters.forEach(cutter => {
+        let cutterRowAtt = 0;
+        html += `<tr>
+          <td style="position:sticky; left:0; z-index:4; background:#fff; font-weight:700; border-right:2px solid var(--border);">
+            ${escapeHtml(cutter.code)} — ${escapeHtml(cutter.name)}
+          </td>`;
+
+        dates.forEach(d => {
+          const key = `${d.dateStr}__${cutter.id}`;
+          const entry = appState.dailyPairings[key];
+          let cellClass = 'pairing-cell';
+          let cellContent = `<span style="color:#cbd5e1;">+</span>`;
+
+          if (entry) {
+            const cAtt = Number(entry.cutterAtt) || 0;
+            cutterRowAtt += cAtt;
+            const fcCount = (entry.carriers || []).filter(c => Number(c.att) > 0).length;
+            const normBadge = Number(entry.normType) === 500 ? `<span style="font-size:8.5px; color:#7c3aed; font-weight:700;">[1000]</span>` : '';
+
+            if (cAtt === 1) {
+              cellClass += ' has-full';
+              cellContent = `<div><strong>F (1.0)</strong> ${normBadge}</div>`;
+            } else if (cAtt === 0.5) {
+              cellClass += ' has-half';
+              cellContent = `<div><strong>H (0.5)</strong> ${normBadge}</div>`;
+            } else {
+              cellClass += ' has-absent';
+              cellContent = `<div><strong>A (0)</strong></div>`;
+            }
+            if (fcCount > 0) {
+              cellContent += `<div style="font-size:9.5px; color:#0369a1; font-weight:700;">+${fcCount} FC</div>`;
+            }
+          }
+
+          html += `<td class="${cellClass}" data-pair-date="${d.dateStr}" data-pair-cutter="${cutter.id}">${cellContent}</td>`;
+        });
+
+        html += `<td class="num" style="font-weight:700; background:#f0fdf4;">${cutterRowAtt.toFixed(1)} d</td></tr>`;
+      });
+
+      html += `</tbody></table>`;
+      wrap.innerHTML = html;
+
+      // Build Worker-Wise Attendance Summary from Daily Pairings
+      const summaryMap = {};
+      appState.roster.forEach(w => {
+        summaryMap[w.id] = {
+          worker: w,
+          fullDays: 0,
+          halfDays: 0,
+          mandays250: 0,
+          mandays500: 0,
+          totalMandays: 0
+        };
+      });
+
+      Object.values(appState.dailyPairings).forEach(entry => {
+        if (!entry) return;
+        const is1000 = Number(entry.normType) === 500;
+        const cAtt = Number(entry.cutterAtt) || 0;
+        if (summaryMap[entry.cutterId] && cAtt > 0) {
+          if (cAtt === 1) summaryMap[entry.cutterId].fullDays += 1;
+          else if (cAtt === 0.5) summaryMap[entry.cutterId].halfDays += 1;
+          if (is1000) summaryMap[entry.cutterId].mandays500 += cAtt;
+          else summaryMap[entry.cutterId].mandays250 += cAtt;
+          summaryMap[entry.cutterId].totalMandays += cAtt;
+        }
+
+        (entry.carriers || []).forEach(fcAss => {
+          const fAtt = Number(fcAss.att) || 0;
+          if (summaryMap[fcAss.carrierId] && fAtt > 0) {
+            if (fAtt === 1) summaryMap[fcAss.carrierId].fullDays += 1;
+            else if (fAtt === 0.5) summaryMap[fcAss.carrierId].halfDays += 1;
+            if (is1000) summaryMap[fcAss.carrierId].mandays500 += fAtt;
+            else summaryMap[fcAss.carrierId].mandays250 += fAtt;
+            summaryMap[fcAss.carrierId].totalMandays += fAtt;
+          }
+        });
+      });
+
+      const sumBody = document.getElementById('dailyPairingSummaryBody');
+      let sumHtml = '';
+      let totFull = 0, totHalf = 0, tot250 = 0, tot500 = 0, totAll = 0;
+
+      appState.roster.forEach((w, idx) => {
+        const st = summaryMap[w.id];
+        totFull += st.fullDays;
+        totHalf += st.halfDays;
+        tot250 += st.mandays250;
+        tot500 += st.mandays500;
+        totAll += st.totalMandays;
+
+        sumHtml += `<tr>
+          <td class="mono">${idx + 1}</td>
+          <td class="mono"><strong>${escapeHtml(w.code)}</strong></td>
+          <td>${escapeHtml(w.name)}</td>
+          <td><span class="badge ${w.role === 'Cutter' ? 'badge-cutter' : 'badge-carrier'}">${w.role}</span></td>
+          <td class="num">${st.fullDays}</td>
+          <td class="num">${st.halfDays}</td>
+          <td class="num">${st.mandays250.toFixed(1)}</td>
+          <td class="num">${st.mandays500.toFixed(1)}</td>
+          <td class="num" style="font-weight:700;">${st.totalMandays.toFixed(1)}</td>
+        </tr>`;
+      });
+
+      sumHtml += `<tr class="grandtotal-row">
+        <td colspan="4">TOTAL DAILY PAIRING ATTENDANCE</td>
+        <td class="num">${totFull}</td>
+        <td class="num">${totHalf}</td>
+        <td class="num">${tot250.toFixed(1)}</td>
+        <td class="num">${tot500.toFixed(1)}</td>
+        <td class="num">${totAll.toFixed(1)}</td>
+      </tr>`;
+      sumBody.innerHTML = sumHtml;
+    }
+
+    function openDailyCellModal(dateStr, cutterId) {
+      const cutter = appState.roster.find(w => w.id === cutterId);
+      if (!cutter) return;
+
+      activeCellDate = dateStr;
+      activeCellCutterId = cutterId;
+      activeCellKey = `${dateStr}__${cutterId}`;
+
+      const existing = appState.dailyPairings[activeCellKey];
+      const defaultNorm = String(appState.meta.norm) === '500' ? 500 : 250;
+
+      cellDraft = existing ? JSON.parse(JSON.stringify(existing)) : {
+        date: dateStr,
+        cutterId,
+        normType: defaultNorm,
+        cutterAtt: 1,
+        carriers: []
+      };
+
+      document.getElementById('cellModalTitle').textContent =
+        `Date: ${dateStr} — Cutter ${cutter.code} (${cutter.name})`;
+      document.getElementById('cellDayNormSelect').value = String(cellDraft.normType || 250);
+      document.getElementById('cellCutterAttSelect').value = String(cellDraft.cutterAtt ?? 1);
+
+      renderCellModalCarriers();
+      document.getElementById('dailyCellPairingModal').classList.add('open');
+    }
+
+    function renderCellModalCarriers() {
+      const tbody = document.getElementById('cellCarriersTableBody');
+      const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
+      tbody.innerHTML = '';
+
+      if (!cellDraft.carriers || cellDraft.carriers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:12px; color:var(--text-muted);">No carriers assigned for this day. Click "Add Carrier" above.</td></tr>`;
+        return;
+      }
+
+      cellDraft.carriers.forEach((cAss, idx) => {
+        const opts = allCarriers.map(fc =>
+          `<option value="${fc.id}" ${fc.id === cAss.carrierId ? 'selected' : ''}>${escapeHtml(fc.code)} — ${escapeHtml(fc.name)}</option>`
+        ).join('');
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <select class="inline-input" data-cell-fc-idx="${idx}" data-cell-field="carrierId">${opts}</select>
+          </td>
+          <td>
+            <select class="inline-input" data-cell-fc-idx="${idx}" data-cell-field="att">
+              <option value="1" ${Number(cAss.att) === 1 ? 'selected' : ''}>Full Day (1.0)</option>
+              <option value="0.5" ${Number(cAss.att) === 0.5 ? 'selected' : ''}>Half Day (0.5)</option>
+              <option value="0" ${Number(cAss.att) === 0 ? 'selected' : ''}>Absent (0.0)</option>
+            </select>
+          </td>
+          <td style="text-align:center;">
+            <button type="button" class="btn btn-secondary btn-sm" data-cell-remove-idx="${idx}" style="color:var(--danger);">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function syncDailyPairingsToCutterGroups() {
+      const entries = Object.values(appState.dailyPairings);
+      if (entries.length === 0) {
+        showToast('No daily pairing cells found to sync.');
+        return;
+      }
+
+      const cutters = appState.roster.filter(w => w.role === 'Cutter');
+      let hasBothNorms = false;
+      let seen250 = false;
+      let seen500 = false;
+
+      // Reset mandays per cutter group before accumulating from daily pairings
+      const groupAccum = {};
+      cutters.forEach(c => {
+        groupAccum[c.id] = {
+          c250: 0,
+          c500: 0,
+          carrierMap: {} // carrierId -> { m250, m500 }
+        };
+      });
+
+      entries.forEach(entry => {
+        if (!entry || !groupAccum[entry.cutterId]) return;
+        const is1000 = Number(entry.normType) === 500;
+        const cAtt = Number(entry.cutterAtt) || 0;
+        if (cAtt > 0) {
+          if (is1000) {
+            groupAccum[entry.cutterId].c500 += cAtt;
+            seen500 = true;
+          } else {
+            groupAccum[entry.cutterId].c250 += cAtt;
+            seen250 = true;
+          }
+        }
+
+        (entry.carriers || []).forEach(fc => {
+          const fAtt = Number(fc.att) || 0;
+          if (fAtt <= 0) return;
+          if (!groupAccum[entry.cutterId].carrierMap[fc.carrierId]) {
+            groupAccum[entry.cutterId].carrierMap[fc.carrierId] = { m250: 0, m500: 0 };
+          }
+          if (is1000) {
+            groupAccum[entry.cutterId].carrierMap[fc.carrierId].m500 += fAtt;
+            seen500 = true;
+          } else {
+            groupAccum[entry.cutterId].carrierMap[fc.carrierId].m250 += fAtt;
+            seen250 = true;
+          }
+        });
+      });
+
+      if (seen250 && seen500) {
+        appState.meta.norm = 'BOTH';
+      } else if (seen500 && !seen250) {
+        appState.meta.norm = '500';
+      }
+
+      cutters.forEach(c => {
+        const acc = groupAccum[c.id];
+        if (!acc) return;
+        const totalC = acc.c250 + acc.c500;
+        const fcIds = Object.keys(acc.carrierMap);
+        if (totalC === 0 && fcIds.length === 0) return;
+
+        const grp = appState.cutterGroups[c.id];
+        grp.cutterMandays250 = acc.c250;
+        grp.cutterMandays500 = acc.c500;
+        grp.cutterMandays = totalC;
+
+        // Merge with existing carriers or populate anew
+        const newCarriers = fcIds.map(fcId => {
+          const prev = (grp.carriers || []).find(x => x.carrierId === fcId);
+          const m250 = acc.carrierMap[fcId].m250;
+          const m500 = acc.carrierMap[fcId].m500;
+          return {
+            carrierId: fcId,
+            mandays250: m250,
+            mandays500: m500,
+            mandays: m250 + m500,
+            transportedQty: prev ? prev.transportedQty : 0,
+            locked: true,
+            share: 0
+          };
+        });
+
+        grp.carriers = newCarriers;
+        grp.configured = true;
+        distributeGroupShares(grp, !!appState.meta.roundMultiple5);
+      });
+
+      saveStateToLocal();
+      renderAll();
+      showToast('Synced Daily Pairing mandays and assigned carriers into Cutter Groups!');
+    }
+
+    // ==========================================
+    // MODULE 3: TRANSPORTING LOAD LEDGER & BUNCH SPLITTER
+    // ==========================================
+    function resetLoadBuilderDraft() {
+      const defaultDate = (appState.meta.monthYear || new Date().toISOString().slice(0, 7)) + '-01';
+      const firstCutter = appState.roster.find(w => w.role === 'Cutter');
+      loadDraft = {
+        date: defaultDate,
+        loadRef: `Load #${(appState.transportLoads || []).length + 1}`,
+        totalWeight: 0,
+        splitMode: 'RATIO',
+        allocations: firstCutter ? [{ cutterId: firstCutter.id, bunches: 50, weight: 0 }] : []
+      };
+
+      const dInput = document.getElementById('loadDateInput');
+      const rInput = document.getElementById('loadRefInput');
+      const wInput = document.getElementById('loadWeightInput');
+      const mSelect = document.getElementById('loadSplitMode');
+      if (dInput) dInput.value = loadDraft.date;
+      if (rInput) rInput.value = loadDraft.loadRef;
+      if (wInput) wInput.value = '';
+      if (mSelect) mSelect.value = loadDraft.splitMode;
+    }
+
+    function recalcLoadBuilderDraft() {
+      const totalW = Math.max(0, Math.round(Number(loadDraft.totalWeight) || 0));
+      const mode = loadDraft.splitMode;
+      const allocs = loadDraft.allocations || [];
+
+      if (allocs.length === 0) return;
+
+      if (mode === 'EQUAL') {
+        let sumSoFar = 0;
+        allocs.forEach((a, idx) => {
+          a.bunches = 1;
+          if (idx === allocs.length - 1) {
+            a.weight = totalW - sumSoFar;
+          } else {
+            a.weight = Math.round(totalW / allocs.length);
+            sumSoFar += a.weight;
+          }
+        });
+      } else if (mode === 'RATIO') {
+        const totalBunches = allocs.reduce((acc, a) => acc + Math.max(0, Number(a.bunches) || 0), 0);
+        if (totalBunches <= 0) {
+          allocs.forEach(a => { a.weight = 0; });
+        } else {
+          let sumSoFar = 0;
+          allocs.forEach((a, idx) => {
+            const b = Math.max(0, Number(a.bunches) || 0);
+            if (idx === allocs.length - 1) {
+              a.weight = totalW - sumSoFar;
+            } else {
+              a.weight = Math.round(totalW * (b / totalBunches));
+              sumSoFar += a.weight;
+            }
+          });
+        }
+      }
+      // In MANUAL mode, a.weight is edited directly by the user
+    }
+
+    function renderLoadBuilderDraftTable() {
+      recalcLoadBuilderDraft();
+      const tbody = document.getElementById('loadDraftCuttersBody');
+      const cutters = appState.roster.filter(w => w.role === 'Cutter');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      const totalW = Math.max(0, Math.round(Number(loadDraft.totalWeight) || 0));
+      const totalBunches = (loadDraft.allocations || []).reduce((acc, a) => acc + (Number(a.bunches) || 0), 0);
+      const totalAllocated = (loadDraft.allocations || []).reduce((acc, a) => acc + (Number(a.weight) || 0), 0);
+
+      document.getElementById('loadDraftRatioHeader').textContent =
+        loadDraft.splitMode === 'EQUAL' ? 'Equal Share Unit' : 'Bunches / Ratio (e.g. 20, 50, 60)';
+
+      (loadDraft.allocations || []).forEach((al, idx) => {
+        const cOpts = cutters.map(c =>
+          `<option value="${c.id}" ${c.id === al.cutterId ? 'selected' : ''}>${escapeHtml(c.code)} — ${escapeHtml(c.name)}</option>`
+        ).join('');
+
+        const pct = totalW > 0 ? ((Number(al.weight) || 0) / totalW * 100).toFixed(1) + '%' : '0.0%';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="mono">${idx + 1}</td>
+          <td>
+            <select class="inline-input" data-ld-idx="${idx}" data-ld-field="cutterId">${cOpts}</select>
+          </td>
+          <td>
+            <input type="number" class="inline-input num" min="0" step="1" value="${al.bunches ?? 0}" ${loadDraft.splitMode === 'EQUAL' ? 'readonly style="background:#f1f5f9;"' : ''} data-ld-idx="${idx}" data-ld-field="bunches">
+          </td>
+          <td class="num" style="color:var(--text-muted);">${pct}</td>
+          <td>
+            <input type="number" class="inline-input num" min="0" step="1" value="${al.weight ?? 0}" ${loadDraft.splitMode !== 'MANUAL' ? 'readonly style="background:#f0fdf4; font-weight:700; color:var(--primary);"' : 'style="font-weight:700;"'} data-ld-idx="${idx}" data-ld-field="weight">
+          </td>
+          <td style="text-align:center;">
+            <button type="button" class="btn btn-secondary btn-sm" data-ld-remove="${idx}" style="color:var(--danger);">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('loadDraftTotalBunches').textContent = totalBunches.toLocaleString();
+      document.getElementById('loadDraftTotalAllocated').textContent = `${totalAllocated.toLocaleString()} kg`;
+    }
+
+    function syncTransportLoadsToCutterGroups(silent = false) {
+      const cutters = appState.roster.filter(w => w.role === 'Cutter');
+      let updatedCount = 0;
+
+      cutters.forEach(c => {
+        const loadsForCutter = getTransportLoadsForCutter(c.id);
+        if (loadsForCutter.length > 0) {
+          const totalLoadKg = loadsForCutter.reduce((acc, item) => acc + item.weight, 0);
+          const grp = appState.cutterGroups[c.id];
+          if (grp) {
+            grp.transportedQty = totalLoadKg;
+            grp.configured = true;
+            distributeGroupShares(grp, !!appState.meta.roundMultiple5);
+            updatedCount++;
+          }
+        }
+      });
+
+      saveStateToLocal();
+      if (!silent) {
+        renderAll();
+        showToast(`Synced Transport Loads into ${updatedCount} Cutter Group(s)!`);
+      }
+    }
+
+    function renderModule3TransportLoads(analytics) {
+      renderLoadBuilderDraftTable();
+
+      const loads = appState.transportLoads || [];
+      const tbody = document.getElementById('recordedLoadsTableBody');
+      tbody.innerHTML = '';
+
+      if (loads.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:16px; color:var(--text-muted);">No transport loads logged yet. Use the form above to add date-wise loads.</td></tr>`;
+      } else {
+        let grandTotalLoadsKg = 0;
+        loads.forEach((ld, idx) => {
+          grandTotalLoadsKg += Number(ld.totalWeight) || 0;
+          const chips = (ld.allocations || []).map(al => {
+            const cObj = appState.roster.find(w => w.id === al.cutterId);
+            const cName = cObj ? `${cObj.code} (${cObj.name.split(' ')[0]})` : al.cutterId;
+            const bInfo = ld.splitMode === 'RATIO' ? `${al.bunches} bunches → ` : '';
+            return `<span class="carrier-chip" style="margin-right:4px;">${escapeHtml(cName)}: ${bInfo}<strong>${Number(al.weight).toLocaleString()} kg</strong></span>`;
+          }).join(' ');
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="mono">${idx + 1}</td>
+            <td class="mono"><strong>${escapeHtml(ld.date)}</strong></td>
+            <td>${escapeHtml(ld.loadRef || '-')}</td>
+            <td><span class="badge badge-purple">${escapeHtml(ld.splitMode)}</span></td>
+            <td>${chips}</td>
+            <td class="num" style="font-weight:700;">${Number(ld.totalWeight).toLocaleString()} kg</td>
+            <td style="text-align:center;">
+              <button type="button" class="btn btn-secondary btn-sm" data-del-load="${ld.id}" style="color:var(--danger);">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        const totalTr = document.createElement('tr');
+        totalTr.className = 'grandtotal-row';
+        totalTr.innerHTML = `
+          <td colspan="5">GRAND TOTAL TRANSPORTED ACROSS ALL LOADS (${loads.length} Loads)</td>
+          <td class="num">${grandTotalLoadsKg.toLocaleString()} kg</td>
+          <td></td>
+        `;
+        tbody.appendChild(totalTr);
+      }
+
+      // Render Date-Wise Summary
+      const dateMap = {};
+      loads.forEach(ld => {
+        if (!dateMap[ld.date]) dateMap[ld.date] = { count: 0, weight: 0 };
+        dateMap[ld.date].count += 1;
+        dateMap[ld.date].weight += Number(ld.totalWeight) || 0;
+      });
+      const dateBody = document.getElementById('transportDateSummaryBody');
+      const sortedDates = Object.keys(dateMap).sort();
+      if (sortedDates.length === 0) {
+        dateBody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No dates recorded</td></tr>`;
+      } else {
+        let dHtml = '';
+        let sumCount = 0, sumW = 0;
+        sortedDates.forEach(dt => {
+          sumCount += dateMap[dt].count;
+          sumW += dateMap[dt].weight;
+          dHtml += `<tr>
+            <td class="mono"><strong>${escapeHtml(dt)}</strong></td>
+            <td class="num">${dateMap[dt].count}</td>
+            <td class="num" style="font-weight:700;">${dateMap[dt].weight.toLocaleString()} kg</td>
+          </tr>`;
+        });
+        dHtml += `<tr class="subtotal-row">
+          <td>Total</td>
+          <td class="num">${sumCount}</td>
+          <td class="num">${sumW.toLocaleString()} kg</td>
+        </tr>`;
+        dateBody.innerHTML = dHtml;
+      }
+
+      // Render Cutter-Wise Summary
+      const cutterLoadBody = document.getElementById('transportCutterSummaryBody');
+      let cHtml = '';
+      let totCWeight = 0;
+      analytics.cutters.forEach(c => {
+        const cLoads = getTransportLoadsForCutter(c.id);
+        const sumB = cLoads.reduce((a, b) => a + (Number(b.bunches) || 0), 0);
+        const sumW = cLoads.reduce((a, b) => a + (Number(b.weight) || 0), 0);
+        totCWeight += sumW;
+        cHtml += `<tr>
+          <td><strong>${escapeHtml(c.code)}</strong> — ${escapeHtml(c.name)}</td>
+          <td class="num">${cLoads.length}</td>
+          <td class="num">${sumB.toLocaleString()}</td>
+          <td class="num" style="font-weight:700; color:var(--primary);">${sumW.toLocaleString()} kg</td>
+        </tr>`;
+      });
+      cHtml += `<tr class="subtotal-row">
+        <td colspan="3">Total Cutter Attributed Load Weight</td>
+        <td class="num">${totCWeight.toLocaleString()} kg</td>
+      </tr>`;
+      cutterLoadBody.innerHTML = cHtml;
+    }
+
+    // ==========================================
+    // MODULE 4: CUTTER SELECTION GRID & MODAL
+    // ==========================================
+    function renderModule4CutterGrid(analytics) {
       const container = document.getElementById('cutterSelectionGrid');
       const searchQ = (document.getElementById('cutterGridSearch').value || '').trim().toLowerCase();
       const statusFilter = document.getElementById('cutterStatusFilter').value;
@@ -2105,15 +3380,15 @@
         const totalGroupMandays = isConf
           ? (Number(grp.cutterMandays) || 0) + carrierList.reduce((acc, c) => acc + (Number(c.mandays) || 0), 0)
           : 0;
+        const cLoads = getTransportLoadsForCutter(cutter.id);
 
         const card = document.createElement('div');
         card.className = `cutter-card ${isConf ? 'configured' : 'pending'}`;
-        card.setAttribute('data-cutter-id', cutter.id);
 
         const carrierChipsHtml = carrierList.length > 0
           ? carrierList.map(c => {
               const fcObj = appState.roster.find(w => w.id === c.carrierId);
-              const label = fcObj ? `${fcObj.code} (${c.Share || c.share || 0}kg)` : c.carrierId;
+              const label = fcObj ? `${fcObj.code} (${c.share || 0}kg)` : c.carrierId;
               return `<span class="carrier-chip">${escapeHtml(label)}</span>`;
             }).join('')
           : `<span style="font-size: 11px; color: var(--text-light);">No carriers assigned yet</span>`;
@@ -2122,6 +3397,7 @@
           <div class="cutter-card-top">
             <div>
               <span class="cutter-code">${escapeHtml(cutter.code)}</span>
+              ${cLoads.length > 0 ? `<span class="badge badge-purple" style="margin-left:4px;">${cLoads.length} Loads</span>` : ''}
               <div class="cutter-name">${escapeHtml(cutter.name)}</div>
             </div>
             <span class="badge ${isConf ? 'badge-configured' : 'badge-pending'}">
@@ -2167,11 +3443,277 @@
       });
     }
 
-    // MODULE 3: Live Matrices & Adjustments
-    function renderModule3Matrices(analytics) {
-      document.getElementById('lblSummaryNorm').textContent = `${analytics.norm} kg / manday`;
+    function openGroupAllocationModal(cutterId) {
+      const cutter = appState.roster.find(w => w.id === cutterId);
+      if (!cutter) return;
 
-      // 3A. Cutter-Carrier Allocation Matrix
+      activeModalCutterId = cutterId;
+      const existing = appState.cutterGroups[cutterId] || {
+        cutterId,
+        configured: false,
+        transportedQty: 0,
+        tripLoadsText: '',
+        openingFB: 0,
+        closingFB: 0,
+        cutterMandays250: 0,
+        cutterMandays500: 0,
+        cutterMandays: 0,
+        autoSplit: true,
+        cutterLocked: true,
+        cutterShare: 0,
+        carriers: []
+      };
+
+      modalDraftGroup = JSON.parse(JSON.stringify(existing));
+      normalizeGroupMandays(modalDraftGroup);
+
+      // If Transport Section has loads for this cutter and group is unconfigured (0 transported), auto-fill transportedQty
+      const cutterLoads = getTransportLoadsForCutter(cutterId);
+      const loadsBox = document.getElementById('modalTransportLoadsBreakdownBox');
+      const loadsListEl = document.getElementById('modalTransportLoadsList');
+
+      if (cutterLoads.length > 0) {
+        const sumLoadWeight = cutterLoads.reduce((a, b) => a + b.weight, 0);
+        if (!modalDraftGroup.configured && modalDraftGroup.transportedQty === 0) {
+          modalDraftGroup.transportedQty = sumLoadWeight;
+        }
+        loadsBox.style.display = 'block';
+        loadsListEl.innerHTML = cutterLoads.map(ld =>
+          `<div>• <strong>${escapeHtml(ld.date)}</strong> [${escapeHtml(ld.loadRef)}]: ${ld.splitMode === 'RATIO' ? ld.bunches + ' bunches → ' : ''}<strong>${ld.weight.toLocaleString()} kg</strong> (of ${Number(ld.totalLoadWeight).toLocaleString()} kg load)</div>`
+        ).join('') + `<div style="margin-top:4px; border-top:1px dashed #7dd3fc; padding-top:4px;"><strong>Total Attributed from Transport Section: ${sumLoadWeight.toLocaleString()} kg</strong></div>`;
+      } else {
+        loadsBox.style.display = 'none';
+      }
+
+      document.getElementById('modalCutterHeaderTitle').textContent =
+        `Group Allocation & Field Balance — ${cutter.code}: ${cutter.name}`;
+
+      document.getElementById('modTransportedInput').value = modalDraftGroup.transportedQty || 0;
+      document.getElementById('modTripLoadsInput').value = modalDraftGroup.tripLoadsText || '';
+      document.getElementById('modOpeningFbInput').value = modalDraftGroup.openingFB || 0;
+      document.getElementById('modClosingFbInput').value = modalDraftGroup.closingFB || 0;
+      document.getElementById('modAutoSplitCheckbox').checked = modalDraftGroup.autoSplit !== false;
+      document.getElementById('modCarrierFilterInput').value = '';
+
+      document.getElementById('modRoundingRuleBadge').textContent =
+        appState.meta.roundMultiple5 ? 'MROUND 5 Active' : 'Exact Integer Rounding';
+
+      const normMode = String(appState.meta.norm || '250');
+      document.getElementById('modActiveNormBadge').textContent =
+        normMode === 'BOTH' ? 'Mode: Both (500 & 1000 Split)' : (normMode === '500' ? 'Mode: 1000 (500 kg Norm)' : 'Mode: 500 (250 kg Norm)');
+
+      recalcAndRenderModalTable();
+      document.getElementById('groupAllocationModal').classList.add('open');
+    }
+
+    function parseTripLoadsSum(expr) {
+      if (!expr || !expr.trim()) return null;
+      const parts = expr.split(/[+,;\s]+/).map(s => parseFloat(s)).filter(n => !isNaN(n) && n >= 0);
+      if (parts.length === 0) return null;
+      return Math.round(parts.reduce((a, b) => a + b, 0));
+    }
+
+    function recalcAndRenderModalTable() {
+      if (!modalDraftGroup) return;
+
+      const normMode = String(appState.meta.norm || '250'); // '250', '500', 'BOTH'
+      const isBoth = normMode === 'BOTH';
+
+      const sumCarrierTrans = (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.transportedQty) || 0), 0);
+      const tripSum = parseTripLoadsSum(modalDraftGroup.tripLoadsText);
+
+      if (tripSum !== null) {
+        modalDraftGroup.transportedQty = tripSum;
+        document.getElementById('modTransportedInput').value = tripSum;
+        document.getElementById('modTripHelperText').textContent = `Auto-summed from trip loads (${tripSum} kg)`;
+      } else if (sumCarrierTrans > 0) {
+        modalDraftGroup.transportedQty = sumCarrierTrans;
+        document.getElementById('modTransportedInput').value = sumCarrierTrans;
+        document.getElementById('modTripHelperText').textContent = `Auto-summed from carrier loads (${sumCarrierTrans} kg)`;
+      } else {
+        document.getElementById('modTripHelperText').textContent = `Direct entry or synced from Transport Loads`;
+      }
+
+      distributeGroupShares(modalDraftGroup, !!appState.meta.roundMultiple5);
+
+      const netPool = computeNetDistributable(modalDraftGroup);
+      document.getElementById('modNetDistributableDisplay').textContent = `${netPool.toLocaleString()} kg`;
+
+      const cutter = appState.roster.find(w => w.id === activeModalCutterId);
+      const carrierFilterQ = (document.getElementById('modCarrierFilterInput').value || '').trim().toLowerCase();
+      const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
+
+      // Render Dynamic Table Header based on Norm Mode (Single vs Both 500 & 1000)
+      const thead = document.getElementById('modalGroupMembersThead');
+      if (isBoth) {
+        thead.innerHTML = `<tr>
+          <th style="width: 85px;">Role</th>
+          <th>Worker (Code & Name)</th>
+          <th style="width: 115px; text-align: right;">Att 500<br><span style="font-size:9px;font-weight:400;">(250 kg Norm)</span></th>
+          <th style="width: 115px; text-align: right;">Att 1000<br><span style="font-size:9px;font-weight:400;">(500 kg Norm)</span></th>
+          <th style="width: 90px; text-align: right;">Total Att</th>
+          <th style="width: 125px; text-align: right;">Carrier Trans (kg)</th>
+          <th style="width: 90px; text-align: center;">Lock Qty</th>
+          <th style="width: 130px; text-align: right;">Allocated Share (kg)</th>
+          <th style="width: 55px; text-align: center;">Del</th>
+        </tr>`;
+      } else {
+        const colLabel = normMode === '500' ? 'Attendance 1000 (500 Norm)' : 'Attendance 500 (250 Norm)';
+        thead.innerHTML = `<tr>
+          <th style="width: 90px;">Role</th>
+          <th>Worker (Code & Name)</th>
+          <th style="width: 150px; text-align: right;">${colLabel}</th>
+          <th style="width: 145px; text-align: right;">Carrier Transported (kg)</th>
+          <th style="width: 105px; text-align: center;">Lock to Formula</th>
+          <th style="width: 145px; text-align: right;">Allocated Share (kg)</th>
+          <th style="width: 60px; text-align: center;">Del</th>
+        </tr>`;
+      }
+
+      const tbody = document.getElementById('modalGroupMembersBody');
+      tbody.innerHTML = '';
+
+      // Row 1: Cutter Own Row
+      const cutterTr = document.createElement('tr');
+      cutterTr.style.background = '#f0fdf4';
+      if (isBoth) {
+        cutterTr.innerHTML = `
+          <td><span class="badge badge-cutter">Cutter (H)</span></td>
+          <td><strong>${escapeHtml(cutter.code)} — ${escapeHtml(cutter.name)}</strong> <span style="font-size:10.5px; color:var(--primary);">(Residual)</span></td>
+          <td><input type="number" class="inline-input num" step="0.5" min="0" value="${modalDraftGroup.cutterMandays250 ?? 0}" data-mod-role="cutter" data-mod-field="mandays250"></td>
+          <td><input type="number" class="inline-input num" step="0.5" min="0" value="${modalDraftGroup.cutterMandays500 ?? 0}" data-mod-role="cutter" data-mod-field="mandays500"></td>
+          <td class="num" style="font-weight:700;">${(modalDraftGroup.cutterMandays || 0).toFixed(1)}</td>
+          <td class="num" style="color:var(--text-light);">-</td>
+          <td style="text-align:center;"><input type="checkbox" ${modalDraftGroup.cutterLocked !== false ? 'checked' : ''} data-mod-role="cutter" data-mod-field="locked"></td>
+          <td><input type="number" class="inline-input num" step="5" value="${modalDraftGroup.cutterShare ?? 0}" ${modalDraftGroup.cutterLocked !== false ? 'readonly style="background:#e2e8f0; font-weight:700;"' : 'style="font-weight:700;"'} data-mod-role="cutter" data-mod-field="share"></td>
+          <td style="text-align:center;">-</td>
+        `;
+      } else {
+        const activeField = normMode === '500' ? 'mandays500' : 'mandays250';
+        const activeVal = normMode === '500' ? (modalDraftGroup.cutterMandays500 ?? 0) : (modalDraftGroup.cutterMandays250 ?? 0);
+        cutterTr.innerHTML = `
+          <td><span class="badge badge-cutter">Cutter (H)</span></td>
+          <td><strong>${escapeHtml(cutter.code)} — ${escapeHtml(cutter.name)}</strong> <span style="font-size:11px; color:var(--primary);">(Residual Absorber)</span></td>
+          <td><input type="number" class="inline-input num" step="0.5" min="0" value="${activeVal}" data-mod-role="cutter" data-mod-field="${activeField}"></td>
+          <td class="num" style="color:var(--text-light);">-</td>
+          <td style="text-align:center;"><input type="checkbox" ${modalDraftGroup.cutterLocked !== false ? 'checked' : ''} data-mod-role="cutter" data-mod-field="locked"></td>
+          <td><input type="number" class="inline-input num" step="5" value="${modalDraftGroup.cutterShare ?? 0}" ${modalDraftGroup.cutterLocked !== false ? 'readonly style="background:#e2e8f0; font-weight:700;"' : 'style="font-weight:700;"'} data-mod-role="cutter" data-mod-field="share"></td>
+          <td style="text-align:center;">-</td>
+        `;
+      }
+      tbody.appendChild(cutterTr);
+
+      // Carrier Rows
+      (modalDraftGroup.carriers || []).forEach((cRow, idx) => {
+        const tr = document.createElement('tr');
+        const filteredCarriers = allCarriers.filter(fc =>
+          fc.id === cRow.carrierId ||
+          !carrierFilterQ ||
+          fc.code.toLowerCase().includes(carrierFilterQ) ||
+          fc.name.toLowerCase().includes(carrierFilterQ)
+        );
+        const carrierOpts = filteredCarriers.map(fc =>
+          `<option value="${fc.id}" ${fc.id === cRow.carrierId ? 'selected' : ''}>${escapeHtml(fc.code)} — ${escapeHtml(fc.name)}</option>`
+        ).join('');
+
+        if (isBoth) {
+          tr.innerHTML = `
+            <td><span class="badge badge-carrier">Carrier (FC)</span></td>
+            <td><select class="inline-input" data-mod-role="carrier" data-idx="${idx}" data-mod-field="carrierId">${carrierOpts}</select></td>
+            <td><input type="number" class="inline-input num" step="0.5" min="0" value="${cRow.mandays250 ?? 0}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="mandays250"></td>
+            <td><input type="number" class="inline-input num" step="0.5" min="0" value="${cRow.mandays500 ?? 0}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="mandays500"></td>
+            <td class="num" style="font-weight:700;">${(cRow.mandays || 0).toFixed(1)}</td>
+            <td><input type="number" class="inline-input num" step="1" min="0" value="${cRow.transportedQty ?? 0}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="transportedQty"></td>
+            <td style="text-align:center;"><input type="checkbox" ${cRow.locked !== false ? 'checked' : ''} data-mod-role="carrier" data-idx="${idx}" data-mod-field="locked"></td>
+            <td><input type="number" class="inline-input num" step="5" value="${cRow.share ?? 0}" ${cRow.locked !== false ? 'readonly style="background:#f1f5f9; font-weight:600;"' : 'style="font-weight:700; border-color:var(--accent);"'} data-mod-role="carrier" data-idx="${idx}" data-mod-field="share"></td>
+            <td style="text-align:center;">
+              <button type="button" class="btn btn-secondary btn-sm" data-mod-action="remove-carrier" data-idx="${idx}" style="color:var(--danger);">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </td>
+          `;
+        } else {
+          const activeField = normMode === '500' ? 'mandays500' : 'mandays250';
+          const activeVal = normMode === '500' ? (cRow.mandays500 ?? 0) : (cRow.mandays250 ?? 0);
+          tr.innerHTML = `
+            <td><span class="badge badge-carrier">Carrier (FC)</span></td>
+            <td><select class="inline-input" data-mod-role="carrier" data-idx="${idx}" data-mod-field="carrierId">${carrierOpts}</select></td>
+            <td><input type="number" class="inline-input num" step="0.5" min="0" value="${activeVal}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="${activeField}"></td>
+            <td><input type="number" class="inline-input num" step="1" min="0" value="${cRow.transportedQty ?? 0}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="transportedQty"></td>
+            <td style="text-align:center;"><input type="checkbox" ${cRow.locked !== false ? 'checked' : ''} data-mod-role="carrier" data-idx="${idx}" data-mod-field="locked"></td>
+            <td><input type="number" class="inline-input num" step="5" value="${cRow.share ?? 0}" ${cRow.locked !== false ? 'readonly style="background:#f1f5f9; font-weight:600;"' : 'style="font-weight:700; border-color:var(--accent);"'} data-mod-role="carrier" data-idx="${idx}" data-mod-field="share"></td>
+            <td style="text-align:center;">
+              <button type="button" class="btn btn-secondary btn-sm" data-mod-action="remove-carrier" data-idx="${idx}" style="color:var(--danger);">
+                <span class="material-symbols-outlined">close</span>
+              </button>
+            </td>
+          `;
+        }
+        tbody.appendChild(tr);
+      });
+
+      // Totals & Validation Footer
+      const totAtt250 = (Number(modalDraftGroup.cutterMandays250) || 0) +
+        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.mandays250) || 0), 0);
+      const totAtt500 = (Number(modalDraftGroup.cutterMandays500) || 0) +
+        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.mandays500) || 0), 0);
+      const totalAtt = (Number(modalDraftGroup.cutterMandays) || 0) +
+        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.mandays) || 0), 0);
+      const totalAllocated = (Number(modalDraftGroup.cutterShare) || 0) +
+        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.share) || 0), 0);
+      const diff = netPool - totalAllocated;
+
+      const diffBadgeHtml = diff === 0
+        ? `<span class="badge badge-configured">Balanced ✓</span>`
+        : `<span class="badge badge-pending">Diff: ${diff > 0 ? '+' + diff : diff} kg</span>`;
+
+      const tfoot = document.getElementById('modalGroupMembersTfoot');
+      if (isBoth) {
+        tfoot.innerHTML = `<tr class="subtotal-row">
+          <td colspan="2">Group Totals</td>
+          <td class="num">${totAtt250.toFixed(1)}</td>
+          <td class="num">${totAtt500.toFixed(1)}</td>
+          <td class="num">${totalAtt.toFixed(1)}</td>
+          <td class="num">${sumCarrierTrans.toLocaleString()} kg</td>
+          <td style="text-align:center;">${diffBadgeHtml}</td>
+          <td class="num">${totalAllocated.toLocaleString()} kg</td>
+          <td></td>
+        </tr>`;
+      } else {
+        tfoot.innerHTML = `<tr class="subtotal-row">
+          <td colspan="2">Group Totals</td>
+          <td class="num">${totalAtt.toFixed(1)}</td>
+          <td class="num">${sumCarrierTrans.toLocaleString()} kg</td>
+          <td style="text-align:center;">${diffBadgeHtml}</td>
+          <td class="num">${totalAllocated.toLocaleString()} kg</td>
+          <td></td>
+        </tr>`;
+      }
+
+      const msgEl = document.getElementById('modalValidationMsg');
+      const saveBtn = document.getElementById('btnSaveGroupModal');
+
+      if (diff === 0) {
+        msgEl.style.color = 'var(--primary)';
+        msgEl.textContent = `Group allocation is 100% balanced (${totalAllocated.toLocaleString()} kg = Net Distributable Qty).`;
+        saveBtn.disabled = false;
+      } else {
+        msgEl.style.color = 'var(--danger)';
+        msgEl.textContent = `Allocation mismatch! Total allocated (${totalAllocated} kg) differs from Net Distributable (${netPool} kg) by ${diff} kg.`;
+        saveBtn.disabled = true;
+      }
+    }
+
+    // ==========================================
+    // MODULE 5: LIVE MATRICES & ADJUSTMENTS
+    // ==========================================
+    function renderModule5Matrices(analytics) {
+      const modeLabel = analytics.normMode === 'BOTH'
+        ? 'Both (500 [250kg] & 1000 [500kg] Split Month)'
+        : (analytics.normMode === '500' ? 'Peak Season 1000 (500 kg / manday)' : 'Off-Season 500 (250 kg / manday)');
+      document.getElementById('lblSummaryNorm').textContent = modeLabel;
+
+      // 5A. Cutter-Carrier Allocation Matrix
       const matrixWrap = document.getElementById('allocationMatrixContainer');
       const carriers = analytics.carriers;
 
@@ -2200,7 +3742,6 @@
         });
       }
 
-      // Bottom Column Totals Row
       matrixHtml += `<tr class="grandtotal-row">
         <td>Column Totals (Acquired in Matrix)</td>
         <td class="num">${analytics.totalCutterOwnShare.toLocaleString()}</td>`;
@@ -2211,7 +3752,7 @@
       matrixHtml += `<td class="num" style="background:#bbf7d0; color:#14532d;">${analytics.totalNetDistributable.toLocaleString()}</td></tr></tbody></table>`;
       matrixWrap.innerHTML = matrixHtml;
 
-      // 3B. Populate Transfer Dropdowns & Adjustment Table
+      // 5B. Populate Transfer Dropdowns & Adjustment Table
       const fromSel = document.getElementById('adjFromWorker');
       const toSel = document.getElementById('adjToWorker');
       const prevFrom = fromSel.value;
@@ -2250,7 +3791,7 @@
         });
       }
 
-      // 3C. Flattened Attendance & Balance Summary
+      // 5C. Flattened Attendance & Balance Summary
       const flatBody = document.getElementById('flattenedSummaryBody');
       flatBody.innerHTML = '';
 
@@ -2261,7 +3802,9 @@
           <td class="mono"><strong>${escapeHtml(w.code)}</strong></td>
           <td>${escapeHtml(w.name)}</td>
           <td><span class="badge ${w.role === 'Cutter' ? 'badge-cutter' : 'badge-carrier'}">${w.role}</span></td>
-          <td class="num">${w.mandays.toFixed(1)}</td>
+          <td class="num">${w.mandays250.toFixed(1)}</td>
+          <td class="num">${w.mandays500.toFixed(1)}</td>
+          <td class="num" style="font-weight:700;">${w.mandays.toFixed(1)}</td>
           <td class="num">${w.targetQty.toLocaleString()}</td>
           <td class="num">${w.matrixQty.toLocaleString()}</td>
           <td class="num" style="${w.adjQty !== 0 ? 'font-weight:700;' : 'color:var(--text-light);'}">${w.adjQty > 0 ? '+' + w.adjQty : w.adjQty}</td>
@@ -2274,6 +3817,8 @@
         const balPrefix = t.netBalance > 0 ? '+' : '';
         return `<tr class="${rowClass}">
           <td colspan="3">${escapeHtml(label)}</td>
+          <td class="num">${t.mandays250.toFixed(1)}</td>
+          <td class="num">${t.mandays500.toFixed(1)}</td>
           <td class="num">${t.mandays.toFixed(1)}</td>
           <td class="num">${t.targetQty.toLocaleString()}</td>
           <td class="num">${t.matrixQty.toLocaleString()}</td>
@@ -2283,11 +3828,11 @@
         </tr>`;
       };
 
-      let flatHtml = `<tr class="section-banner"><td colspan="9">Cutters Block (H)</td></tr>`;
+      let flatHtml = `<tr class="section-banner"><td colspan="11">Cutters Block (H)</td></tr>`;
       analytics.cutterSummaries.forEach(w => { flatHtml += renderWorkerSummaryRow(w); });
       flatHtml += renderSubtotalRow('Subtotal — Cutters (H)', analytics.cutterTotals);
 
-      flatHtml += `<tr class="section-banner"><td colspan="9">Carriers Block (FC)</td></tr>`;
+      flatHtml += `<tr class="section-banner"><td colspan="11">Carriers Block (FC)</td></tr>`;
       analytics.carrierSummaries.forEach(w => { flatHtml += renderWorkerSummaryRow(w); });
       flatHtml += renderSubtotalRow('Subtotal — Carriers (FC)', analytics.carrierTotals);
 
@@ -2295,93 +3840,82 @@
       flatBody.innerHTML = flatHtml;
     }
 
-    // MODULE 4: Final Submission Chart & Estate Reconciliation Summary
-    function renderModule4Submission(analytics) {
-      const isOffSeason = analytics.norm === 250;
+    // ==========================================
+    // MODULE 6: FINAL SUBMISSION CHART (INC 1 = 500, INC 2 = 1000)
+    // ==========================================
+    function renderModule6Submission(analytics) {
+      const nMode = analytics.normMode;
 
-      // Update Print Report Header
       document.getElementById('repHeaderEstate').textContent = appState.meta.estateName || 'UNNAMED OIL PALM ESTATE';
       document.getElementById('repHeaderDiv').textContent = appState.meta.division || '-';
       document.getElementById('repHeaderField').textContent = appState.meta.fieldNo || '-';
       document.getElementById('repHeaderMonth').textContent = appState.meta.monthYear || '-';
-      document.getElementById('repHeaderNorm').textContent = isOffSeason ? '250 kg (500 Col)' : '500 kg (1000 Col)';
+      document.getElementById('repHeaderNorm').textContent =
+        nMode === 'BOTH' ? 'Both (500 & 1000 Split)' : (nMode === '500' ? '1000 (500 kg Norm)' : '500 (250 kg Norm)');
 
       const tbody = document.getElementById('finalSubmissionBody');
 
-      const buildSectionRows = (workers, isCutterSection) => {
-        return workers.map((w, idx) => {
-          const att500 = isOffSeason ? w.mandays.toFixed(1) : '-';
-          const att1000 = !isOffSeason ? w.mandays.toFixed(1) : '-';
-          const qty500 = isOffSeason ? w.cappedCheckRollQty.toLocaleString() : '-';
-          const qty1000 = !isOffSeason ? w.cappedCheckRollQty.toLocaleString() : '-';
-          const inc1 = isCutterSection ? w.incentiveQty.toLocaleString() : '-';
-          const inc2 = !isCutterSection ? w.incentiveQty.toLocaleString() : '-';
+      const fmtVal = (v, isDec = false) => {
+        if (!v || v === 0) return '-';
+        return isDec ? Number(v).toFixed(1) : Number(v).toLocaleString();
+      };
 
+      // Note: Modification #1 — Incentive 1 is for 500 (250 Norm) and Incentive 2 is for 1000 (500 Norm) across BOTH Cutters and Carriers!
+      const buildSectionRows = (workers) => {
+        return workers.map((w, idx) => {
           return `<tr>
             <td class="mono" style="text-align:center;">${idx + 1}</td>
             <td class="mono"><strong>${escapeHtml(w.code)}</strong></td>
             <td>${escapeHtml(w.name)}</td>
             <td class="num" style="font-weight:700;">${w.finalHarvestedQty.toLocaleString()}</td>
-            <td class="num">${att500}</td>
-            <td class="num">${att1000}</td>
-            <td class="num">${qty500}</td>
-            <td class="num">${qty1000}</td>
-            <td class="num">${inc1}</td>
-            <td class="num">${inc2}</td>
+            <td class="num">${fmtVal(w.mandays250, true)}</td>
+            <td class="num">${fmtVal(w.mandays500, true)}</td>
+            <td class="num">${fmtVal(w.qty500Capped)}</td>
+            <td class="num">${fmtVal(w.qty1000Capped)}</td>
+            <td class="num">${fmtVal(w.inc500)}</td>
+            <td class="num">${fmtVal(w.inc1000)}</td>
             <td class="num" style="font-weight:700; color:var(--primary);">${w.incentiveQty.toLocaleString()}</td>
             <td class="num" style="${w.wageCutQty > 0 ? 'color:var(--danger); font-weight:700;' : 'color:var(--text-light);'}">${w.wageCutQty.toLocaleString()}</td>
           </tr>`;
         }).join('');
       };
 
-      const buildTotalRow = (label, totals, roleType, rowClass) => {
-        const att500 = isOffSeason ? totals.mandays.toFixed(1) : '-';
-        const att1000 = !isOffSeason ? totals.mandays.toFixed(1) : '-';
-        const qty500 = isOffSeason ? totals.cappedCheckRollQty.toLocaleString() : '-';
-        const qty1000 = !isOffSeason ? totals.cappedCheckRollQty.toLocaleString() : '-';
-
-        let inc1 = '-';
-        let inc2 = '-';
-        if (roleType === 'CUTTER') {
-          inc1 = totals.incentiveQty.toLocaleString();
-        } else if (roleType === 'CARRIER') {
-          inc2 = totals.incentiveQty.toLocaleString();
-        } else {
-          inc1 = analytics.cutterTotals.incentiveQty.toLocaleString();
-          inc2 = analytics.carrierTotals.incentiveQty.toLocaleString();
-        }
-
+      const buildTotalRow = (label, totals, rowClass) => {
         return `<tr class="${rowClass}">
           <td colspan="3">${escapeHtml(label)}</td>
           <td class="num">${totals.finalHarvestedQty.toLocaleString()}</td>
-          <td class="num">${att500}</td>
-          <td class="num">${att1000}</td>
-          <td class="num">${qty500}</td>
-          <td class="num">${qty1000}</td>
-          <td class="num">${inc1}</td>
-          <td class="num">${inc2}</td>
+          <td class="num">${fmtVal(totals.mandays250, true)}</td>
+          <td class="num">${fmtVal(totals.mandays500, true)}</td>
+          <td class="num">${fmtVal(totals.qty500Capped)}</td>
+          <td class="num">${fmtVal(totals.qty1000Capped)}</td>
+          <td class="num">${fmtVal(totals.inc500)}</td>
+          <td class="num">${fmtVal(totals.inc1000)}</td>
           <td class="num">${totals.incentiveQty.toLocaleString()}</td>
           <td class="num">${totals.wageCutQty.toLocaleString()}</td>
         </tr>`;
       };
 
       let subHtml = `<tr class="section-banner"><td colspan="12">Section A: Men (Cutters - H)</td></tr>`;
-      subHtml += buildSectionRows(analytics.cutterSummaries, true);
-      subHtml += buildTotalRow('Subtotal — Section A: Men (Cutters)', analytics.cutterTotals, 'CUTTER', 'subtotal-row');
+      subHtml += buildSectionRows(analytics.cutterSummaries);
+      subHtml += buildTotalRow('Subtotal — Section A: Men (Cutters)', analytics.cutterTotals, 'subtotal-row');
 
       subHtml += `<tr class="section-banner"><td colspan="12">Section B: Women (Carriers - FC)</td></tr>`;
-      subHtml += buildSectionRows(analytics.carrierSummaries, false);
-      subHtml += buildTotalRow('Subtotal — Section B: Women (Carriers)', analytics.carrierTotals, 'CARRIER', 'subtotal-row');
+      subHtml += buildSectionRows(analytics.carrierSummaries);
+      subHtml += buildTotalRow('Subtotal — Section B: Women (Carriers)', analytics.carrierTotals, 'subtotal-row');
 
-      subHtml += buildTotalRow('GRAND TOTAL (SECTION A + SECTION B)', analytics.grandTotals, 'ALL', 'grandtotal-row');
+      subHtml += buildTotalRow('GRAND TOTAL (SECTION A + SECTION B)', analytics.grandTotals, 'grandtotal-row');
       tbody.innerHTML = subHtml;
 
       // Populate Estate Reconciliation Summary Block
-      document.getElementById('recCutterMandays').textContent = analytics.cutterTotals.mandays.toFixed(2);
-      document.getElementById('recCarrierMandays').textContent = analytics.carrierTotals.mandays.toFixed(2);
+      document.getElementById('recCutterMandays').textContent =
+        `${analytics.cutterTotals.mandays250.toFixed(1)} (500) + ${analytics.cutterTotals.mandays500.toFixed(1)} (1000) = ${analytics.cutterTotals.mandays.toFixed(2)}`;
+      document.getElementById('recCarrierMandays').textContent =
+        `${analytics.carrierTotals.mandays250.toFixed(1)} (500) + ${analytics.carrierTotals.mandays500.toFixed(1)} (1000) = ${analytics.carrierTotals.mandays.toFixed(2)}`;
       document.getElementById('recTotalMandays').textContent = analytics.grandTotals.mandays.toFixed(2);
-      document.getElementById('recAttendanceQty').textContent = `${analytics.grandTotals.cappedCheckRollQty.toLocaleString()} kg`;
-      document.getElementById('recIncentiveQty').textContent = `${analytics.grandTotals.incentiveQty.toLocaleString()} kg`;
+      document.getElementById('recAttendanceQty').textContent =
+        `${analytics.grandTotals.qty500Capped.toLocaleString()} + ${analytics.grandTotals.qty1000Capped.toLocaleString()} = ${analytics.grandTotals.cappedCheckRollQty.toLocaleString()} kg`;
+      document.getElementById('recIncentiveQty').textContent =
+        `${analytics.grandTotals.inc500.toLocaleString()} (500) + ${analytics.grandTotals.inc1000.toLocaleString()} (1000) = ${analytics.grandTotals.incentiveQty.toLocaleString()} kg`;
       document.getElementById('recWageCutQty').textContent = `${analytics.grandTotals.wageCutQty.toLocaleString()} kg`;
 
       const accountedHarvest = analytics.grandTotals.cappedCheckRollQty + analytics.grandTotals.incentiveQty;
@@ -2392,7 +3926,6 @@
       document.getElementById('recClosingBalance').textContent = `${analytics.totalClosingFB.toLocaleString()} kg`;
       document.getElementById('recNetDistributable').textContent = `${analytics.totalNetDistributable.toLocaleString()} kg`;
 
-      // Verify Closing Balance formula: Closing = (Attendance Qty + Incentive Qty + Opening Balance) - Total Transported
       const formulaClosing = (accountedHarvest + analytics.totalOpeningFB) - analytics.totalTransported;
       const verifyEl = document.getElementById('recClosingFormulaVerify');
       if (formulaClosing === analytics.totalClosingFB) {
@@ -2401,166 +3934,6 @@
       } else {
         verifyEl.style.color = 'var(--danger)';
         verifyEl.textContent = `Formula: ${formulaClosing.toLocaleString()} kg vs Actual: ${analytics.totalClosingFB.toLocaleString()} kg`;
-      }
-    }
-
-    // ==========================================
-    // MODULE 2 MODAL: CUTTER GROUP ALLOCATION
-    // ==========================================
-    function openGroupAllocationModal(cutterId) {
-      const cutter = appState.roster.find(w => w.id === cutterId);
-      if (!cutter) return;
-
-      activeModalCutterId = cutterId;
-      const existing = appState.cutterGroups[cutterId] || {
-        cutterId,
-        configured: false,
-        transportedQty: 0,
-        tripLoadsText: '',
-        openingFB: 0,
-        closingFB: 0,
-        cutterMandays: 0,
-        autoSplit: true,
-        cutterLocked: true,
-        cutterShare: 0,
-        carriers: []
-      };
-
-      // Deep clone into modal draft
-      modalDraftGroup = JSON.parse(JSON.stringify(existing));
-
-      document.getElementById('modalCutterHeaderTitle').textContent =
-        `Group Allocation & Field Balance — ${cutter.code}: ${cutter.name}`;
-
-      document.getElementById('modTransportedInput').value = modalDraftGroup.transportedQty || 0;
-      document.getElementById('modTripLoadsInput').value = modalDraftGroup.tripLoadsText || '';
-      document.getElementById('modOpeningFbInput').value = modalDraftGroup.openingFB || 0;
-      document.getElementById('modClosingFbInput').value = modalDraftGroup.closingFB || 0;
-      document.getElementById('modAutoSplitCheckbox').checked = modalDraftGroup.autoSplit !== false;
-
-      const badge = document.getElementById('modRoundingRuleBadge');
-      badge.textContent = appState.meta.roundMultiple5 ? 'MROUND 5 Active' : 'Exact Integer Rounding';
-
-      recalcAndRenderModalTable();
-      document.getElementById('groupAllocationModal').classList.add('open');
-    }
-
-    function parseTripLoadsSum(expr) {
-      if (!expr || !expr.trim()) return null;
-      const parts = expr.split(/[+,;\s]+/).map(s => parseFloat(s)).filter(n => !isNaN(n) && n >= 0);
-      if (parts.length === 0) return null;
-      return Math.round(parts.reduce((a, b) => a + b, 0));
-    }
-
-    function recalcAndRenderModalTable() {
-      if (!modalDraftGroup) return;
-
-      // Check if carrier transported loads are entered; if so or if tripLoadsText exists, sync Transported Qty
-      const sumCarrierTrans = (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.transportedQty) || 0), 0);
-      const tripSum = parseTripLoadsSum(modalDraftGroup.tripLoadsText);
-
-      if (tripSum !== null) {
-        modalDraftGroup.transportedQty = tripSum;
-        document.getElementById('modTransportedInput').value = tripSum;
-        document.getElementById('modTripHelperText').textContent = `Auto-summed from trip loads (${tripSum} kg)`;
-      } else if (sumCarrierTrans > 0) {
-        modalDraftGroup.transportedQty = sumCarrierTrans;
-        document.getElementById('modTransportedInput').value = sumCarrierTrans;
-        document.getElementById('modTripHelperText').textContent = `Auto-summed from carrier loads (${sumCarrierTrans} kg)`;
-      } else {
-        document.getElementById('modTripHelperText').textContent = `Direct entry or summed from trips/carriers`;
-      }
-
-      distributeGroupShares(modalDraftGroup, !!appState.meta.roundMultiple5);
-
-      const netPool = computeNetDistributable(modalDraftGroup);
-      document.getElementById('modNetDistributableDisplay').textContent = `${netPool.toLocaleString()} kg`;
-
-      const cutter = appState.roster.find(w => w.id === activeModalCutterId);
-      const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
-      const tbody = document.getElementById('modalGroupMembersBody');
-      tbody.innerHTML = '';
-
-      // Row 1: Cutter Own Row
-      const cutterTr = document.createElement('tr');
-      cutterTr.style.background = '#f0fdf4';
-      cutterTr.innerHTML = `
-        <td><span class="badge badge-cutter">Cutter (H)</span></td>
-        <td><strong>${escapeHtml(cutter.code)} — ${escapeHtml(cutter.name)}</strong> <span style="font-size:11px; color:var(--primary);">(Residual Absorber)</span></td>
-        <td>
-          <input type="number" class="inline-input num" step="0.5" min="0" value="${modalDraftGroup.cutterMandays ?? 0}" data-mod-role="cutter" data-mod-field="mandays">
-        </td>
-        <td class="num" style="color:var(--text-light);">-</td>
-        <td style="text-align:center;">
-          <input type="checkbox" ${modalDraftGroup.cutterLocked !== false ? 'checked' : ''} data-mod-role="cutter" data-mod-field="locked" title="Lock Cutter share to absorb residual">
-        </td>
-        <td>
-          <input type="number" class="inline-input num" step="5" value="${modalDraftGroup.cutterShare ?? 0}" ${modalDraftGroup.cutterLocked !== false ? 'readonly style="background:#e2e8f0; font-weight:700;"' : 'style="font-weight:700;"'} data-mod-role="cutter" data-mod-field="share">
-        </td>
-        <td style="text-align:center;">-</td>
-      `;
-      tbody.appendChild(cutterTr);
-
-      // Carrier Rows
-      (modalDraftGroup.carriers || []).forEach((cRow, idx) => {
-        const tr = document.createElement('tr');
-        const carrierOpts = allCarriers.map(fc =>
-          `<option value="${fc.id}" ${fc.id === cRow.carrierId ? 'selected' : ''}>${escapeHtml(fc.code)} — ${escapeHtml(fc.name)}</option>`
-        ).join('');
-
-        tr.innerHTML = `
-          <td><span class="badge badge-carrier">Carrier (FC)</span></td>
-          <td>
-            <select class="inline-input" data-mod-role="carrier" data-idx="${idx}" data-mod-field="carrierId">
-              ${carrierOpts}
-            </select>
-          </td>
-          <td>
-            <input type="number" class="inline-input num" step="0.5" min="0" value="${cRow.mandays ?? 0}" data-mod-role="carrier" data-idx="${idx}" data-mod-field="mandays">
-          </td>
-          <td>
-            <input type="number" class="inline-input num" step="1" min="0" value="${cRow.transportedQty ?? 0}" placeholder="0" data-mod-role="carrier" data-idx="${idx}" data-mod-field="transportedQty">
-          </td>
-          <td style="text-align:center;">
-            <input type="checkbox" ${cRow.locked !== false ? 'checked' : ''} data-mod-role="carrier" data-idx="${idx}" data-mod-field="locked" title="Uncheck to manually override quantity">
-          </td>
-          <td>
-            <input type="number" class="inline-input num" step="5" value="${cRow.share ?? 0}" ${cRow.locked !== false ? 'readonly style="background:#f1f5f9; font-weight:600;"' : 'style="font-weight:700; border-color:var(--accent);"'} data-mod-role="carrier" data-idx="${idx}" data-mod-field="share">
-          </td>
-          <td style="text-align:center;">
-            <button type="button" class="btn btn-secondary btn-sm" data-mod-action="remove-carrier" data-idx="${idx}" style="color:var(--danger);">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // Totals & Validation
-      const totalAtt = (Number(modalDraftGroup.cutterMandays) || 0) +
-        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.mandays) || 0), 0);
-      const totalAllocated = (Number(modalDraftGroup.cutterShare) || 0) +
-        (modalDraftGroup.carriers || []).reduce((acc, c) => acc + (Number(c.share) || 0), 0);
-      const diff = netPool - totalAllocated;
-
-      document.getElementById('modTotalMandaysCell').textContent = totalAtt.toFixed(1);
-      document.getElementById('modTotalCarrierTransCell').textContent = `${sumCarrierTrans.toLocaleString()} kg`;
-      document.getElementById('modTotalAllocatedCell').textContent = `${totalAllocated.toLocaleString()} kg`;
-
-      const diffCell = document.getElementById('modDiffStatusCell');
-      const msgEl = document.getElementById('modalValidationMsg');
-      const saveBtn = document.getElementById('btnSaveGroupModal');
-
-      if (diff === 0) {
-        diffCell.innerHTML = `<span class="badge badge-configured">Balanced ✓</span>`;
-        msgEl.style.color = 'var(--primary)';
-        msgEl.textContent = `Group allocation is 100% balanced (${totalAllocated.toLocaleString()} kg = Net Distributable Qty).`;
-        saveBtn.disabled = false;
-      } else {
-        diffCell.innerHTML = `<span class="badge badge-pending">Diff: ${diff > 0 ? '+' + diff : diff} kg</span>`;
-        msgEl.style.color = 'var(--danger)';
-        msgEl.textContent = `Allocation mismatch! Total allocated (${totalAllocated} kg) differs from Net Distributable (${netPool} kg) by ${diff} kg.`;
-        saveBtn.disabled = true;
       }
     }
 
@@ -2588,7 +3961,6 @@
             return;
           }
 
-          // Detect header indices
           const header = rows[0].map(h => String(h || '').toLowerCase());
           const roleIdx = header.findIndex(h => h.includes('role') || h.includes('cat') || h.includes('type'));
           const codeIdx = header.findIndex(h => h.includes('code') || h.includes('id') || h.includes('no'));
@@ -2610,7 +3982,6 @@
               ? 'Carrier'
               : 'Cutter';
 
-            // Update existing by code or add new
             const existing = appState.roster.find(w => w.code.toLowerCase() === rawCode.toLowerCase());
             if (existing) {
               existing.role = normalizedRole;
@@ -2669,8 +4040,8 @@
     function downloadSampleCsvTemplate() {
       const sample = [
         'Role,Code No,Name,Field Code',
-        'Cutter,H-101,Rajan Pillai,FD-2014B',
-        'Cutter,H-102,Suresh Kumar K,FD-2014B',
+        'Cutter,H-101,Rajesh Pillai,FD-2014B',
+        'Cutter,H-102,Binu Kumar K,FD-2014B',
         'Carrier,FC-201,Santha Kumari,FD-2014B',
         'Carrier,FC-202,Latha Nair,FD-2014B'
       ].join('\n');
@@ -2683,7 +4054,6 @@
       URL.revokeObjectURL(url);
     }
 
-    // Multi-Sheet Workbook (.XLSX) Export with Live Excel Formulas
     function exportMultiSheetWorkbook() {
       if (typeof XLSX === 'undefined') {
         showToast('SheetJS library not loaded yet.');
@@ -2702,10 +4072,23 @@
       appState.roster.forEach((w, i) => {
         rosterAoA.push([i + 1, w.role, w.code, w.name, w.fieldCode || '']);
       });
-      const wsRoster = XLSX.utils.aoa_to_sheet(rosterAoA);
-      XLSX.utils.book_append_sheet(wb, wsRoster, '1_Master_Roster');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rosterAoA), '1_Master_Roster');
 
-      // SHEET 2: Allocation Matrix (with live SUM formulas)
+      // SHEET 2: Transport Loads (if any)
+      const transportAoA = [
+        ['TRANSPORT LOADS & BUNCH RATIO SPLITTER LEDGER'],
+        ['Sl No', 'Date', 'Load Ref', 'Split Mode', 'Total Load Weight (kg)', 'Cutter Breakdown']
+      ];
+      (appState.transportLoads || []).forEach((ld, i) => {
+        const desc = (ld.allocations || []).map(a => {
+          const cObj = appState.roster.find(w => w.id === a.cutterId);
+          return `${cObj ? cObj.code : a.cutterId}: ${a.bunches} bunches = ${a.weight} kg`;
+        }).join(' | ');
+        transportAoA.push([i + 1, ld.date, ld.loadRef, ld.splitMode, ld.totalWeight, desc]);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(transportAoA), '2_Transport_Loads');
+
+      // SHEET 3: Allocation Matrix
       const carriers = analytics.carriers;
       const matrixHeader = ['Cutter Code', 'Cutter Name', 'Own Share (kg)', ...carriers.map(c => `${c.code} (${c.name})`), 'Row Total (Net Pool)'];
       const matrixAoA = [
@@ -2713,19 +4096,12 @@
         matrixHeader
       ];
 
-      const startRow = 3; // 1-indexed in Excel
+      const startRow = 3;
       analytics.matrixRows.forEach((row, rIdx) => {
         const excelRow = startRow + rIdx;
         const lastCarrierColLetter = XLSX.utils.encode_col(2 + carriers.length);
-        const rArr = [
-          row.cutter.code,
-          row.cutter.name,
-          row.ownShare
-        ];
-        carriers.forEach(fc => {
-          rArr.push(row.carrierCells[fc.id] || 0);
-        });
-        // Live Excel Row Sum formula
+        const rArr = [row.cutter.code, row.cutter.name, row.ownShare];
+        carriers.forEach(fc => { rArr.push(row.carrierCells[fc.id] || 0); });
         rArr.push({ t: 'n', f: `SUM(C${excelRow}:${lastCarrierColLetter}${excelRow})`, v: row.rowTotal });
         matrixAoA.push(rArr);
       });
@@ -2733,7 +4109,7 @@
       const totalExcelRow = startRow + analytics.matrixRows.length;
       const lastDataRow = totalExcelRow - 1;
       const totalRowArr = ['TOTAL', 'Column Sums'];
-      const totalColsCount = 1 + carriers.length + 1; // Own Share + Carriers + Grand Total
+      const totalColsCount = 1 + carriers.length + 1;
       for (let c = 0; c < totalColsCount; c++) {
         const colLetter = XLSX.utils.encode_col(2 + c);
         if (analytics.matrixRows.length > 0) {
@@ -2743,96 +4119,91 @@
         }
       }
       matrixAoA.push(totalRowArr);
-      const wsMatrix = XLSX.utils.aoa_to_sheet(matrixAoA);
-      XLSX.utils.book_append_sheet(wb, wsMatrix, '2_Allocation_Matrix');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(matrixAoA), '3_Allocation_Matrix');
 
-      // SHEET 3: Flattened Attendance & Summary Balances
+      // SHEET 4: Summary Balances
       const summaryAoA = [
-        ['FLATTENED ATTENDANCE & TARGET BALANCE SUMMARY', `Active Norm: ${analytics.norm} kg/manday`],
-        ['Code No', 'Worker Name', 'Role', 'Total Att (Days)', 'Target Qty (kg)', 'Matrix Acquired (kg)', 'Manual Adj (kg)', 'Final Harvested (kg)', 'Net Balance (kg)']
+        ['FLATTENED ATTENDANCE & TARGET BALANCE SUMMARY', `Norm Mode: ${analytics.normMode}`],
+        ['Code No', 'Worker Name', 'Role', 'Att 500 (250 Norm)', 'Att 1000 (500 Norm)', 'Total Att', 'Target Qty (kg)', 'Matrix Acquired (kg)', 'Manual Adj (kg)', 'Final Harvested (kg)', 'Net Balance (kg)']
       ];
       let sRow = 3;
       const appendWorkerSummaryWithFormulas = (w) => {
         summaryAoA.push([
-          w.code,
-          w.name,
-          w.role,
-          w.mandays,
-          { t: 'n', f: `ROUND(D${sRow}*${analytics.norm},0)`, v: w.targetQty },
-          w.matrixQty,
-          w.adjQty,
-          { t: 'n', f: `F${sRow}+G${sRow}`, v: w.finalHarvestedQty },
-          { t: 'n', f: `H${sRow}-E${sRow}`, v: w.netBalance }
+          w.code, w.name, w.role,
+          w.mandays250, w.mandays500,
+          { t: 'n', f: `D${sRow}+E${sRow}`, v: w.mandays },
+          { t: 'n', f: `ROUND(D${sRow}*250+E${sRow}*500,0)`, v: w.targetQty },
+          w.matrixQty, w.adjQty,
+          { t: 'n', f: `H${sRow}+I${sRow}`, v: w.finalHarvestedQty },
+          { t: 'n', f: `J${sRow}-G${sRow}`, v: w.netBalance }
         ]);
         sRow++;
       };
       analytics.cutterSummaries.forEach(appendWorkerSummaryWithFormulas);
       analytics.carrierSummaries.forEach(appendWorkerSummaryWithFormulas);
-      const wsSummary = XLSX.utils.aoa_to_sheet(summaryAoA);
-      XLSX.utils.book_append_sheet(wb, wsSummary, '3_Summary_Balances');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summaryAoA), '4_Summary_Balances');
 
-      // SHEET 4: Final Submission Chart & Estate Reconciliation Summary
-      const isOff = analytics.norm === 250;
+      // SHEET 5: Final Submission Chart & Estate Reconciliation Summary
       const subAoA = [
         [appState.meta.estateName || 'OIL PALM ESTATE', `Division: ${appState.meta.division || '-'}`, `Field: ${appState.meta.fieldNo || '-'}`, `Month: ${appState.meta.monthYear || '-'}`],
         ['FINAL CHECK-ROLL SUBMISSION REGISTER & WAGE RECONCILIATION'],
-        ['Sl No', 'Code No', 'Name', 'Total Qty Harvested', 'Mandays 500 (250 Norm)', 'Mandays 1000 (500 Norm)', 'Check-Roll Qty 500', 'Check-Roll Qty 1000', 'Incentive I (Cutter)', 'Incentive II (Carrier)', 'Total Incentive', 'Wage Cut Shortfall']
+        ['Sl No', 'Code No', 'Name', 'Total Qty Harvested', 'Mandays 500 (250 Norm)', 'Mandays 1000 (500 Norm)', 'Check-Roll Qty 500', 'Check-Roll Qty 1000', 'Incentive 1 (For 500)', 'Incentive 2 (For 1000)', 'Total Incentive', 'Wage Cut Shortfall']
       ];
 
       analytics.cutterSummaries.forEach((w, idx) => {
         subAoA.push([
           idx + 1, w.code, w.name, w.finalHarvestedQty,
-          isOff ? w.mandays : 0, !isOff ? w.mandays : 0,
-          isOff ? w.cappedCheckRollQty : 0, !isOff ? w.cappedCheckRollQty : 0,
-          w.incentiveQty, 0, w.incentiveQty, w.wageCutQty
+          w.mandays250, w.mandays500,
+          w.qty500Capped, w.qty1000Capped,
+          w.inc500, w.inc1000, w.incentiveQty, w.wageCutQty
         ]);
       });
 
       subAoA.push([
         '', 'SUBTOTAL', 'Section A: Men (Cutters)', analytics.cutterTotals.finalHarvestedQty,
-        isOff ? analytics.cutterTotals.mandays : 0, !isOff ? analytics.cutterTotals.mandays : 0,
-        isOff ? analytics.cutterTotals.cappedCheckRollQty : 0, !isOff ? analytics.cutterTotals.cappedCheckRollQty : 0,
-        analytics.cutterTotals.incentiveQty, 0, analytics.cutterTotals.incentiveQty, analytics.cutterTotals.wageCutQty
+        analytics.cutterTotals.mandays250, analytics.cutterTotals.mandays500,
+        analytics.cutterTotals.qty500Capped, analytics.cutterTotals.qty1000Capped,
+        analytics.cutterTotals.inc500, analytics.cutterTotals.inc1000, analytics.cutterTotals.incentiveQty, analytics.cutterTotals.wageCutQty
       ]);
 
       analytics.carrierSummaries.forEach((w, idx) => {
         subAoA.push([
           idx + 1, w.code, w.name, w.finalHarvestedQty,
-          isOff ? w.mandays : 0, !isOff ? w.mandays : 0,
-          isOff ? w.cappedCheckRollQty : 0, !isOff ? w.cappedCheckRollQty : 0,
-          0, w.incentiveQty, w.incentiveQty, w.wageCutQty
+          w.mandays250, w.mandays500,
+          w.qty500Capped, w.qty1000Capped,
+          w.inc500, w.inc1000, w.incentiveQty, w.wageCutQty
         ]);
       });
 
       subAoA.push([
         '', 'SUBTOTAL', 'Section B: Women (Carriers)', analytics.carrierTotals.finalHarvestedQty,
-        isOff ? analytics.carrierTotals.mandays : 0, !isOff ? analytics.carrierTotals.mandays : 0,
-        isOff ? analytics.carrierTotals.cappedCheckRollQty : 0, !isOff ? analytics.carrierTotals.cappedCheckRollQty : 0,
-        0, analytics.carrierTotals.incentiveQty, analytics.carrierTotals.incentiveQty, analytics.carrierTotals.wageCutQty
+        analytics.carrierTotals.mandays250, analytics.carrierTotals.mandays500,
+        analytics.carrierTotals.qty500Capped, analytics.carrierTotals.qty1000Capped,
+        analytics.carrierTotals.inc500, analytics.carrierTotals.inc1000, analytics.carrierTotals.incentiveQty, analytics.carrierTotals.wageCutQty
       ]);
 
       subAoA.push([
         '', 'GRAND TOTAL', 'All Workers (A + B)', analytics.grandTotals.finalHarvestedQty,
-        isOff ? analytics.grandTotals.mandays : 0, !isOff ? analytics.grandTotals.mandays : 0,
-        isOff ? analytics.grandTotals.cappedCheckRollQty : 0, !isOff ? analytics.grandTotals.cappedCheckRollQty : 0,
-        analytics.cutterTotals.incentiveQty, analytics.carrierTotals.incentiveQty, analytics.grandTotals.incentiveQty, analytics.grandTotals.wageCutQty
+        analytics.grandTotals.mandays250, analytics.grandTotals.mandays500,
+        analytics.grandTotals.qty500Capped, analytics.grandTotals.qty1000Capped,
+        analytics.grandTotals.inc500, analytics.grandTotals.inc1000, analytics.grandTotals.incentiveQty, analytics.grandTotals.wageCutQty
       ]);
 
-      // Append Estate Reconciliation Summary Block
       subAoA.push([]);
       subAoA.push(['ESTATE RECONCILIATION SUMMARY BLOCK', 'VALUE']);
       subAoA.push(['Cutter (Mandays)', analytics.cutterTotals.mandays]);
       subAoA.push(['Carrier (Mandays)', analytics.carrierTotals.mandays]);
       subAoA.push(['Total (Mandays)', analytics.grandTotals.mandays]);
-      subAoA.push(['Attendance Qty (Check-Roll Capped)', analytics.grandTotals.cappedCheckRollQty]);
-      subAoA.push(['Incentive Qty', analytics.grandTotals.incentiveQty]);
+      subAoA.push(['Attendance Qty (Check-Roll Capped 500 + 1000)', analytics.grandTotals.cappedCheckRollQty]);
+      subAoA.push(['Incentive 1 (500 Norm)', analytics.grandTotals.inc500]);
+      subAoA.push(['Incentive 2 (1000 Norm)', analytics.grandTotals.inc1000]);
+      subAoA.push(['Incentive Qty (Total)', analytics.grandTotals.incentiveQty]);
       subAoA.push(['Wage Cut', analytics.grandTotals.wageCutQty]);
       subAoA.push(['Opening Balance (Prev Month FB)', analytics.totalOpeningFB]);
       subAoA.push(['Total Transported (Gross)', analytics.totalTransported]);
       subAoA.push(['Closing Balance (Curr Month FB)', analytics.totalClosingFB]);
 
-      const wsSub = XLSX.utils.aoa_to_sheet(subAoA);
-      XLSX.utils.book_append_sheet(wb, wsSub, '4_Final_Submission');
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(subAoA), '5_Final_Submission');
 
       const fileName = `OilPalm_Submission_${appState.meta.fieldNo || 'Estate'}_${appState.meta.monthYear || 'Report'}.xlsx`;
       XLSX.writeFile(wb, fileName);
@@ -2869,12 +4240,27 @@
         document.querySelectorAll('.module-panel').forEach(p => p.classList.toggle('active', p.id === targetId));
       });
 
+      // JSON Export & Import
+      document.getElementById('btnExportJson').addEventListener('click', exportWorkspaceJson);
+      document.getElementById('btnTriggerImportJson').addEventListener('click', () => {
+        document.getElementById('jsonFileInput').click();
+      });
+      document.getElementById('jsonFileInput').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) importWorkspaceJson(file);
+        e.target.value = '';
+      });
+
       // Global Metadata Inputs
       const bindMeta = (id, key) => {
         document.getElementById(id).addEventListener('input', (e) => {
           appState.meta[key] = e.target.value;
           saveStateToLocal();
-          renderModule4Submission(computeEstateAnalytics());
+          if (key === 'monthYear') {
+            renderAll();
+          } else {
+            renderModule6Submission(computeEstateAnalytics());
+          }
         });
       };
       bindMeta('metaEstate', 'estateName');
@@ -2882,13 +4268,15 @@
       bindMeta('metaField', 'fieldNo');
       bindMeta('metaMonth', 'monthYear');
 
-      // Global Norm Toggle (250 vs 500)
-      document.querySelectorAll('.norm-switch [data-norm]').forEach(btn => {
+      // Global Norm Toggle ('250', '500', 'BOTH')
+      document.querySelectorAll('#globalNormSwitch [data-norm]').forEach(btn => {
         btn.addEventListener('click', () => {
-          appState.meta.norm = Number(btn.getAttribute('data-norm'));
+          const newNorm = String(btn.getAttribute('data-norm'));
+          appState.meta.norm = newNorm;
+          recalculateAllGroupsInState();
           saveStateToLocal();
           renderAll();
-          showToast(`Global Harvest Norm switched to ${appState.meta.norm} kg / manday.`);
+          showToast(`Global Harvest Norm Mode set to: ${newNorm === 'BOTH' ? 'Both (500 & 1000 Split)' : newNorm + ' kg / manday'}`);
         });
       });
 
@@ -2906,10 +4294,11 @@
       // Load Demo Button
       document.getElementById('btnLoadDemo').addEventListener('click', () => {
         appState = createSampleEstateState();
+        resetLoadBuilderDraft();
         recalculateAllGroupsInState();
         saveStateToLocal();
         renderAll();
-        showToast('Loaded sample Oil Palm Estate roster and cutter groups.');
+        showToast('Loaded sample Oil Palm Estate data with Daily Pairings, Transport Loads & Split Norms.');
       });
 
       // Protected "Clear & Exit" Modal Workflow
@@ -2937,6 +4326,7 @@
         allowUnprotectedUnload = true;
         localStorage.removeItem(STORAGE_KEY);
         appState = createEmptyState();
+        resetLoadBuilderDraft();
         closeClearModal();
         renderAll();
         document.getElementById('saveStatusText').textContent = 'Workspace cleared';
@@ -3022,11 +4412,211 @@
       document.getElementById('btnExportMasterCsv').addEventListener('click', exportMasterRosterCsv);
       document.getElementById('btnDownloadSampleCsv').addEventListener('click', downloadSampleCsvTemplate);
 
-      // Module 2: Filter Cutter Grid
-      document.getElementById('cutterGridSearch').addEventListener('input', () => renderModule2CutterGrid(computeEstateAnalytics()));
-      document.getElementById('cutterStatusFilter').addEventListener('change', () => renderModule2CutterGrid(computeEstateAnalytics()));
+      // ==========================================
+      // MODULE 2 EVENTS: DAILY PAIRING GRID & MODAL
+      // ==========================================
+      document.getElementById('dailyPairingGridWrap').addEventListener('click', (e) => {
+        const cell = e.target.closest('[data-pair-date]');
+        if (!cell) return;
+        const dt = cell.getAttribute('data-pair-date');
+        const cId = cell.getAttribute('data-pair-cutter');
+        openDailyCellModal(dt, cId);
+      });
 
-      // Module 2 Modal Events
+      const closeCellModal = () => {
+        document.getElementById('dailyCellPairingModal').classList.remove('open');
+        activeCellKey = null;
+        cellDraft = null;
+      };
+      document.getElementById('btnCloseCellModal').addEventListener('click', closeCellModal);
+      document.getElementById('btnCancelCellModal').addEventListener('click', closeCellModal);
+
+      document.getElementById('cellDayNormSelect').addEventListener('change', (e) => {
+        if (cellDraft) cellDraft.normType = Number(e.target.value);
+      });
+      document.getElementById('cellCutterAttSelect').addEventListener('change', (e) => {
+        if (cellDraft) cellDraft.cutterAtt = parseFloat(e.target.value) || 0;
+      });
+
+      document.getElementById('btnAddCarrierToCell').addEventListener('click', () => {
+        if (!cellDraft) return;
+        const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
+        if (allCarriers.length === 0) {
+          showToast('Add Carriers in Module 1 first.');
+          return;
+        }
+        const used = new Set((cellDraft.carriers || []).map(c => c.carrierId));
+        const nextFc = allCarriers.find(fc => !used.has(fc.id)) || allCarriers[0];
+        cellDraft.carriers.push({ carrierId: nextFc.id, att: 1 });
+        renderCellModalCarriers();
+      });
+
+      document.getElementById('cellCarriersTableBody').addEventListener('change', (e) => {
+        if (!cellDraft) return;
+        const el = e.target;
+        const idx = Number(el.getAttribute('data-cell-fc-idx'));
+        const field = el.getAttribute('data-cell-field');
+        if (cellDraft.carriers[idx]) {
+          if (field === 'carrierId') cellDraft.carriers[idx].carrierId = el.value;
+          if (field === 'att') cellDraft.carriers[idx].att = parseFloat(el.value) || 0;
+        }
+      });
+
+      document.getElementById('cellCarriersTableBody').addEventListener('click', (e) => {
+        const rm = e.target.closest('[data-cell-remove-idx]');
+        if (!rm || !cellDraft) return;
+        const idx = Number(rm.getAttribute('data-cell-remove-idx'));
+        cellDraft.carriers.splice(idx, 1);
+        renderCellModalCarriers();
+      });
+
+      document.getElementById('btnSaveCellModal').addEventListener('click', () => {
+        if (!activeCellKey || !cellDraft) return;
+        appState.dailyPairings[activeCellKey] = JSON.parse(JSON.stringify(cellDraft));
+        saveStateToLocal();
+        closeCellModal();
+        renderAll();
+        showToast(`Saved pairing for ${activeCellDate}. Click "Sync Attendance to Cutter Groups" to push mandays.`);
+      });
+
+      document.getElementById('btnClearCellEntry').addEventListener('click', () => {
+        if (!activeCellKey) return;
+        delete appState.dailyPairings[activeCellKey];
+        saveStateToLocal();
+        closeCellModal();
+        renderAll();
+        showToast('Cleared day pairing cell.');
+      });
+
+      document.getElementById('btnSyncPairingToGroups').addEventListener('click', syncDailyPairingsToCutterGroups);
+      document.getElementById('btnClearPairings').addEventListener('click', () => {
+        appState.dailyPairings = {};
+        saveStateToLocal();
+        renderAll();
+        showToast('Daily Pairing Grid cleared.');
+      });
+
+      // ==========================================
+      // MODULE 3 EVENTS: TRANSPORTING LOAD LEDGER
+      // ==========================================
+      document.getElementById('loadDateInput').addEventListener('input', (e) => {
+        loadDraft.date = e.target.value;
+      });
+      document.getElementById('loadRefInput').addEventListener('input', (e) => {
+        loadDraft.loadRef = e.target.value;
+      });
+      document.getElementById('loadWeightInput').addEventListener('input', (e) => {
+        loadDraft.totalWeight = Math.max(0, Number(e.target.value) || 0);
+        renderLoadBuilderDraftTable();
+      });
+      document.getElementById('loadSplitMode').addEventListener('change', (e) => {
+        loadDraft.splitMode = e.target.value;
+        renderLoadBuilderDraftTable();
+      });
+
+      document.getElementById('btnAddCutterToLoadDraft').addEventListener('click', () => {
+        const cutters = appState.roster.filter(w => w.role === 'Cutter');
+        if (cutters.length === 0) {
+          showToast('Add Cutters in Module 1 first.');
+          return;
+        }
+        const used = new Set((loadDraft.allocations || []).map(a => a.cutterId));
+        const nextC = cutters.find(c => !used.has(c.id)) || cutters[0];
+        loadDraft.allocations.push({ cutterId: nextC.id, bunches: 30, weight: 0 });
+        renderLoadBuilderDraftTable();
+      });
+
+      document.getElementById('loadDraftCuttersBody').addEventListener('input', (e) => {
+        const el = e.target;
+        const idx = Number(el.getAttribute('data-ld-idx'));
+        const field = el.getAttribute('data-ld-field');
+        const row = loadDraft.allocations[idx];
+        if (!row) return;
+        if (field === 'bunches') {
+          row.bunches = Math.max(0, Number(el.value) || 0);
+          renderLoadBuilderDraftTable();
+        } else if (field === 'weight' && loadDraft.splitMode === 'MANUAL') {
+          row.weight = Math.max(0, Math.round(Number(el.value) || 0));
+          renderLoadBuilderDraftTable();
+        }
+      });
+
+      document.getElementById('loadDraftCuttersBody').addEventListener('change', (e) => {
+        const el = e.target;
+        const idx = Number(el.getAttribute('data-ld-idx'));
+        const field = el.getAttribute('data-ld-field');
+        if (field === 'cutterId' && loadDraft.allocations[idx]) {
+          loadDraft.allocations[idx].cutterId = el.value;
+          renderLoadBuilderDraftTable();
+        }
+      });
+
+      document.getElementById('loadDraftCuttersBody').addEventListener('click', (e) => {
+        const rm = e.target.closest('[data-ld-remove]');
+        if (!rm) return;
+        const idx = Number(rm.getAttribute('data-ld-remove'));
+        loadDraft.allocations.splice(idx, 1);
+        renderLoadBuilderDraftTable();
+      });
+
+      document.getElementById('btnResetLoadDraft').addEventListener('click', () => {
+        resetLoadBuilderDraft();
+        renderLoadBuilderDraftTable();
+      });
+
+      document.getElementById('btnSaveTransportLoad').addEventListener('click', () => {
+        const totalW = Math.round(Number(loadDraft.totalWeight) || 0);
+        if (totalW <= 0) {
+          showToast('Please enter a valid Total Load Weight (kg) greater than 0.');
+          return;
+        }
+        if (!loadDraft.allocations || loadDraft.allocations.length === 0) {
+          showToast('Please add at least one Cutter to the load.');
+          return;
+        }
+        recalcLoadBuilderDraft();
+        const sumAlloc = loadDraft.allocations.reduce((a, b) => a + (Number(b.weight) || 0), 0);
+        if (sumAlloc !== totalW) {
+          showToast(`Allocated cutter weights (${sumAlloc} kg) must equal Total Load Weight (${totalW} kg).`);
+          return;
+        }
+
+        appState.transportLoads.push({
+          id: 'ld_' + Date.now(),
+          date: loadDraft.date || new Date().toISOString().slice(0, 10),
+          loadRef: loadDraft.loadRef || `Load #${appState.transportLoads.length + 1}`,
+          totalWeight: totalW,
+          splitMode: loadDraft.splitMode,
+          allocations: JSON.parse(JSON.stringify(loadDraft.allocations))
+        });
+
+        // Auto-sync into cutter groups
+        syncTransportLoadsToCutterGroups(true);
+        resetLoadBuilderDraft();
+        renderAll();
+        showToast(`Saved Transport Load (${totalW.toLocaleString()} kg) and updated Cutter Group Transported quantities!`);
+      });
+
+      document.getElementById('recordedLoadsTableBody').addEventListener('click', (e) => {
+        const delBtn = e.target.closest('[data-del-load]');
+        if (!delBtn) return;
+        const id = delBtn.getAttribute('data-del-load');
+        appState.transportLoads = appState.transportLoads.filter(l => l.id !== id);
+        syncTransportLoadsToCutterGroups(true);
+        renderAll();
+        showToast('Removed transport load and updated Cutter totals.');
+      });
+
+      document.getElementById('btnSyncLoadsToGroups').addEventListener('click', () => {
+        syncTransportLoadsToCutterGroups(false);
+      });
+
+      // ==========================================
+      // MODULE 4 EVENTS: CUTTER GROUP MODAL
+      // ==========================================
+      document.getElementById('cutterGridSearch').addEventListener('input', () => renderModule4CutterGrid(computeEstateAnalytics()));
+      document.getElementById('cutterStatusFilter').addEventListener('change', () => renderModule4CutterGrid(computeEstateAnalytics()));
+
       const closeGroupModal = () => {
         document.getElementById('groupAllocationModal').classList.remove('open');
         activeModalCutterId = null;
@@ -3034,6 +4624,18 @@
       };
       document.getElementById('btnCloseGroupModal').addEventListener('click', closeGroupModal);
       document.getElementById('btnCancelGroupModal').addEventListener('click', closeGroupModal);
+
+      document.getElementById('btnUseTransportLoadsSum').addEventListener('click', () => {
+        if (!modalDraftGroup || !activeModalCutterId) return;
+        const cLoads = getTransportLoadsForCutter(activeModalCutterId);
+        const sumW = cLoads.reduce((a, b) => a + b.weight, 0);
+        modalDraftGroup.transportedQty = sumW;
+        modalDraftGroup.tripLoadsText = '';
+        document.getElementById('modTransportedInput').value = sumW;
+        document.getElementById('modTripLoadsInput').value = '';
+        recalcAndRenderModalTable();
+        showToast(`Applied ${sumW.toLocaleString()} kg from Transport Loads.`);
+      });
 
       document.getElementById('modTransportedInput').addEventListener('input', (e) => {
         if (!modalDraftGroup) return;
@@ -3071,6 +4673,10 @@
         recalcAndRenderModalTable();
       });
 
+      document.getElementById('modCarrierFilterInput').addEventListener('input', () => {
+        recalcAndRenderModalTable();
+      });
+
       document.getElementById('btnAddCarrierRow').addEventListener('click', () => {
         if (!modalDraftGroup) return;
         const allCarriers = appState.roster.filter(w => w.role === 'Carrier');
@@ -3078,12 +4684,14 @@
           showToast('Please add Carriers (FC) in Module 1 first.');
           return;
         }
-        // Pick first unassigned carrier if available
         const usedIds = new Set((modalDraftGroup.carriers || []).map(c => c.carrierId));
         const nextCarrier = allCarriers.find(fc => !usedIds.has(fc.id)) || allCarriers[0];
 
+        const nMode = String(appState.meta.norm || '250');
         modalDraftGroup.carriers.push({
           carrierId: nextCarrier.id,
+          mandays250: nMode === '500' ? 0 : 1,
+          mandays500: nMode === '500' ? 1 : 0,
           mandays: 1,
           transportedQty: 0,
           locked: true,
@@ -3100,8 +4708,11 @@
         if (!role || !field) return;
 
         if (role === 'cutter') {
-          if (field === 'mandays') {
-            modalDraftGroup.cutterMandays = Math.max(0, parseFloat(el.value) || 0);
+          if (field === 'mandays250') {
+            modalDraftGroup.cutterMandays250 = Math.max(0, parseFloat(el.value) || 0);
+            recalcAndRenderModalTable();
+          } else if (field === 'mandays500') {
+            modalDraftGroup.cutterMandays500 = Math.max(0, parseFloat(el.value) || 0);
             recalcAndRenderModalTable();
           } else if (field === 'share') {
             modalDraftGroup.cutterShare = Math.round(Number(el.value) || 0);
@@ -3111,8 +4722,11 @@
           const idx = Number(el.getAttribute('data-idx'));
           const cRow = modalDraftGroup.carriers[idx];
           if (!cRow) return;
-          if (field === 'mandays') {
-            cRow.mandays = Math.max(0, parseFloat(el.value) || 0);
+          if (field === 'mandays250') {
+            cRow.mandays250 = Math.max(0, parseFloat(el.value) || 0);
+            recalcAndRenderModalTable();
+          } else if (field === 'mandays500') {
+            cRow.mandays500 = Math.max(0, parseFloat(el.value) || 0);
             recalcAndRenderModalTable();
           } else if (field === 'transportedQty') {
             cRow.transportedQty = Math.max(0, Math.round(Number(el.value) || 0));
@@ -3174,7 +4788,7 @@
         showToast('Cutter group allocation and field balance saved.');
       });
 
-      // Module 3: Manual Cross-Worker Adjustment Form
+      // Module 5: Manual Cross-Worker Adjustment Form
       document.getElementById('transferAdjustmentForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const fromId = document.getElementById('adjFromWorker').value;
@@ -3213,7 +4827,7 @@
         showToast('Transfer adjustment removed.');
       });
 
-      // Module 4: Export Actions
+      // Module 6: Export Actions
       document.getElementById('btnExportExcel').addEventListener('click', exportMultiSheetWorkbook);
       document.getElementById('btnExportPdf').addEventListener('click', exportSubmissionPdf);
       document.getElementById('btnPrintReport').addEventListener('click', () => window.print());

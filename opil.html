@@ -29,7 +29,7 @@
     --ledger-margin: #dc2626;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'Roboto Mono', monospace;
-    --print-font-size: 10.5px;
+    --print-font-size: 10px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -187,7 +187,7 @@
   }
 
   /* Main Container */
-  .container { padding: 12px 14px; max-width: 1650px; margin: 0 auto; }
+  .container { padding: 12px 14px; max-width: 1700px; margin: 0 auto; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
@@ -257,6 +257,7 @@
 
   .green-ink { color: var(--green-ink); font-weight: 700; }
   .red-ink { color: var(--red-ink); font-weight: 700; }
+  .amber-ink { color: var(--amber-ink); font-weight: 700; }
 
   /* PHYSICAL REGISTER VIEW */
   .physical-book {
@@ -327,8 +328,8 @@
   .worker-split-line {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
+    align-items: center;
+    gap: 6px;
     padding: 1px 0;
     border-bottom: 1px dotted #e2e8f0;
     font-size: 11.5px;
@@ -344,9 +345,10 @@
     font-weight: 700;
     color: #0f172a;
   }
-  .w-code { color: #475569; min-width: 38px; display: inline-block; flex-shrink: 0; }
+  .w-code { color: #475569; min-width: 36px; display: inline-block; flex-shrink: 0; }
   .w-name { color: #0f172a; font-family: var(--font-sans); font-weight: 600; flex: 1; word-break: break-word; }
-  .w-qty { font-weight: 700; text-align: right; min-width: 48px; flex-shrink: 0; }
+  .w-att { font-size: 10px; font-weight: 700; color: #1d4ed8; background: #dbeafe; padding: 0 4px; border-radius: 2px; flex-shrink: 0; }
+  .w-qty { font-weight: 700; text-align: right; min-width: 46px; flex-shrink: 0; }
 
   /* Field Control Grid */
   .field-cards-grid {
@@ -415,7 +417,7 @@
     border: 1px solid #475569;
     border-radius: 2px;
     width: 100%;
-    max-width: 840px;
+    max-width: 880px;
     max-height: 92vh;
     display: flex;
     flex-direction: column;
@@ -476,9 +478,9 @@
   .tag-green { background: var(--green-bg); color: var(--green-ink); }
   .tag-blue { background: #dbeafe; color: #1d4ed8; }
 
-  /* PRINT STYLES (Dynamic font size + full wrapping so nothing clips horizontally) */
+  /* PRINT STYLES */
   @media print {
-    @page { size: landscape; margin: 8mm; }
+    @page { size: landscape; margin: 7mm; }
     body {
       background: #fff !important;
       font-size: var(--print-font-size) !important;
@@ -487,7 +489,7 @@
     .container { padding: 0 !important; max-width: 100% !important; width: 100% !important; }
     .tab-panel { display: none !important; }
     .print-target-active { display: block !important; page-break-after: always; }
-    .panel { border: none !important; margin: 0 !important; }
+    .panel { border: none !important; margin: 0 0 10px 0 !important; }
     .panel-body { padding: 0 !important; }
     .physical-book, .table-wrap {
       border: 1px solid #334155 !important;
@@ -517,7 +519,7 @@
       <span class="brand-badge">OPIL • LOGISTICS</span>
       <div class="brand-title">
         <h1>Division-Wise Transporting Register & Reconciliation</h1>
-        <p id="headerSubtitle">Oil Palm India Limited • Weigh-Slip Ledger, Combined/Per-Ticket Splits & Reconciliation</p>
+        <p id="headerSubtitle">Oil Palm India Limited • Weigh-Slip Ledger, Attendance Quota (1670 kg/MD) & Reconciliation</p>
       </div>
     </div>
     <div class="top-actions">
@@ -549,19 +551,23 @@
     <div class="config-group">
       <div class="field-item">
         <label>Estate Name</label>
-        <input type="text" id="metaEstate" style="width:175px;" placeholder="e.g. Oil Palm India Ltd" oninput="updateMeta()">
+        <input type="text" id="metaEstate" style="width:170px;" placeholder="e.g. Oil Palm India Ltd" oninput="updateMeta()">
       </div>
       <div class="field-item">
         <label>Division</label>
-        <input type="text" id="metaDivision" style="width:135px;" placeholder="e.g. Yeroor Estate" oninput="updateMeta()">
+        <input type="text" id="metaDivision" style="width:130px;" placeholder="e.g. Yeroor Estate" oninput="updateMeta()">
       </div>
       <div class="field-item">
         <label>Month / Year</label>
-        <input type="text" id="metaMonth" style="width:130px;" placeholder="e.g. November 2026" oninput="updateMeta()">
+        <input type="text" id="metaMonth" style="width:125px;" placeholder="e.g. November 2026" oninput="updateMeta()">
       </div>
       <div class="field-item">
         <label>Register Page Nos.</label>
-        <input type="text" id="metaPages" style="width:95px;" placeholder="e.g. 200 - 201" oninput="updateMeta()">
+        <input type="text" id="metaPages" style="width:90px;" placeholder="e.g. 200 - 201" oninput="updateMeta()">
+      </div>
+      <div class="field-item">
+        <label>Manday Norm (kg/MD)</label>
+        <input type="number" id="metaMandayNorm" style="width:95px;" class="mono" value="1670" onchange="updateMandayNorm()">
       </div>
     </div>
 
@@ -592,11 +598,11 @@
         <span class="material-symbols-outlined">groups</span> Worker Roster Master
       </button>
       <button class="tab-btn" data-tab="tab-reconciliation" onclick="switchTab('tab-reconciliation', this)">
-        <span class="material-symbols-outlined">fact_check</span> Final Reconciliation Report
+        <span class="material-symbols-outlined">fact_check</span> Final Reconciliation & Summary Tables
       </button>
     </div>
     <div style="font-size:11px;color:var(--text-muted);padding:4px 0;">
-      Active Fields: <strong id="activeFieldsBadge" class="mono">None</strong>
+      Norm: <strong id="normBadge" class="mono">1670 kg/MD</strong> • Fields: <strong id="activeFieldsBadge" class="mono">None</strong>
     </div>
   </nav>
 
@@ -641,7 +647,7 @@
         <div class="panel-header">
           <div class="panel-title">
             <span class="material-symbols-outlined">receipt_long</span>
-            <span>Transport Entries & Combined / Per-Ticket Worker Splits</span>
+            <span>Transport Entries, Attendance & Worker Splits</span>
           </div>
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
             <input type="text" id="loadSearchInput" placeholder="Filter by Date, Ticket No, Vehicle, Field or Worker..." style="width:280px;" oninput="renderDashboard()">
@@ -658,7 +664,7 @@
                   <th>Tickets / Vehicles</th>
                   <th>Field-Wise Weight (kg)</th>
                   <th class="num">Total Load (kg)</th>
-                  <th>Worker Split Details (Code • Name • Qty)</th>
+                  <th>Worker Split & Attendance (Code • Name • Att • Qty)</th>
                   <th class="no-print" style="width:95px;text-align:center;">Actions</th>
                 </tr>
               </thead>
@@ -743,16 +749,17 @@
       </div>
     </section>
 
-    <!-- TAB 5: FINAL RECONCILIATION REPORT -->
+    <!-- TAB 5: FINAL RECONCILIATION & ADDITIONAL ATTENDANCE QUOTA SUMMARY TABLES -->
     <section id="tab-reconciliation" class="tab-panel">
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">
             <span class="material-symbols-outlined">analytics</span>
-            <span>Division Field-Wise & Worker-Wise Transport Reconciliation Summary</span>
+            <span>Division Field-Wise Reconciliation & Worker Attendance Quota Summary</span>
           </div>
-          <div class="no-print" style="display:flex;gap:6px;">
-            <button class="btn btn-green btn-sm" onclick="exportExcel()">Download Full Excel Report</button>
+          <div class="no-print" style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="btn btn-sm" onclick="exportQuotaSummaryCSV()">Export Quota Table (.csv)</button>
+            <button class="btn btn-green btn-sm" onclick="exportExcel()">Download Full Excel (.xlsx)</button>
             <button class="btn btn-primary btn-sm" onclick="openPrintCustomizer('tab-reconciliation')">Customize & Print</button>
           </div>
         </div>
@@ -774,20 +781,31 @@
             </table>
           </div>
 
-          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">2. Worker-Wise Total Transported Quantity Summary</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
+            <h3 style="font-size:12px;text-transform:uppercase;color:#334155;">
+              2. Worker Attendance Quota, Incentive Load & Wage Cut Summary (Norm: <span id="quotaTableNormLabel" class="mono">1670</span> kg / Manday)
+            </h3>
+            <span style="font-size:11px;color:var(--text-muted);">
+              Target = Attendance × Norm • Attendance Load (Capped) = MIN(Total Load, Target) • Incentive Load = MAX(0, Total Load − Target) • Wage Cut = MAX(0, Target − Total Load)
+            </span>
+          </div>
           <div class="table-wrap">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th style="width:55px;">Sl. No</th>
-                  <th style="width:100px;">Code No</th>
+                  <th style="width:45px;">Sl.</th>
+                  <th style="width:85px;">Code No</th>
                   <th>Worker Name</th>
-                  <th style="width:100px;">Role</th>
-                  <th class="num">Entries Participated</th>
-                  <th class="num">Total Transported Qty (kg)</th>
+                  <th style="width:85px;">Role</th>
+                  <th class="num">Attendance (MD)</th>
+                  <th class="num">Target Quota (kg)</th>
+                  <th class="num">Total Load (kg)</th>
+                  <th class="num">Attendance Load (Capped)</th>
+                  <th class="num">Incentive Load (kg)</th>
+                  <th class="num">Wage Cut (kg)</th>
                 </tr>
               </thead>
-              <tbody id="reconWorkerBody"></tbody>
+              <tbody id="reconWorkerQuotaBody"></tbody>
             </table>
           </div>
         </div>
@@ -796,7 +814,7 @@
 
   </main>
 
-  <!-- ADD / EDIT TRANSPORT ENTRY MODAL (SUPPORTS COMBINED MULTI-TICKET OR PER-TICKET SPLIT) -->
+  <!-- ADD / EDIT TRANSPORT ENTRY MODAL -->
   <div class="modal-backdrop" id="loadModal">
     <div class="modal-box">
       <div class="modal-hdr">
@@ -833,10 +851,10 @@
           <div id="ldTicketsContainer"></div>
         </div>
 
-        <!-- Worker Search & Load Split Allocation -->
+        <!-- Worker Search, Attendance (1 or 0.5) & Load Split Allocation -->
         <div style="border:1px solid var(--border-color);padding:8px 10px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
-            <strong style="font-size:11.5px;" id="workerSplitSectionTitle">Worker Load Split</strong>
+            <strong style="font-size:11.5px;" id="workerSplitSectionTitle">Worker Attendance & Load Split</strong>
             <div style="display:flex;gap:8px;align-items:center;">
               <label style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;cursor:pointer;">
                 <input type="checkbox" id="ldAutoSplitCheck" checked onchange="recalcModalWorkerSplits()"> Auto-Split Equally
@@ -854,7 +872,7 @@
           <div id="ldWorkerSplitArea"></div>
 
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11.5px;">
-            <span style="color:var(--text-muted);">Integer rounding remainder is automatically adjusted to keep total matched.</span>
+            <span style="color:var(--text-muted);">Mark attendance (e.g., <strong>1</strong> Full or <strong>0.5</strong> Half) alongside each worker.</span>
             <span>Allocated Sum: <strong id="ldAllocatedSumDisplay" class="mono">0</strong> kg (<span id="ldDiffStatus">OK</span>)</span>
           </div>
         </div>
@@ -866,32 +884,33 @@
     </div>
   </div>
 
-  <!-- CUSTOMIZE & PRINT MODAL -->
+  <!-- CUSTOMIZE & PRINT MODAL (Supports Physical Register, Summary Tables, or Both) -->
   <div class="modal-backdrop" id="printModal">
-    <div class="modal-box" style="max-width:460px;">
+    <div class="modal-box" style="max-width:480px;">
       <div class="modal-hdr">
-        <strong>Customize & Print Layout</strong>
+        <strong>Customize & Print Report</strong>
         <button class="btn btn-sm" style="background:transparent;color:#fff;border-color:#475569;" onclick="closePrintModal()">✕</button>
       </div>
       <div class="modal-body">
         <div class="field-item" style="margin-bottom:10px;">
-          <label>Section to Print</label>
+          <label>Report Content to Print</label>
           <select id="printTargetSelect">
-            <option value="tab-register">Physical Register View</option>
-            <option value="tab-reconciliation">Final Reconciliation Report</option>
+            <option value="both_report">Physical Register + Summary & Quota Tables (Full Report)</option>
+            <option value="tab-register">Physical Register View Only</option>
+            <option value="tab-reconciliation">Summary & Attendance Quota Tables Only</option>
             <option value="tab-dashboard">Digital Dashboard & Loads</option>
           </select>
         </div>
 
         <div class="field-item" style="margin-bottom:10px;">
-          <label>Print Font Size (<span id="printFontVal" class="mono">10.5</span> px)</label>
-          <input type="range" id="printFontRange" min="8" max="15" step="0.5" value="10.5" oninput="document.getElementById('printFontVal').textContent = this.value">
+          <label>Print Font Size (<span id="printFontVal" class="mono">10</span> px)</label>
+          <input type="range" id="printFontRange" min="7.5" max="14" step="0.5" value="10" oninput="document.getElementById('printFontVal').textContent = this.value">
         </div>
 
         <div style="display:flex;flex-direction:column;gap:8px;background:#f8fafc;padding:10px;border:1px solid var(--border-color);">
           <label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;">
             <input type="checkbox" id="printWrapAllCheck" checked onchange="syncPrintWrapOptions()">
-            <span>Wrap all table & column contents (prevents right-edge clipping)</span>
+            <span>Wrap all table & column contents (prevents horizontal cropping)</span>
           </label>
           <label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;">
             <input type="checkbox" id="printWrapNamesCheck" checked>
@@ -928,9 +947,8 @@
   </div>
 
 <script>
-const STORAGE_KEY = 'OPIL_TRANSPORT_REGISTER_V2_EMPTY';
+const STORAGE_KEY = 'OPIL_TRANSPORT_REGISTER_V3_QUOTA';
 
-// Clean empty initial state (no dummy dates or dummy load entries)
 function getEmptyState() {
   return {
     meta: {
@@ -938,6 +956,7 @@ function getEmptyState() {
       division: '',
       monthYear: '',
       pages: '',
+      mandayNorm: 1670,
       roundDigit: true
     },
     fields: [],
@@ -957,6 +976,7 @@ function loadState() {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && parsed.meta && Array.isArray(parsed.fields)) {
+        if (!parsed.meta.mandayNorm) parsed.meta.mandayNorm = 1670;
         return parsed;
       }
     }
@@ -1011,10 +1031,12 @@ function switchTab(tabId, btnEl) {
 }
 
 function syncMetaInputs() {
+  const norm = Number(state.meta.mandayNorm || 1670);
   document.getElementById('metaEstate').value = state.meta.estateName || '';
   document.getElementById('metaDivision').value = state.meta.division || '';
   document.getElementById('metaMonth').value = state.meta.monthYear || '';
   document.getElementById('metaPages').value = state.meta.pages || '';
+  document.getElementById('metaMandayNorm').value = norm;
   document.getElementById('roundDigitCheck').checked = state.meta.roundDigit !== false;
 
   document.getElementById('bookHeading').textContent = state.meta.monthYear
@@ -1022,6 +1044,8 @@ function syncMetaInputs() {
     : 'Division Transporting Register';
   document.getElementById('bookSubheading').textContent = [state.meta.estateName, state.meta.division].filter(Boolean).join(' • ');
   document.getElementById('bookPageTag').textContent = state.meta.pages ? `Folio: ${state.meta.pages}` : '';
+  document.getElementById('normBadge').textContent = `${fmtNum(norm)} kg/MD`;
+  document.getElementById('quotaTableNormLabel').textContent = fmtNum(norm);
   document.getElementById('activeFieldsBadge').textContent = state.fields.length
     ? state.fields.map(f => f.code).join(', ')
     : 'None (Add in Field Control)';
@@ -1034,6 +1058,13 @@ function updateMeta() {
   state.meta.pages = document.getElementById('metaPages').value;
   saveState();
   syncMetaInputs();
+}
+
+function updateMandayNorm() {
+  const val = Number(document.getElementById('metaMandayNorm').value);
+  state.meta.mandayNorm = val > 0 ? val : 1670;
+  saveState();
+  renderAll();
 }
 
 function toggleRoundDigit() {
@@ -1112,7 +1143,7 @@ function renderPhysicalRegister() {
   html += `
     <th class="page-spine" style="width:92px;">DAY'S TOTAL</th>
     <th style="width:95px;">PRO. TOTAL</th>
-    <th style="min-width:255px;">NAME & WORKER SPLIT</th>
+    <th style="min-width:270px;">NAME, ATT & SPLIT</th>
   </tr></thead><tbody>`;
 
   if (sortedEntries.length === 0) {
@@ -1138,7 +1169,6 @@ function renderPhysicalRegister() {
     });
     progressiveTotal += entryTotal;
 
-    // Build Worker Split HTML (supports either combined split or per-ticket split)
     let workerHtml = '';
     let workerSum = 0;
     if (entry.splitMode === 'per_ticket') {
@@ -1147,10 +1177,12 @@ function renderPhysicalRegister() {
         workerHtml += `<div style="font-size:10.5px;font-weight:700;color:#1e293b;margin-top:${tIdx>0?'4px':'0'};">Ticket #${t.ticketNo || (tIdx+1)} (${fmtNum(tW)} kg):</div>`;
         (t.workerSplits || []).forEach(ws => {
           const w = getWorkerById(ws.workerId);
+          const att = Number(ws.att ?? 1);
           workerSum += Number(ws.qty) || 0;
           workerHtml += `<div class="worker-split-line">
             <span class="w-code">${w.code}</span>
             <span class="w-name">${w.name}</span>
+            <span class="w-att">${fmtNum(att)}d</span>
             <span class="w-qty">${fmtNum(ws.qty)}</span>
           </div>`;
         });
@@ -1158,10 +1190,12 @@ function renderPhysicalRegister() {
     } else {
       (entry.workerSplits || []).forEach(ws => {
         const w = getWorkerById(ws.workerId);
+        const att = Number(ws.att ?? 1);
         workerSum += Number(ws.qty) || 0;
         workerHtml += `<div class="worker-split-line">
           <span class="w-code">${w.code}</span>
           <span class="w-name">${w.name}</span>
+          <span class="w-att">${fmtNum(att)}d</span>
           <span class="w-qty">${fmtNum(ws.qty)}</span>
         </div>`;
       });
@@ -1206,7 +1240,6 @@ function renderPhysicalRegister() {
       });
     }
 
-    // Green Day's Field Total Row
     html += `<tr class="day-green-row">
       <td></td><td></td><td style="text-align:right;font-size:10px;font-family:var(--font-sans);">DAY FIELD TOT</td>`;
     fields.forEach(f => {
@@ -1215,7 +1248,6 @@ function renderPhysicalRegister() {
     });
     html += `<td class="page-spine num">${fmtNum(entryTotal)}</td><td></td></tr>`;
 
-    // Progressive Total Row
     html += `<tr class="day-prog-row">
       <td></td><td></td><td style="text-align:right;font-size:10px;font-family:var(--font-sans);">CUMULATIVE</td>`;
     fields.forEach(f => {
@@ -1276,14 +1308,14 @@ function renderDashboard() {
       workerBadges = tickets.map((t, i) => {
         const items = (t.workerSplits || []).map(ws => {
           const w = getWorkerById(ws.workerId);
-          return `<span class="tag" style="margin:1px;">${w.code} ${w.name}: <strong>${fmtNum(ws.qty)}</strong></span>`;
+          return `<span class="tag" style="margin:1px;">${w.code} ${w.name} [${fmtNum(ws.att ?? 1)} MD]: <strong>${fmtNum(ws.qty)}</strong></span>`;
         }).join(' ');
         return `<div style="margin-bottom:3px;"><span style="font-size:10px;font-weight:700;color:#475569;">T#${t.ticketNo || (i+1)}:</span> ${items}</div>`;
       }).join('');
     } else {
       workerBadges = (entry.workerSplits || []).map(ws => {
         const w = getWorkerById(ws.workerId);
-        return `<span class="tag" style="margin:1px;">${w.code} ${w.name}: <strong>${fmtNum(ws.qty)}</strong></span>`;
+        return `<span class="tag" style="margin:1px;">${w.code} ${w.name} [${fmtNum(ws.att ?? 1)} MD]: <strong>${fmtNum(ws.qty)}</strong></span>`;
       }).join(' ');
     }
 
@@ -1438,8 +1470,7 @@ function editWorker(id, field, val) {
   if (w) {
     w[field] = val.trim();
     saveState();
-    renderPhysicalRegister();
-    renderDashboard();
+    renderAll();
   }
 }
 
@@ -1496,7 +1527,51 @@ function exportRosterCSV() {
   XLSX.writeFile(wb, `OPIL_Roster_${state.meta.division || 'Division'}.csv`);
 }
 
-// TAB 5: RECONCILIATION
+// Compute Worker Attendance Quota Summary Rows (Reusable for Table, CSV, and Excel)
+function computeWorkerQuotaSummary() {
+  const norm = Number(state.meta.mandayNorm || 1670);
+  const workerMap = new Map();
+
+  state.loads.forEach(entry => {
+    const splits = entry.splitMode === 'per_ticket'
+      ? (entry.tickets || []).flatMap(t => t.workerSplits || [])
+      : (entry.workerSplits || []);
+
+    splits.forEach(ws => {
+      const cur = workerMap.get(ws.workerId) || { att: 0, totalLoad: 0 };
+      cur.att += Number(ws.att ?? 1);
+      cur.totalLoad += Number(ws.qty) || 0;
+      workerMap.set(ws.workerId, cur);
+    });
+  });
+
+  const rows = [];
+  workerMap.forEach((stats, wId) => {
+    const w = getWorkerById(wId);
+    const att = Number(stats.att.toFixed(2));
+    const totalLoad = Number(stats.totalLoad.toFixed(2));
+    const targetQuota = Number((att * norm).toFixed(2));
+    const cappedLoad = Number(Math.min(totalLoad, targetQuota).toFixed(2));
+    const incentiveLoad = Number(Math.max(0, totalLoad - targetQuota).toFixed(2));
+    const wageCut = Number(Math.max(0, targetQuota - totalLoad).toFixed(2));
+    rows.push({
+      code: w.code,
+      name: w.name,
+      role: w.role,
+      att,
+      targetQuota,
+      totalLoad,
+      cappedLoad,
+      incentiveLoad,
+      wageCut
+    });
+  });
+
+  rows.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
+  return rows;
+}
+
+// TAB 5: RECONCILIATION & ATTENDANCE QUOTA TABLE
 function renderReconciliation() {
   let totOpen = 0, totTrans = 0, totClose = 0, totNet = 0, totTickets = 0;
   const fRows = state.fields.map(f => {
@@ -1532,45 +1607,44 @@ function renderReconciliation() {
       <td class="num">${totTickets}</td>
     </tr>`;
 
-  const workerMap = new Map();
-  state.loads.forEach(entry => {
-    const splits = entry.splitMode === 'per_ticket'
-      ? (entry.tickets || []).flatMap(t => t.workerSplits || [])
-      : (entry.workerSplits || []);
-    splits.forEach(ws => {
-      const cur = workerMap.get(ws.workerId) || { trips: 0, qty: 0 };
-      cur.trips += 1;
-      cur.qty += Number(ws.qty) || 0;
-      workerMap.set(ws.workerId, cur);
-    });
-  });
+  const quotaRows = computeWorkerQuotaSummary();
+  let sumAtt = 0, sumTarget = 0, sumLoad = 0, sumCapped = 0, sumInc = 0, sumCut = 0;
 
-  const workerEntries = [];
-  workerMap.forEach((stats, wId) => {
-    const w = getWorkerById(wId);
-    workerEntries.push({ ...w, ...stats });
-  });
-  workerEntries.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
+  const qHtml = quotaRows.map((r, idx) => {
+    sumAtt += r.att;
+    sumTarget += r.targetQuota;
+    sumLoad += r.totalLoad;
+    sumCapped += r.cappedLoad;
+    sumInc += r.incentiveLoad;
+    sumCut += r.wageCut;
 
-  let grandWorkerQty = 0;
-  document.getElementById('reconWorkerBody').innerHTML = workerEntries.map((we, idx) => {
-    grandWorkerQty += we.qty;
     return `<tr>
       <td class="mono">${idx + 1}</td>
-      <td class="mono" style="font-weight:700;">${we.code}</td>
-      <td style="font-weight:600;">${we.name}</td>
-      <td>${we.role}</td>
-      <td class="num">${we.trips}</td>
-      <td class="num green-ink">${fmtNum(we.qty)}</td>
+      <td class="mono" style="font-weight:700;">${r.code}</td>
+      <td style="font-weight:600;">${r.name}</td>
+      <td>${r.role}</td>
+      <td class="num">${fmtNum(r.att)}</td>
+      <td class="num">${fmtNum(r.targetQuota)}</td>
+      <td class="num" style="font-weight:700;">${fmtNum(r.totalLoad)}</td>
+      <td class="num green-ink">${fmtNum(r.cappedLoad)}</td>
+      <td class="num ${r.incentiveLoad > 0 ? 'green-ink' : ''}">${r.incentiveLoad > 0 ? fmtNum(r.incentiveLoad) : '0'}</td>
+      <td class="num ${r.wageCut > 0 ? 'red-ink' : ''}">${r.wageCut > 0 ? fmtNum(r.wageCut) : '0'}</td>
     </tr>`;
-  }).join('') + `
+  }).join('');
+
+  document.getElementById('reconWorkerQuotaBody').innerHTML = qHtml + `
     <tr style="background:#f1f5f9;font-weight:700;">
-      <td colspan="5">GRAND TOTAL WORKER ALLOCATED QUANTITY</td>
-      <td class="num green-ink">${fmtNum(grandWorkerQty)}</td>
+      <td colspan="4">GRAND TOTAL</td>
+      <td class="num">${fmtNum(sumAtt)}</td>
+      <td class="num">${fmtNum(sumTarget)}</td>
+      <td class="num">${fmtNum(sumLoad)}</td>
+      <td class="num green-ink">${fmtNum(sumCapped)}</td>
+      <td class="num green-ink">${fmtNum(sumInc)}</td>
+      <td class="num red-ink">${fmtNum(sumCut)}</td>
     </tr>`;
 }
 
-// LOAD ENTRY MODAL (COMBINED MULTI-TICKET OR PER-TICKET SPLIT)
+// LOAD ENTRY MODAL (WITH ATTENDANCE 1 OR 0.5 PER WORKER)
 function openLoadModal(entryId = null) {
   if (state.fields.length === 0) {
     return alert('Please add at least one Division Field in "Field Control & Balances" before adding a load entry.');
@@ -1666,18 +1740,16 @@ function updateModalTotalWeightDisplay() {
 function onSplitMethodChange(shouldRecalc = true) {
   const mode = document.getElementById('ldSplitMethod').value;
   document.getElementById('workerSplitSectionTitle').textContent = mode === 'per_ticket'
-    ? 'Per-Ticket Worker Split'
-    : 'Combined Total Load Worker Split (Across All Tickets Above)';
+    ? 'Per-Ticket Worker Attendance & Split'
+    : 'Combined Total Load Worker Attendance & Split (Across All Tickets Above)';
 
   if (mode === 'per_ticket') {
-    // Ensure each ticket has workerSplits initialized
     modalTickets.forEach(t => {
       if (!Array.isArray(t.workerSplits) || t.workerSplits.length === 0) {
         t.workerSplits = JSON.parse(JSON.stringify(modalWorkerRows));
       }
     });
   } else {
-    // If switching back to combined and modalWorkerRows is empty, pull from first ticket
     if (modalWorkerRows.length === 0 && modalTickets[0]?.workerSplits?.length) {
       modalWorkerRows = JSON.parse(JSON.stringify(modalTickets[0].workerSplits));
     }
@@ -1722,12 +1794,12 @@ function addWorkerToSplit(workerId) {
     modalTickets.forEach(t => {
       if (!t.workerSplits) t.workerSplits = [];
       if (!t.workerSplits.some(r => r.workerId === workerId)) {
-        t.workerSplits.push({ workerId, qty: 0, locked: false });
+        t.workerSplits.push({ workerId, att: 1, qty: 0, locked: false });
       }
     });
   } else {
     if (!modalWorkerRows.some(r => r.workerId === workerId)) {
-      modalWorkerRows.push({ workerId, qty: 0, locked: false });
+      modalWorkerRows.push({ workerId, att: 1, qty: 0, locked: false });
     }
   }
   document.getElementById('workerSearchBox').value = '';
@@ -1785,6 +1857,15 @@ function recalcModalWorkerSplits(forceResetLocks = false) {
   renderWorkerSplitArea();
 }
 
+function attSelectHtml(curVal, onChangeExpr) {
+  const v = Number(curVal ?? 1);
+  return `<select style="width:74px;font-family:var(--font-mono);" onchange="${onChangeExpr}">
+    <option value="1" ${v === 1 ? 'selected' : ''}>1 (Full)</option>
+    <option value="0.5" ${v === 0.5 ? 'selected' : ''}>0.5 (Half)</option>
+    <option value="0" ${v === 0 ? 'selected' : ''}>0 (Abs)</option>
+  </select>`;
+}
+
 function renderWorkerSplitArea() {
   const mode = document.getElementById('ldSplitMethod').value;
   const area = document.getElementById('ldWorkerSplitArea');
@@ -1794,13 +1875,13 @@ function renderWorkerSplitArea() {
       const rows = t.workerSplits || [];
       const tW = getTicketWeight(t);
       const bodyHtml = rows.length === 0
-        ? `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:8px;">Search worker above to assign to Ticket #${tIdx+1}</td></tr>`
+        ? `<tr><td colspan="7" style="text-align:center;color:#64748b;padding:8px;">Search worker above to assign to Ticket #${tIdx+1}</td></tr>`
         : rows.map((row, rIdx) => {
             const w = getWorkerById(row.workerId);
             return `<tr>
               <td class="mono" style="font-weight:700;">${w.code}</td>
               <td style="font-weight:600;">${w.name}</td>
-              <td>${w.role}</td>
+              <td>${attSelectHtml(row.att, `modalTickets[${tIdx}].workerSplits[${rIdx}].att = Number(this.value)`)}</td>
               <td><input type="number" step="any" class="num" value="${row.qty}" style="width:100%;" onchange="onPerTicketQtyChange(${tIdx}, ${rIdx}, this.value)"></td>
               <td style="text-align:center;"><input type="checkbox" ${row.locked ? 'checked' : ''} onchange="onPerTicketLockChange(${tIdx}, ${rIdx}, this.checked)"></td>
               <td style="text-align:center;"><button type="button" class="btn btn-sm btn-danger" onclick="onPerTicketRemove(${tIdx}, ${rIdx})">✕</button></td>
@@ -1810,20 +1891,20 @@ function renderWorkerSplitArea() {
       return `<div style="margin-bottom:8px;border:1px solid #e2e8f0;padding:6px;background:#fafafa;">
         <div style="font-size:11px;font-weight:700;margin-bottom:4px;">Ticket #${t.ticketNo || (tIdx+1)} (${t.vehicleNo || '-'}) — Weight: ${fmtNum(tW)} kg</div>
         <div class="table-wrap"><table class="data-table"><thead><tr>
-          <th style="width:85px;">Code</th><th>Name</th><th style="width:85px;">Role</th>
-          <th style="width:115px;" class="num">Qty (kg)</th><th style="width:55px;text-align:center;">Lock</th><th style="width:40px;">Del</th>
+          <th style="width:80px;">Code</th><th>Name</th><th style="width:92px;">Att (MD)</th>
+          <th style="width:110px;" class="num">Qty (kg)</th><th style="width:50px;text-align:center;">Lock</th><th style="width:40px;">Del</th>
         </tr></thead><tbody>${bodyHtml}</tbody></table></div>
       </div>`;
     }).join('');
   } else {
     const bodyHtml = modalWorkerRows.length === 0
-      ? `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:12px;">Search and select workers above to split the combined load weight.</td></tr>`
+      ? `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:12px;">Search and select workers above to mark attendance and split load weight.</td></tr>`
       : modalWorkerRows.map((row, idx) => {
           const w = getWorkerById(row.workerId);
           return `<tr>
             <td class="mono" style="font-weight:700;">${w.code}</td>
             <td style="font-weight:600;">${w.name}</td>
-            <td>${w.role}</td>
+            <td>${attSelectHtml(row.att, `modalWorkerRows[${idx}].att = Number(this.value)`)}</td>
             <td><input type="number" step="any" class="num" value="${row.qty}" style="width:100%;" onchange="onCombinedQtyChange(${idx}, this.value)"></td>
             <td style="text-align:center;"><input type="checkbox" ${row.locked ? 'checked' : ''} onchange="onCombinedLockChange(${idx}, this.checked)"></td>
             <td style="text-align:center;"><button type="button" class="btn btn-sm btn-danger" onclick="onCombinedRemove(${idx})">✕</button></td>
@@ -1831,8 +1912,8 @@ function renderWorkerSplitArea() {
         }).join('');
 
     area.innerHTML = `<div class="table-wrap"><table class="data-table"><thead><tr>
-      <th style="width:90px;">Code No</th><th>Worker Name</th><th style="width:90px;">Role</th>
-      <th style="width:125px;" class="num">Split Qty (kg)</th><th style="width:70px;text-align:center;">Lock</th><th style="width:45px;text-align:center;">Del</th>
+      <th style="width:85px;">Code No</th><th>Worker Name</th><th style="width:95px;">Att (MD)</th>
+      <th style="width:120px;" class="num">Split Qty (kg)</th><th style="width:65px;text-align:center;">Lock</th><th style="width:45px;text-align:center;">Del</th>
     </tr></thead><tbody>${bodyHtml}</tbody></table></div>`;
   }
 
@@ -1937,7 +2018,7 @@ function deleteLoad(id) {
 // JSON EXPORT & IMPORT
 function exportJSON() {
   const bundle = {
-    appVersion: 'OPIL_TransportingRegister_v2.0',
+    appVersion: 'OPIL_TransportingRegister_v3.0',
     exportedAt: new Date().toISOString(),
     estateName: state.meta.estateName,
     division: state.meta.division,
@@ -1964,6 +2045,7 @@ function importJSON(e) {
       if (!importedState.meta || !Array.isArray(importedState.fields) || !Array.isArray(importedState.loads)) {
         throw new Error('Invalid JSON structure.');
       }
+      if (!importedState.meta.mandayNorm) importedState.meta.mandayNorm = 1670;
       state = importedState;
       saveState();
       renderAll();
@@ -1976,7 +2058,28 @@ function importJSON(e) {
   e.target.value = '';
 }
 
-// EXCEL EXPORT
+// EXPORT ADDITIONAL ATTENDANCE QUOTA SUMMARY CSV
+function exportQuotaSummaryCSV() {
+  const qRows = computeWorkerQuotaSummary().map((r, i) => ({
+    'Sl. No': i + 1,
+    'Code No': r.code,
+    'Worker Name': r.name,
+    'Role': r.role,
+    'Attendance (MD)': r.att,
+    'Target Quota (kg)': r.targetQuota,
+    'Total Load (kg)': r.totalLoad,
+    'Attendance Load Capped (kg)': r.cappedLoad,
+    'Incentive Load (kg)': r.incentiveLoad,
+    'Wage Cut (kg)': r.wageCut
+  }));
+  const ws = XLSX.utils.json_to_sheet(qRows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Attendance Quota Summary');
+  const safeDiv = (state.meta.division || 'Division').replace(/[^a-zA-Z0-9_-]/g, '_');
+  XLSX.writeFile(wb, `OPIL_Attendance_Quota_Summary_${safeDiv}.csv`);
+}
+
+// FULL MULTI-SHEET EXCEL EXPORT
 function exportExcel() {
   const wb = XLSX.utils.book_new();
   const rows = [];
@@ -2010,14 +2113,28 @@ function exportExcel() {
   });
   XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(fRows), 'Field Reconciliation');
 
+  const qRows = computeWorkerQuotaSummary().map((r, i) => ({
+    'Sl. No': i + 1,
+    'Code No': r.code,
+    'Worker Name': r.name,
+    'Role': r.role,
+    'Attendance (MD)': r.att,
+    'Target Quota (kg)': r.targetQuota,
+    'Total Load (kg)': r.totalLoad,
+    'Attendance Load Capped (kg)': r.cappedLoad,
+    'Incentive Load (kg)': r.incentiveLoad,
+    'Wage Cut (kg)': r.wageCut
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(qRows), 'Attendance Quota Summary');
+
   const safeDiv = (state.meta.division || 'Division').replace(/[^a-zA-Z0-9_-]/g, '_');
   XLSX.writeFile(wb, `OPIL_TransportRegister_${safeDiv}.xlsx`);
 }
 
 // CUSTOMIZE & PRINT MODAL
 function openPrintCustomizer(defaultTabId = null) {
-  const activeTab = defaultTabId || document.querySelector('.tab-panel.active')?.id || 'tab-register';
-  document.getElementById('printTargetSelect').value = activeTab;
+  const activeTab = defaultTabId || document.querySelector('.tab-panel.active')?.id || 'both_report';
+  document.getElementById('printTargetSelect').value = activeTab === 'tab-register' ? 'both_report' : activeTab;
   document.getElementById('printModal').classList.add('open');
 }
 function closePrintModal() {
@@ -2029,12 +2146,17 @@ function syncPrintWrapOptions() {
 }
 function executeCustomPrint() {
   const fontSize = document.getElementById('printFontRange').value;
-  const targetId = document.getElementById('printTargetSelect').value;
+  const targetMode = document.getElementById('printTargetSelect').value;
   document.documentElement.style.setProperty('--print-font-size', fontSize + 'px');
 
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('print-target-active'));
-  const targetEl = document.getElementById(targetId);
-  if (targetEl) targetEl.classList.add('print-target-active');
+  if (targetMode === 'both_report') {
+    document.getElementById('tab-register').classList.add('print-target-active');
+    document.getElementById('tab-reconciliation').classList.add('print-target-active');
+  } else {
+    const el = document.getElementById(targetMode);
+    if (el) el.classList.add('print-target-active');
+  }
 
   closePrintModal();
   setTimeout(() => window.print(), 80);

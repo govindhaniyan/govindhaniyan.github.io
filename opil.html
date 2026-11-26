@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OPIL Division-Wise Transporting Register & Reconciliation</title>
+<title>OPIL Daily Checkroll & Pocket Abstract Register</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,500,0,0" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -20,16 +20,11 @@
     --primary: #0f62fe;
     --primary-hover: #0353e9;
     --green-ink: #15803d;
-    --green-bg: #dcfce7;
     --red-ink: #b91c1c;
-    --red-bg: #fee2e2;
     --amber-ink: #b45309;
-    --amber-bg: #fef3c7;
-    --ledger-paper: #fcfbf7;
-    --ledger-margin: #dc2626;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'Roboto Mono', monospace;
-    --print-font-size: 10px;
+    --print-font-size: 9.5px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,7 +47,7 @@
     line-height: 1;
   }
 
-  /* Top Header Bar */
+  /* Top Bar */
   .top-bar {
     background: var(--bg-header);
     color: #fff;
@@ -75,9 +70,8 @@
     padding: 4px 8px;
     border-radius: 2px;
     font-size: 11px;
-    letter-spacing: 0.5px;
   }
-  .brand-title h1 { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
+  .brand-title h1 { font-size: 14px; font-weight: 700; }
   .brand-title p { font-size: 11px; color: #94a3b8; }
 
   .top-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -107,7 +101,6 @@
     border-radius: 2px;
     cursor: pointer;
     font-family: var(--font-sans);
-    transition: background 0.12s, border-color 0.12s;
   }
   .btn:hover { background: #f1f5f9; border-color: #94a3b8; }
   .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
@@ -137,7 +130,7 @@
   .mono { font-family: var(--font-mono); }
   .num { text-align: right; font-family: var(--font-mono); }
 
-  /* Global Config Strip */
+  /* Global Context Strip */
   .config-bar {
     background: var(--bg-surface);
     border-bottom: 1px solid var(--border-color);
@@ -146,13 +139,13 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
   }
   .config-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .field-item { display: flex; flex-direction: column; gap: 2px; }
   .field-item label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
 
-  /* Navigation Tabs */
+  /* Tabs */
   .nav-tabs {
     background: #e2e8f0;
     padding: 0 14px;
@@ -187,11 +180,10 @@
   }
 
   /* Main Container */
-  .container { padding: 12px 14px; max-width: 1700px; margin: 0 auto; }
+  .container { padding: 12px 14px; max-width: 1800px; margin: 0 auto; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* Panels & Cards */
   .panel {
     background: var(--bg-surface);
     border: 1px solid var(--border-color);
@@ -217,191 +209,85 @@
   }
   .panel-body { padding: 10px 12px; }
 
-  /* KPI Strip */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .kpi-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    border-left: 3px solid var(--primary);
-    padding: 8px 10px;
-    border-radius: 2px;
-  }
-  .kpi-card.green { border-left-color: var(--green-ink); }
-  .kpi-card.amber { border-left-color: var(--amber-ink); }
-  .kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
-  .kpi-val { font-size: 16px; font-weight: 700; font-family: var(--font-mono); margin-top: 2px; }
-  .kpi-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
-
-  /* Standard Tables */
+  /* Tables & Checkroll Grid */
   .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); }
   table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   table.data-table th, table.data-table td {
-    padding: 5px 8px;
+    padding: 4px 7px;
     border: 1px solid var(--border-color);
     vertical-align: middle;
   }
   table.data-table th {
-    background: #f1f5f9;
+    background: #16803d;
+    color: #fff;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 10.5px;
     text-transform: uppercase;
+    white-space: nowrap;
+  }
+  table.summary-table th {
+    background: #f1f5f9;
     color: #334155;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
     white-space: nowrap;
   }
   table.data-table tbody tr:hover { background: #f8fafc; }
 
-  .green-ink { color: var(--green-ink); font-weight: 700; }
-  .red-ink { color: var(--red-ink); font-weight: 700; }
-  .amber-ink { color: var(--amber-ink); font-weight: 700; }
-
-  /* PHYSICAL REGISTER VIEW */
-  .physical-book {
-    background: var(--ledger-paper);
-    border: 2px solid #475569;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    padding: 14px;
-    overflow-x: auto;
-  }
-  .book-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-bottom: 2px solid var(--ledger-margin);
-    padding-bottom: 6px;
-    margin-bottom: 8px;
-  }
-  .book-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1e293b;
-    letter-spacing: 0.3px;
-  }
-  .book-meta { font-size: 11.5px; color: #334155; font-weight: 600; }
-
-  table.register-table {
-    width: 100%;
-    border-collapse: collapse;
+  .chk-cell {
+    text-align: center;
     font-family: var(--font-mono);
-    font-size: 12px;
-    background: var(--ledger-paper);
-  }
-  table.register-table th {
-    border: 1.5px solid #475569;
-    border-bottom: 2px solid var(--ledger-margin);
-    padding: 6px 8px;
-    background: #f4f1ea;
-    color: var(--ledger-margin);
-    font-family: var(--font-sans);
     font-weight: 700;
     font-size: 11px;
-    text-transform: uppercase;
-    text-align: center;
+    cursor: pointer;
+    min-width: 34px;
+    user-select: none;
   }
-  table.register-table td {
-    border: 1px solid #cbd5e1;
-    padding: 4px 8px;
-    vertical-align: top;
-  }
-  table.register-table th.page-spine,
-  table.register-table td.page-spine {
-    border-left: 3px double var(--ledger-margin);
-  }
-  tr.date-block-start td { border-top: 2px solid #64748b; }
-  tr.day-green-row td {
-    background: #eefdf3;
-    border-top: 1px dashed #16a34a;
-    border-bottom: 1.5px solid #16a34a;
-    color: var(--green-ink);
+  .chk-cell:hover { background: #eff6ff !important; outline: 1px solid var(--primary); }
+  .lend-sup {
+    font-size: 9px;
     font-weight: 700;
+    color: #1d4ed8;
+    background: #dbeafe;
+    padding: 0 2px;
+    border-radius: 2px;
+    margin-left: 2px;
   }
-  tr.day-prog-row td {
-    background: #f0f9ff;
-    border-bottom: 2px solid #475569;
-    color: #0369a1;
-    font-weight: 700;
-  }
-  .worker-split-line {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 6px;
-    padding: 1px 0;
-    border-bottom: 1px dotted #e2e8f0;
-    font-size: 11.5px;
-  }
-  .worker-split-line:last-child { border-bottom: none; }
-  .worker-split-total {
-    display: flex;
-    justify-content: flex-end;
-    border-top: 1.5px solid #334155;
-    border-bottom: 2px double #334155;
-    margin-top: 3px;
-    padding-top: 2px;
-    font-weight: 700;
-    color: #0f172a;
-  }
-  .w-code { color: #475569; min-width: 36px; display: inline-block; flex-shrink: 0; }
-  .w-name { color: #0f172a; font-family: var(--font-sans); font-weight: 600; flex: 1; word-break: break-word; }
-  .w-att { font-size: 10px; font-weight: 700; color: #1d4ed8; background: #dbeafe; padding: 0 4px; border-radius: 2px; flex-shrink: 0; }
-  .w-att.extra-inc { color: #15803d; background: #dcfce7; }
-  .w-qty { font-weight: 700; text-align: right; min-width: 46px; flex-shrink: 0; }
 
-  /* Field Control Grid */
-  .field-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 8px;
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 12px; }
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 2px;
+    background: #e2e8f0;
+    color: #334155;
   }
-  .field-card {
-    border: 1px solid var(--border-color);
-    background: #f8fafc;
-    padding: 8px 10px;
+
+  /* Searchable Dropdown inside Date Marking Modal */
+  .work-dropdown-panel {
+    border: 1px solid var(--primary);
+    background: #fff;
+    max-height: 175px;
+    overflow-y: auto;
+    margin-top: 4px;
     border-radius: 2px;
   }
-  .field-card-hdr {
+  .work-option {
+    padding: 5px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 700;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 4px;
-    margin-bottom: 6px;
-  }
-  .field-card-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
     font-size: 11.5px;
   }
+  .work-option:hover { background: #eff6ff; }
+  .work-option.selected { background: #dbeafe; font-weight: 700; }
 
-  /* Ticket Rows inside Load Modal */
-  .ticket-row-card {
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: 2px;
-    padding: 7px 9px;
-    margin-bottom: 6px;
-  }
-  .ticket-row-top {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 6px;
-  }
-  .ticket-field-inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
-    gap: 6px;
-  }
-
-  /* Modal & Search Dropdown */
+  /* Modals */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -418,7 +304,7 @@
     border: 1px solid #475569;
     border-radius: 2px;
     width: 100%;
-    max-width: 880px;
+    max-width: 860px;
     max-height: 92vh;
     display: flex;
     flex-direction: column;
@@ -442,85 +328,33 @@
     gap: 8px;
   }
 
-  .search-wrapper { position: relative; }
-  .search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid var(--primary);
-    max-height: 180px;
-    overflow-y: auto;
-    z-index: 120;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: none;
-  }
-  .search-results.open { display: block; }
-  .search-item {
-    padding: 5px 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 11.5px;
-  }
-  .search-item:hover { background: #eff6ff; }
-
-  .tag {
-    display: inline-block;
-    padding: 1px 5px;
-    font-size: 10px;
-    font-weight: 700;
-    border-radius: 2px;
-    background: #e2e8f0;
-    color: #334155;
-  }
-  .tag-green { background: var(--green-bg); color: var(--green-ink); }
-  .tag-blue { background: #dbeafe; color: #1d4ed8; }
-
-  /* PRINT STYLES */
   @media print {
     @page { size: landscape; margin: 7mm; }
-    body {
-      background: #fff !important;
-      font-size: var(--print-font-size) !important;
-    }
+    body { background: #fff !important; font-size: var(--print-font-size) !important; }
     .top-bar, .config-bar, .nav-tabs, .no-print, .modal-backdrop { display: none !important; }
     .container { padding: 0 !important; max-width: 100% !important; width: 100% !important; }
     .tab-panel { display: none !important; }
     .print-target-active { display: block !important; page-break-after: always; }
-    .panel { border: none !important; margin: 0 0 10px 0 !important; }
-    .panel-body { padding: 0 !important; }
-    .physical-book, .table-wrap {
-      border: 1px solid #334155 !important;
-      box-shadow: none !important;
-      padding: 4px !important;
-      overflow: visible !important;
-      width: 100% !important;
-    }
+    .panel { border: none !important; margin: 0 0 8px 0 !important; }
+    .table-wrap { overflow: visible !important; border: 1px solid #334155 !important; }
     table, th, td {
       font-size: var(--print-font-size) !important;
       white-space: normal !important;
       word-wrap: break-word !important;
       overflow-wrap: anywhere !important;
     }
-    .worker-split-line {
-      flex-wrap: wrap !important;
-      font-size: var(--print-font-size) !important;
-    }
   }
 </style>
 </head>
 <body>
 
-  <!-- TOP APPLICATION BAR -->
+  <!-- TOP HEADER BAR -->
   <header class="top-bar">
     <div class="brand-block">
-      <span class="brand-badge">OPIL • LOGISTICS</span>
+      <span class="brand-badge">OPIL • CHECKROLL</span>
       <div class="brand-title">
-        <h1>Division-Wise Transporting Register & Reconciliation</h1>
-        <p id="headerSubtitle">Oil Palm India Limited • Weigh-Slip Ledger, Attendance Quota (1670 kg/MD) & Reconciliation</p>
+        <h1>Daily Checkroll & Pocket Abstract Register</h1>
+        <p>Division / Field Setup, Customizable Work Types & Symbols, Lend Labour & Abstract Summaries</p>
       </div>
     </div>
     <div class="top-actions">
@@ -528,18 +362,18 @@
         <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span>
         <span>Ready</span>
       </span>
-      <button class="btn btn-dark btn-sm" onclick="exportJSON()" title="Download complete workspace state as JSON">
+      <button class="btn btn-dark btn-sm" onclick="exportJSON()">
         <span class="material-symbols-outlined">download</span> Save JSON
       </button>
-      <label class="btn btn-dark btn-sm" style="margin:0;" title="Import previously saved JSON file">
+      <label class="btn btn-dark btn-sm" style="margin:0;">
         <span class="material-symbols-outlined">upload</span> Load JSON
         <input type="file" id="jsonFileInput" accept=".json" style="display:none" onchange="importJSON(event)">
       </label>
-      <button class="btn btn-green btn-sm" onclick="exportExcel()">
-        <span class="material-symbols-outlined">table_view</span> Excel (.xlsx)
+      <button class="btn btn-green btn-sm" onclick="exportAllExcel()">
+        <span class="material-symbols-outlined">table_view</span> Export All (.xlsx)
       </button>
-      <button class="btn btn-primary btn-sm" onclick="openPrintCustomizer()">
-        <span class="material-symbols-outlined">print</span> Customize & Print
+      <button class="btn btn-primary btn-sm" onclick="openPrintModal()">
+        <span class="material-symbols-outlined">print</span> Print Abstract / Reports
       </button>
       <button class="btn btn-danger btn-sm" onclick="openClearModal()">
         <span class="material-symbols-outlined">delete_forever</span> Clear & Exit
@@ -547,38 +381,37 @@
     </div>
   </header>
 
-  <!-- GLOBAL CONFIGURATION BAR -->
+  <!-- ACTIVE CONTEXT BAR -->
   <section class="config-bar">
     <div class="config-group">
       <div class="field-item">
         <label>Estate Name</label>
-        <input type="text" id="metaEstate" style="width:170px;" placeholder="e.g. Oil Palm India Ltd" oninput="updateMeta()">
+        <input type="text" id="ctxEstate" style="width:155px;" placeholder="e.g. YEROOR ESTATE" oninput="updateContext()">
       </div>
       <div class="field-item">
-        <label>Division</label>
-        <input type="text" id="metaDivision" style="width:130px;" placeholder="e.g. Yeroor Estate" oninput="updateMeta()">
+        <label>Active Division</label>
+        <select id="ctxDivision" style="width:140px;" onchange="onDivisionChange()"></select>
       </div>
       <div class="field-item">
-        <label>Month / Year</label>
-        <input type="text" id="metaMonth" style="width:125px;" placeholder="e.g. November 2026" oninput="updateMeta()">
+        <label>Active Field</label>
+        <select id="ctxField" style="width:130px;" onchange="onFieldChange()"></select>
       </div>
       <div class="field-item">
-        <label>Register Page Nos.</label>
-        <input type="text" id="metaPages" style="width:90px;" placeholder="e.g. 200 - 201" oninput="updateMeta()">
+        <label>Checkroll Month</label>
+        <input type="month" id="ctxMonth" style="width:140px;" onchange="onMonthChange()">
       </div>
       <div class="field-item">
-        <label>Manday Norm (kg/MD)</label>
-        <input type="number" id="metaMandayNorm" style="width:95px;" class="mono" value="1670" onchange="updateMandayNorm()">
+        <label>Supervisor / F.A.</label>
+        <input type="text" id="ctxSupervisor" style="width:155px;" placeholder="Name of F.A. / Supervisor" oninput="updateContext()">
       </div>
     </div>
 
     <div class="config-group">
-      <label style="display:inline-flex;align-items:center;gap:5px;font-weight:600;cursor:pointer;background:#f8fafc;padding:5px 9px;border:1px solid var(--border-color);border-radius:2px;">
-        <input type="checkbox" id="roundDigitCheck" checked onchange="toggleRoundDigit()">
-        <span>Round Split Digits (Integer)</span>
-      </label>
-      <button class="btn btn-primary" onclick="openLoadModal()">
-        <span class="material-symbols-outlined">local_shipping</span> + Add Transport Entry
+      <button class="btn btn-green btn-sm" onclick="openDateMarkModal(todayISO())">
+        <span class="material-symbols-outlined">today</span> Mark Today's Attendance
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="openDateMarkModal()">
+        <span class="material-symbols-outlined">edit_calendar</span> Mark Specific Date
       </button>
     </div>
   </section>
@@ -586,227 +419,221 @@
   <!-- NAVIGATION TABS -->
   <nav class="nav-tabs">
     <div class="tab-list">
-      <button class="tab-btn active" data-tab="tab-register" onclick="switchTab('tab-register', this)">
-        <span class="material-symbols-outlined">menu_book</span> Physical Register View
+      <button class="tab-btn active" data-tab="tab-checkroll" onclick="switchTab('tab-checkroll', this)">
+        <span class="material-symbols-outlined">calendar_month</span> Monthly Checkroll
       </button>
-      <button class="tab-btn" data-tab="tab-dashboard" onclick="switchTab('tab-dashboard', this)">
-        <span class="material-symbols-outlined">dashboard</span> Digital Dashboard & Loads
+      <button class="tab-btn" data-tab="tab-setup" onclick="switchTab('tab-setup', this)">
+        <span class="material-symbols-outlined">settings</span> Division, Field & Roster Setup
       </button>
-      <button class="tab-btn" data-tab="tab-fields" onclick="switchTab('tab-fields', this)">
-        <span class="material-symbols-outlined">grid_view</span> Field Control & Balances
+      <button class="tab-btn" data-tab="tab-works" onclick="switchTab('tab-works', this)">
+        <span class="material-symbols-outlined">work</span> Work Types & Symbols
       </button>
-      <button class="tab-btn" data-tab="tab-roster" onclick="switchTab('tab-roster', this)">
-        <span class="material-symbols-outlined">groups</span> Worker Roster Master
-      </button>
-      <button class="tab-btn" data-tab="tab-reconciliation" onclick="switchTab('tab-reconciliation', this)">
-        <span class="material-symbols-outlined">fact_check</span> Final Reconciliation & Summary Tables
+      <button class="tab-btn" data-tab="tab-abstract" onclick="switchTab('tab-abstract', this)">
+        <span class="material-symbols-outlined">summarize</span> Checkroll Abstract & Summaries
       </button>
     </div>
     <div style="font-size:11px;color:var(--text-muted);padding:4px 0;">
-      Norm: <strong id="normBadge" class="mono">1670 kg/MD</strong> • Fields: <strong id="activeFieldsBadge" class="mono">None</strong>
+      Click any date cell in Monthly Checkroll to mark or edit attendance
     </div>
   </nav>
 
   <!-- MAIN WORKSPACE -->
   <main class="container">
 
-    <!-- KPI SUMMARY STRIP -->
-    <div class="kpi-grid" id="kpiStrip"></div>
-
-    <!-- TAB 1: PHYSICAL REGISTER VIEW -->
-    <section id="tab-register" class="tab-panel active">
-      <div class="panel">
-        <div class="panel-header no-print">
-          <div class="panel-title">
-            <span class="material-symbols-outlined">auto_stories</span>
-            <span>Physical Transporting Register Replica (Two-Page Spread View)</span>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-            <span class="tag tag-green">Green = Field Day Total & Cumulative Progressive</span>
-            <span class="tag tag-blue">Blue = Division Progressive Total</span>
-            <button class="btn btn-primary btn-sm" onclick="openLoadModal()">+ Add Transport Entry</button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="physical-book">
-            <div class="book-header">
-              <div>
-                <div class="book-title" id="bookHeading">Division Transporting Register</div>
-                <div class="book-meta" id="bookSubheading"></div>
-              </div>
-              <div class="book-meta mono" id="bookPageTag"></div>
-            </div>
-            <div id="physicalRegisterContainer"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: DIGITAL DASHBOARD & LOAD LOG -->
-    <section id="tab-dashboard" class="tab-panel">
+    <!-- TAB 1: MONTHLY CHECKROLL GRID -->
+    <section id="tab-checkroll" class="tab-panel active">
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">
-            <span class="material-symbols-outlined">receipt_long</span>
-            <span>Transport Entries, Attendance & Worker Splits</span>
+            <span class="material-symbols-outlined">grid_on</span>
+            <span id="checkrollTitle">Monthly Pocket Checkroll</span>
           </div>
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-            <input type="text" id="loadSearchInput" placeholder="Filter by Date, Ticket No, Vehicle, Field or Worker..." style="width:280px;" oninput="renderDashboard()">
-            <button class="btn btn-primary btn-sm" onclick="openLoadModal()">+ New Transport Entry</button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Split Mode</th>
-                  <th>Tickets / Vehicles</th>
-                  <th>Field-Wise Weight (kg)</th>
-                  <th class="num">Total Load (kg)</th>
-                  <th>Worker Split & Attendance (Code • Name • Att • Qty)</th>
-                  <th class="no-print" style="width:95px;text-align:center;">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="dashboardLoadsBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: FIELD CONTROL & OPENING / FIELD BALANCES -->
-    <section id="tab-fields" class="tab-panel">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span class="material-symbols-outlined">tune</span>
-            <span>Division Fields Configuration & Opening / Closing Field Balances</span>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-            <input type="text" id="newFieldCodeInput" placeholder="Field Code (e.g. YC1)" style="width:150px;" onkeydown="if(event.key==='Enter') addDivisionField()">
-            <button class="btn btn-primary btn-sm" onclick="addDivisionField()">+ Add Field Column</button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <p style="font-size:11.5px;color:var(--text-muted);margin-bottom:10px;">
-            Add or reorder fields for this division anytime. Enter <strong>Opening Balance</strong> (prior month un-transported stock) and <strong>Closing Field Balance</strong> (harvested fruit remaining in field at month end) for each field.
-          </p>
-          <div class="field-cards-grid" id="fieldControlGrid"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: WORKER ROSTER MASTER -->
-    <section id="tab-roster" class="tab-panel">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span class="material-symbols-outlined">badge</span>
-            <span>Worker Roster Master (Searchable & Editable)</span>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
-            <input type="text" id="rosterSearch" placeholder="Search by code, name or role..." style="width:200px;" oninput="renderRoster()">
-            <label class="btn btn-sm" style="margin:0;">
-              <span class="material-symbols-outlined">upload_file</span> Import CSV
-              <input type="file" accept=".csv,.xlsx" style="display:none" onchange="importRosterCSV(event)">
-            </label>
-            <button class="btn btn-sm" onclick="exportRosterCSV()">
-              <span class="material-symbols-outlined">download</span> Export CSV
-            </button>
-          </div>
-        </div>
-        <div class="panel-body">
-          <div style="display:flex;gap:6px;flex-wrap:wrap;background:#f8fafc;padding:8px;border:1px solid var(--border-color);margin-bottom:10px;align-items:center;">
-            <strong style="font-size:11px;text-transform:uppercase;color:var(--text-muted);">Quick Add:</strong>
-            <input type="text" id="addWCode" placeholder="Code No (e.g. 2842)" style="width:120px;">
-            <input type="text" id="addWName" placeholder="Worker Name" style="width:200px;">
-            <select id="addWRole" style="width:110px;">
-              <option value="Cutter">Cutter</option>
-              <option value="Carrier">Carrier</option>
-              <option value="Loader">Loader</option>
+            <select id="checkrollGenderFilter" onchange="renderCheckrollGrid()">
+              <option value="ALL">All Workers (Men & Women)</option>
+              <option value="M">Men Only</option>
+              <option value="F">Women Only</option>
             </select>
-            <input type="text" id="addWField" placeholder="Field (e.g. YC1)" style="width:100px;">
-            <button class="btn btn-primary btn-sm" onclick="addWorker()">+ Add Worker</button>
+            <input type="text" id="checkrollSearch" placeholder="Search code or name..." style="width:160px;" oninput="renderCheckrollGrid()">
+            <button class="btn btn-sm" onclick="exportCheckrollCSV()">Export Checkroll CSV</button>
           </div>
-
+        </div>
+        <div class="panel-body">
+          <div id="workLegendBar" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;font-size:11px;"></div>
           <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th style="width:50px;">Sl.</th>
-                  <th style="width:110px;">Code No.</th>
-                  <th>Worker Name</th>
-                  <th style="width:120px;">Role</th>
-                  <th style="width:110px;">Default Field</th>
-                  <th style="width:80px;text-align:center;">Action</th>
-                </tr>
-              </thead>
-              <tbody id="rosterTableBody"></tbody>
+            <table class="data-table" id="checkrollGridTable">
+              <thead id="checkrollThead"></thead>
+              <tbody id="checkrollTbody"></tbody>
+              <tfoot id="checkrollTfoot"></tfoot>
             </table>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 5: FINAL RECONCILIATION & ADDITIONAL ATTENDANCE QUOTA SUMMARY TABLES -->
-    <section id="tab-reconciliation" class="tab-panel">
+    <!-- TAB 2: DIVISION, FIELD & ROSTER SETUP -->
+    <section id="tab-setup" class="tab-panel">
+      <div class="grid-2">
+        <!-- Create Division & Field -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="material-symbols-outlined">domain_add</span> 1. Create Division & Field</div>
+          </div>
+          <div class="panel-body">
+            <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+              <input type="text" id="newDivName" placeholder="New Division Name (e.g. C)" style="flex:1;min-width:140px;">
+              <button class="btn btn-primary btn-sm" onclick="createDivision()">+ Create Division</button>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+              <select id="targetDivForField" style="width:130px;"></select>
+              <input type="text" id="newFieldName" placeholder="New Field Code (e.g. 2 or YC1)" style="flex:1;min-width:130px;">
+              <button class="btn btn-green btn-sm" onclick="createField()">+ Add Field</button>
+            </div>
+            <div id="divFieldTreeList" style="font-size:12px;"></div>
+          </div>
+        </div>
+
+        <!-- Upload & Manage Worker CSV -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="material-symbols-outlined">group_add</span> 2. Map Worker CSV to Active Division / Field</div>
+            <div style="display:flex;gap:6px;">
+              <label class="btn btn-sm btn-primary" style="margin:0;">
+                Upload Worker CSV
+                <input type="file" accept=".csv,.xlsx" style="display:none" onchange="uploadWorkerCSV(event)">
+              </label>
+              <button class="btn btn-sm" onclick="exportRosterCSV()">Export CSV</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+              CSV columns needed: <strong>Code No</strong>, <strong>Name</strong> (optional: <strong>Gender</strong> M/F, <strong>Division</strong>, <strong>Field</strong>). Cutter/Carrier is not required.
+            </p>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+              <input type="text" id="quickWCode" placeholder="Code No" style="width:85px;">
+              <input type="text" id="quickWName" placeholder="Worker Name" style="flex:1;min-width:140px;">
+              <select id="quickWGender" style="width:85px;">
+                <option value="M">Male (M)</option>
+                <option value="F">Female (F)</option>
+              </select>
+              <button class="btn btn-sm" onclick="quickAddWorker()">+ Add</button>
+            </div>
+            <div class="table-wrap" style="max-height:260px;overflow-y:auto;">
+              <table class="data-table summary-table">
+                <thead>
+                  <tr>
+                    <th>Code No</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Div / Field</th>
+                    <th style="width:45px;">Del</th>
+                  </tr>
+                </thead>
+                <tbody id="rosterMasterBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: WORK TYPES & WORK SYMBOLS -->
+    <section id="tab-works" class="tab-panel">
+      <div class="grid-2">
+        <!-- Customize Work Types -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="material-symbols-outlined">palette</span> 1. Customize Work Types & Colors</div>
+            <button class="btn btn-primary btn-sm" onclick="addWorkType()">+ Add Work Type</button>
+          </div>
+          <div class="panel-body">
+            <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
+              Default types: <strong>Skilled Work</strong> (green), <strong>Semi-Skilled Work</strong> (red), <strong>Normal Work</strong> (black). You can add, rename, or change colors anytime.
+            </p>
+            <div id="workTypesList" style="display:flex;flex-direction:column;gap:6px;"></div>
+          </div>
+        </div>
+
+        <!-- Add / Edit / Delete Works -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title"><span class="material-symbols-outlined">assignment</span> 2. Work Abbreviations & Symbols</div>
+          </div>
+          <div class="panel-body">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;background:#f8fafc;padding:8px;border:1px solid var(--border-color);">
+              <input type="text" id="newWorkAbbr" placeholder="Abbr (e.g. H, FC, RP)" style="width:105px;text-transform:uppercase;">
+              <input type="text" id="newWorkName" placeholder="Work Name (e.g. Harvesting)" style="flex:1;min-width:150px;">
+              <select id="newWorkTypeSelect" style="width:145px;"></select>
+              <button class="btn btn-primary btn-sm" onclick="addWorkItem()">+ Add Work</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table summary-table">
+                <thead>
+                  <tr>
+                    <th>Abbr</th>
+                    <th>Work Name</th>
+                    <th>Work Type</th>
+                    <th style="width:95px;text-align:center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="worksTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: CHECKROLL ABSTRACT & SUMMARIES -->
+    <section id="tab-abstract" class="tab-panel">
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title">
-            <span class="material-symbols-outlined">analytics</span>
-            <span>Division Field-Wise Reconciliation & Worker Attendance Quota Summary</span>
-          </div>
-          <div class="no-print" style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button class="btn btn-sm" onclick="exportQuotaSummaryCSV()">Export Quota Table (.csv)</button>
-            <button class="btn btn-green btn-sm" onclick="exportExcel()">Download Full Excel (.xlsx)</button>
-            <button class="btn btn-primary btn-sm" onclick="openPrintCustomizer('tab-reconciliation')">Customize & Print</button>
+          <div class="panel-title"><span class="material-symbols-outlined">filter_alt</span> Abstract Filters & Exports</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <select id="absGenderFilter" onchange="renderAbstractSection()">
+              <option value="ALL">Men & Women Together</option>
+              <option value="M">Men Only</option>
+              <option value="F">Women Only</option>
+            </select>
+            <input type="text" id="absFieldMatch" placeholder="Field / Lend Filter (e.g. YC, YD, Y or YC4)" style="width:210px;" oninput="renderAbstractSection()">
+            <button class="btn btn-sm" onclick="exportAbstractCSV('pocket')">Export Pocket Abstract CSV</button>
+            <button class="btn btn-sm" onclick="exportAbstractCSV('worker_day')">Export Worker-Day Matrix CSV</button>
+            <button class="btn btn-sm" onclick="exportAbstractCSV('category_summary')">Export Category Summary CSV</button>
           </div>
         </div>
         <div class="panel-body">
-          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">1. Field-Wise Transport & Balance Reconciliation</h3>
-          <div class="table-wrap" style="margin-bottom:16px;">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Field Code</th>
-                  <th class="num">Opening Balance (kg)</th>
-                  <th class="num">Total Transported in Register (kg)</th>
-                  <th class="num">Closing Field Balance (kg)</th>
-                  <th class="num">Net Current Month Harvest (Trans - Open + Close)</th>
-                  <th class="num">Tickets / Entries</th>
-                </tr>
-              </thead>
-              <tbody id="reconFieldBody"></tbody>
+          <!-- 1. Pocket Abstract of Work & Datewise Totals -->
+          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">
+            1. Pocket Abstract — Work Abbreviation × Day of Month (with Lend Labour Details)
+          </h3>
+          <div class="table-wrap" style="margin-bottom:14px;">
+            <table class="data-table summary-table">
+              <thead id="pocketAbsThead"></thead>
+              <tbody id="pocketAbsTbody"></tbody>
+              <tfoot id="pocketAbsTfoot"></tfoot>
             </table>
           </div>
 
-          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:6px;">
-            <h3 style="font-size:12px;text-transform:uppercase;color:#334155;">
-              2. Worker Attendance Quota, Incentive Load & Wage Cut Summary (Norm: <span id="quotaTableNormLabel" class="mono">1670</span> kg / Manday)
-            </h3>
-            <span style="font-size:11px;color:var(--text-muted);">
-              Att <strong>0</strong> = Extra/Other Work (Target = 0, full load counts as Incentive Load) • Capped = MIN(Load, Target) • Incentive = MAX(0, Load − Target) • Wage Cut = MAX(0, Target − Load)
-            </span>
+          <!-- 2. Work-Wise Labour Details (Datewise Table per Worker) -->
+          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">
+            2. Work-Wise & Lend Labour Details Table (Worker × Date)
+          </h3>
+          <div class="table-wrap" style="margin-bottom:14px;">
+            <table class="data-table summary-table">
+              <thead id="workerDateThead"></thead>
+              <tbody id="workerDateTbody"></tbody>
+            </table>
           </div>
+
+          <!-- 3. Category / Work-Type & Per-Worker Monthly Summary -->
+          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">
+            3. Per-Worker & Work-Type / Category Summary (Monthly & All-Type Totals)
+          </h3>
           <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th style="width:45px;">Sl.</th>
-                  <th style="width:85px;">Code No</th>
-                  <th>Worker Name</th>
-                  <th style="width:85px;">Role</th>
-                  <th class="num">Attendance (MD)</th>
-                  <th class="num">Target Quota (kg)</th>
-                  <th class="num">Total Load (kg)</th>
-                  <th class="num">Attendance Load (Capped)</th>
-                  <th class="num">Incentive Load (kg)</th>
-                  <th class="num">Wage Cut (kg)</th>
-                </tr>
-              </thead>
-              <tbody id="reconWorkerQuotaBody"></tbody>
+            <table class="data-table summary-table">
+              <thead id="workerCatThead"></thead>
+              <tbody id="workerCatTbody"></tbody>
+              <tfoot id="workerCatTfoot"></tfoot>
             </table>
           </div>
         </div>
@@ -815,212 +642,158 @@
 
   </main>
 
-  <!-- ADD / EDIT TRANSPORT ENTRY MODAL -->
-  <div class="modal-backdrop" id="loadModal">
-    <div class="modal-box">
+  <!-- DATE ATTENDANCE MARKING MODAL -->
+  <div class="modal-backdrop" id="dateMarkModal">
+    <div class="modal-box" style="max-width:780px;">
       <div class="modal-hdr">
-        <strong id="loadModalTitle">Add Transport / Weigh-Slip Entry</strong>
-        <button class="btn btn-sm" style="background:transparent;color:#fff;border-color:#475569;" onclick="closeLoadModal()">✕</button>
+        <strong id="dateMarkModalTitle">Mark Daily Checkroll Attendance</strong>
+        <button class="btn btn-sm" style="background:transparent;color:#fff;border-color:#475569;" onclick="closeDateMarkModal()">✕</button>
       </div>
       <div class="modal-body">
-        <input type="hidden" id="editLoadId">
-
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-bottom:10px;">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;background:#f8fafc;padding:8px;border:1px solid var(--border-color);">
           <div class="field-item">
-            <label>Date of Transporting</label>
-            <input type="date" id="ldDate">
+            <label>Select Date</label>
+            <input type="date" id="markDateInput" onchange="loadDateIntoModal(this.value)">
           </div>
-          <div class="field-item">
-            <label>Worker Split Method</label>
-            <select id="ldSplitMethod" onchange="onSplitMethodChange()">
-              <option value="combined">Combined Total Load Split (Multiple Tickets Combined)</option>
-              <option value="per_ticket">Split Per Individual Ticket Load</option>
-            </select>
-          </div>
-          <div class="field-item" style="justify-content:flex-end;">
-            <label>Combined Weight Across Tickets</label>
-            <div class="mono green-ink" style="font-size:14px;padding:3px 0;"><span id="ldTotalWeightDisplay">0</span> kg</div>
+          <div class="field-item" style="flex:1;min-width:220px;">
+            <label>Search & Select Work (Shows Abbr + Work Name)</label>
+            <input type="text" id="workFilterSearch" placeholder="Type abbreviation or work name to filter..." oninput="renderWorkDropdownOptions()">
+            <div class="work-dropdown-panel" id="workDropdownPanel"></div>
           </div>
         </div>
 
-        <!-- Ticket / Weigh-Slip Rows -->
-        <div style="background:#f8fafc;border:1px solid var(--border-color);padding:8px 10px;margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <strong style="font-size:11.5px;">Weigh-Slip Tickets & Field Weights (kg)</strong>
-            <button type="button" class="btn btn-sm btn-primary" onclick="addTicketRow()">+ Add Ticket Row</button>
-          </div>
-          <div id="ldTicketsContainer"></div>
-        </div>
-
-        <!-- Worker Search, Attendance (0, 0.5, 1) & Load Split Allocation -->
-        <div style="border:1px solid var(--border-color);padding:8px 10px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
-            <strong style="font-size:11.5px;" id="workerSplitSectionTitle">Worker Attendance & Load Split</strong>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <label style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;cursor:pointer;">
-                <input type="checkbox" id="ldAutoSplitCheck" checked onchange="recalcModalWorkerSplits()"> Auto-Split Equally
-              </label>
-              <button type="button" class="btn btn-sm" onclick="recalcModalWorkerSplits(true)">Recalculate Split</button>
-            </div>
-          </div>
-
-          <!-- Search Worker by Code or Name -->
-          <div class="search-wrapper" style="margin-bottom:8px;">
-            <input type="text" id="workerSearchBox" placeholder="Search worker by Code No or Name and click to add..." style="width:100%;" oninput="filterWorkerDropdown()" onfocus="filterWorkerDropdown()">
-            <div class="search-results" id="workerSearchDropdown"></div>
-          </div>
-
-          <div id="ldWorkerSplitArea"></div>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11.5px;">
-            <span style="color:var(--text-muted);">Attendance: <strong>1</strong> Full, <strong>0.5</strong> Half, or <strong>0</strong> Extra/Other Work (full load counts as Incentive).</span>
-            <span>Allocated Sum: <strong id="ldAllocatedSumDisplay" class="mono">0</strong> kg (<span id="ldDiffStatus">OK</span>)</span>
-          </div>
+        <div class="table-wrap">
+          <table class="data-table summary-table">
+            <thead>
+              <tr>
+                <th style="width:75px;">Code No</th>
+                <th>Worker Name</th>
+                <th style="width:70px;">Gender</th>
+                <th style="width:175px;">Work Marked</th>
+                <th style="width:90px;">Day Value</th>
+                <th style="width:75px;text-align:center;">Lend?</th>
+                <th style="width:115px;">Lend To Field</th>
+                <th style="width:45px;">Clr</th>
+              </tr>
+            </thead>
+            <tbody id="dateMarkRowsBody"></tbody>
+          </table>
         </div>
       </div>
       <div class="modal-ftr">
-        <button class="btn" onclick="closeLoadModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveLoadEntry()">Save Entry</button>
+        <button class="btn" onclick="closeDateMarkModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveDateAttendance()">Save Attendance for Date</button>
       </div>
     </div>
   </div>
 
-  <!-- CUSTOMIZE & PRINT MODAL -->
+  <!-- PRINT CUSTOMIZER MODAL -->
   <div class="modal-backdrop" id="printModal">
-    <div class="modal-box" style="max-width:480px;">
+    <div class="modal-box" style="max-width:450px;">
       <div class="modal-hdr">
-        <strong>Customize & Print Report</strong>
+        <strong>Customize & Print Checkroll / Abstract</strong>
         <button class="btn btn-sm" style="background:transparent;color:#fff;border-color:#475569;" onclick="closePrintModal()">✕</button>
       </div>
       <div class="modal-body">
         <div class="field-item" style="margin-bottom:10px;">
-          <label>Report Content to Print</label>
-          <select id="printTargetSelect">
-            <option value="both_report">Physical Register + Summary & Quota Tables (Full Report)</option>
-            <option value="tab-register">Physical Register View Only</option>
-            <option value="tab-reconciliation">Summary & Attendance Quota Tables Only</option>
-            <option value="tab-dashboard">Digital Dashboard & Loads</option>
+          <label>Report View to Print</label>
+          <select id="printViewSelect">
+            <option value="tab-checkroll">Monthly Checkroll Grid</option>
+            <option value="tab-abstract">Checkroll Abstract & Summaries</option>
+            <option value="both">Monthly Checkroll + Abstract Summaries</option>
           </select>
         </div>
-
-        <div class="field-item" style="margin-bottom:10px;">
-          <label>Print Font Size (<span id="printFontVal" class="mono">10</span> px)</label>
-          <input type="range" id="printFontRange" min="7.5" max="14" step="0.5" value="10" oninput="document.getElementById('printFontVal').textContent = this.value">
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:8px;background:#f8fafc;padding:10px;border:1px solid var(--border-color);">
-          <label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;">
-            <input type="checkbox" id="printWrapAllCheck" checked onchange="syncPrintWrapOptions()">
-            <span>Wrap all table & column contents (prevents horizontal cropping)</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;font-weight:600;cursor:pointer;">
-            <input type="checkbox" id="printWrapNamesCheck" checked>
-            <span>Wrap worker names & long text cleanly across lines</span>
-          </label>
+        <div class="field-item">
+          <label>Print Font Size (<span id="printFontDisplay" class="mono">9.5</span> px)</label>
+          <input type="range" id="printFontSlider" min="7.5" max="13" step="0.5" value="9.5" oninput="document.getElementById('printFontDisplay').textContent = this.value">
         </div>
       </div>
       <div class="modal-ftr">
         <button class="btn" onclick="closePrintModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="executeCustomPrint()">
-          <span class="material-symbols-outlined">print</span> Print Now
-        </button>
+        <button class="btn btn-primary" onclick="executePrint()">Print Now</button>
       </div>
     </div>
   </div>
 
-  <!-- PROTECTED CLEAR & EXIT MODAL -->
+  <!-- CLEAR & EXIT MODAL -->
   <div class="modal-backdrop" id="clearModal">
-    <div class="modal-box" style="max-width:440px;">
+    <div class="modal-box" style="max-width:420px;">
       <div class="modal-hdr" style="background:#991b1b;">
-        <strong>Confirm Permanent Workspace Reset</strong>
+        <strong>Reset Checkroll Workspace</strong>
         <button class="btn btn-sm" style="background:transparent;color:#fff;border-color:#fca5a5;" onclick="closeClearModal()">✕</button>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom:8px;">This will permanently erase all locally stored register entries, field balances, and worker data.</p>
-        <p style="margin-bottom:10px;font-weight:600;">Type <span class="mono" style="background:#fee2e2;padding:1px 5px;color:#991b1b;">CLEAR</span> below to confirm:</p>
-        <input type="text" id="clearConfirmInput" placeholder="Type CLEAR" style="width:100%;" oninput="checkClearWord()">
+        <p style="margin-bottom:8px;">This permanently wipes all locally saved divisions, workers, work definitions, and attendance entries.</p>
+        <p style="margin-bottom:8px;font-weight:600;">Type <span class="mono" style="background:#fee2e2;padding:1px 5px;color:#991b1b;">CLEAR</span> to confirm:</p>
+        <input type="text" id="clearWordInput" style="width:100%;" oninput="document.getElementById('clearConfirmBtn').disabled = this.value.trim().toUpperCase() !== 'CLEAR'">
       </div>
       <div class="modal-ftr">
         <button class="btn" onclick="closeClearModal()">Cancel</button>
-        <button class="btn btn-danger" id="confirmClearBtn" disabled onclick="executeClearWorkspace()">Confirm & Clear</button>
+        <button class="btn btn-danger" id="clearConfirmBtn" disabled onclick="confirmClear()">Confirm & Clear</button>
       </div>
     </div>
   </div>
 
 <script>
-const STORAGE_KEY = 'OPIL_TRANSPORT_REGISTER_V4_ATT0';
+const STORAGE_KEY = 'OPIL_DAILY_CHECKROLL_V1';
 
-function getEmptyState() {
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function getInitialState() {
   return {
     meta: {
       estateName: '',
-      division: '',
-      monthYear: '',
-      pages: '',
-      mandayNorm: 1670,
-      roundDigit: true
+      supervisorName: '',
+      activeDivision: '',
+      activeField: '',
+      activeMonth: new Date().toISOString().slice(0, 7)
     },
-    fields: [],
-    roster: [],
-    loads: []
+    divisions: [], // { name, fields: [] }
+    roster: [],    // { id, code, name, gender: 'M'|'F', division, field }
+    workTypes: [
+      { id: 'wt_skilled', name: 'Skilled Work', color: '#15803d' },
+      { id: 'wt_semiskilled', name: 'Semi-Skilled Work', color: '#b91c1c' },
+      { id: 'wt_normal', name: 'Normal Work', color: '#0f172a' }
+    ],
+    works: [
+      { id: 'wk_h', abbr: 'H', name: 'Harvesting', typeId: 'wt_skilled' },
+      { id: 'wk_fc', abbr: 'FC', name: 'FFB Carrying', typeId: 'wt_skilled' },
+      { id: 'wk_p', abbr: 'P', name: 'Pruning FFB', typeId: 'wt_skilled' },
+      { id: 'wk_rp', abbr: 'RP', name: 'Re-Planting', typeId: 'wt_semiskilled' },
+      { id: 'wk_pp', abbr: 'PP', name: 'Plant Protection', typeId: 'wt_semiskilled' },
+      { id: 'wk_w', abbr: 'W', name: 'Weeding', typeId: 'wt_normal' },
+      { id: 'wk_m', abbr: 'M', name: 'Manuring', typeId: 'wt_normal' },
+      { id: 'wk_rr', abbr: 'RR', name: 'Road Repairs', typeId: 'wt_normal' },
+      { id: 'wk_rt', abbr: 'RT', name: 'Repairing Tools', typeId: 'wt_normal' }
+    ],
+    // entries[dateISO][workerId] = { workId, value: 1 | 0.5, isLend: boolean, lendTo: string }
+    entries: {}
   };
 }
 
 let state = loadState();
-let modalTickets = [];
-let modalWorkerRows = [];
-let hasActiveWork = false;
+let selectedModalWorkId = null;
+let tempDateDraft = {};
 
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && parsed.meta && Array.isArray(parsed.fields)) {
-        if (!parsed.meta.mandayNorm) parsed.meta.mandayNorm = 1670;
+      if (parsed && parsed.meta && Array.isArray(parsed.workTypes) && Array.isArray(parsed.works)) {
         return parsed;
       }
     }
   } catch (e) { console.error(e); }
-  return getEmptyState();
+  return getInitialState();
 }
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  hasActiveWork = state.loads.length > 0 || state.roster.length > 0 || state.fields.length > 0;
-  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  document.getElementById('saveStatus').innerHTML = `
-    <span class="material-symbols-outlined" style="font-size:14px;">check_circle</span>
-    <span>Saved ${now}</span>
-  `;
-}
-
-window.onbeforeunload = function(e) {
-  if (hasActiveWork) {
-    e.preventDefault();
-    e.returnValue = 'Are you sure you want to leave/reload?';
-    return e.returnValue;
-  }
-};
-
-function fmtDateDDMMYY(iso) {
-  if (!iso) return '';
-  const parts = iso.split('-');
-  if (parts.length !== 3) return iso;
-  return `${parts[2]}/${parts[1]}/${parts[0].slice(2)}`;
-}
-function fmtNum(n) {
-  const val = Number(n || 0);
-  return Number.isInteger(val) ? val.toString() : val.toFixed(2);
-}
-function getTicketWeight(t) {
-  return Object.values(t.fieldWeights || {}).reduce((s, v) => s + (Number(v) || 0), 0);
-}
-function getEntryTotalWeight(entry) {
-  return (entry.tickets || []).reduce((s, t) => s + getTicketWeight(t), 0);
-}
-function getWorkerById(id) {
-  return state.roster.find(w => w.id === id) || { code: '?', name: 'Unknown Worker', role: '-' };
+  const t = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  document.getElementById('saveStatus').innerHTML = `<span class="material-symbols-outlined" style="font-size:14px;">check_circle</span><span>Saved ${t}</span>`;
 }
 
 function switchTab(tabId, btnEl) {
@@ -1031,456 +804,100 @@ function switchTab(tabId, btnEl) {
   renderAll();
 }
 
-function syncMetaInputs() {
-  const norm = Number(state.meta.mandayNorm || 1670);
-  document.getElementById('metaEstate').value = state.meta.estateName || '';
-  document.getElementById('metaDivision').value = state.meta.division || '';
-  document.getElementById('metaMonth').value = state.meta.monthYear || '';
-  document.getElementById('metaPages').value = state.meta.pages || '';
-  document.getElementById('metaMandayNorm').value = norm;
-  document.getElementById('roundDigitCheck').checked = state.meta.roundDigit !== false;
+function syncContextSelectors() {
+  document.getElementById('ctxEstate').value = state.meta.estateName || '';
+  document.getElementById('ctxSupervisor').value = state.meta.supervisorName || '';
+  document.getElementById('ctxMonth').value = state.meta.activeMonth || todayISO().slice(0, 7);
 
-  document.getElementById('bookHeading').textContent = state.meta.monthYear
-    ? `${state.meta.monthYear} — Division Transporting Register`
-    : 'Division Transporting Register';
-  document.getElementById('bookSubheading').textContent = [state.meta.estateName, state.meta.division].filter(Boolean).join(' • ');
-  document.getElementById('bookPageTag').textContent = state.meta.pages ? `Folio: ${state.meta.pages}` : '';
-  document.getElementById('normBadge').textContent = `${fmtNum(norm)} kg/MD`;
-  document.getElementById('quotaTableNormLabel').textContent = fmtNum(norm);
-  document.getElementById('activeFieldsBadge').textContent = state.fields.length
-    ? state.fields.map(f => f.code).join(', ')
-    : 'None (Add in Field Control)';
+  const divSel = document.getElementById('ctxDivision');
+  const targetDivSel = document.getElementById('targetDivForField');
+  const divOptions = state.divisions.map(d => `<option value="${d.name}" ${state.meta.activeDivision === d.name ? 'selected' : ''}>${d.name}</option>`).join('');
+  divSel.innerHTML = `<option value="">-- Select Division --</option>` + divOptions;
+  targetDivSel.innerHTML = `<option value="">-- Division --</option>` + divOptions;
+
+  const activeDivObj = state.divisions.find(d => d.name === state.meta.activeDivision);
+  const fldSel = document.getElementById('ctxField');
+  const fldOptions = (activeDivObj?.fields || []).map(f => `<option value="${f}" ${state.meta.activeField === f ? 'selected' : ''}>${f}</option>`).join('');
+  fldSel.innerHTML = `<option value="">-- All Fields --</option>` + fldOptions;
 }
 
-function updateMeta() {
-  state.meta.estateName = document.getElementById('metaEstate').value;
-  state.meta.division = document.getElementById('metaDivision').value;
-  state.meta.monthYear = document.getElementById('metaMonth').value;
-  state.meta.pages = document.getElementById('metaPages').value;
+function updateContext() {
+  state.meta.estateName = document.getElementById('ctxEstate').value;
+  state.meta.supervisorName = document.getElementById('ctxSupervisor').value;
   saveState();
-  syncMetaInputs();
+  renderCheckrollTitle();
 }
 
-function updateMandayNorm() {
-  const val = Number(document.getElementById('metaMandayNorm').value);
-  state.meta.mandayNorm = val >= 0 ? val : 1670;
+function onDivisionChange() {
+  state.meta.activeDivision = document.getElementById('ctxDivision').value;
+  const divObj = state.divisions.find(d => d.name === state.meta.activeDivision);
+  state.meta.activeField = divObj?.fields?.[0] || '';
   saveState();
   renderAll();
 }
 
-function toggleRoundDigit() {
-  state.meta.roundDigit = document.getElementById('roundDigitCheck').checked;
+function onFieldChange() {
+  state.meta.activeField = document.getElementById('ctxField').value;
   saveState();
+  renderAll();
 }
 
-function renderKPIs() {
-  const fieldCodes = state.fields.map(f => f.code);
-  let totalTransported = 0;
-  let totalTickets = 0;
-  const totalOpening = state.fields.reduce((s, f) => s + (Number(f.openingBalance) || 0), 0);
-  const totalClosing = state.fields.reduce((s, f) => s + (Number(f.closingBalance) || 0), 0);
-
-  state.loads.forEach(entry => {
-    (entry.tickets || []).forEach(t => {
-      totalTickets++;
-      fieldCodes.forEach(fc => {
-        totalTransported += Number(t.fieldWeights?.[fc] || 0);
-      });
-    });
-  });
-
-  const netHarvest = totalTransported - totalOpening + totalClosing;
-  const uniqueDates = new Set(state.loads.map(l => l.date).filter(Boolean)).size;
-
-  document.getElementById('kpiStrip').innerHTML = `
-    <div class="kpi-card green">
-      <div class="kpi-label">Progressive Transported</div>
-      <div class="kpi-val green-ink">${fmtNum(totalTransported)} kg</div>
-      <div class="kpi-sub">${totalTickets} tickets across ${uniqueDates} days</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Opening Field Balance</div>
-      <div class="kpi-val">${fmtNum(totalOpening)} kg</div>
-      <div class="kpi-sub">Prior month carry-over</div>
-    </div>
-    <div class="kpi-card amber">
-      <div class="kpi-label">Closing Field Balance</div>
-      <div class="kpi-val">${fmtNum(totalClosing)} kg</div>
-      <div class="kpi-sub">Awaiting transport in field</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-label">Net Current Harvest</div>
-      <div class="kpi-val">${fmtNum(netHarvest)} kg</div>
-      <div class="kpi-sub">Transported − Opening + Closing</div>
-    </div>
-  `;
+function onMonthChange() {
+  state.meta.activeMonth = document.getElementById('ctxMonth').value;
+  saveState();
+  renderAll();
 }
 
-// PHYSICAL REGISTER RENDERER
-function renderPhysicalRegister() {
-  const container = document.getElementById('physicalRegisterContainer');
-  const fields = state.fields;
+function renderCheckrollTitle() {
+  const div = state.meta.activeDivision || 'All Divisions';
+  const fld = state.meta.activeField || 'All Fields';
+  const mon = state.meta.activeMonth || '';
+  document.getElementById('checkrollTitle').textContent = `Monthly Pocket Checkroll • Division: ${div} • Field: ${fld} (${mon})`;
+}
 
-  if (fields.length === 0) {
-    container.innerHTML = `<div style="text-align:center;padding:24px;color:#64748b;">No division fields configured yet. Go to <strong>Field Control & Balances</strong> to add field columns (e.g., YC1, YC2...).</div>`;
+// DIVISION, FIELD & ROSTER SETUP
+function createDivision() {
+  const name = document.getElementById('newDivName').value.trim();
+  if (!name) return alert('Enter a division name.');
+  if (state.divisions.some(d => d.name.toLowerCase() === name.toLowerCase())) return alert('Division already exists.');
+  state.divisions.push({ name, fields: [] });
+  if (!state.meta.activeDivision) state.meta.activeDivision = name;
+  document.getElementById('newDivName').value = '';
+  saveState();
+  renderAll();
+}
+
+function createField() {
+  const divName = document.getElementById('targetDivForField').value;
+  const fldName = document.getElementById('newFieldName').value.trim();
+  if (!divName || !fldName) return alert('Select a division and enter a field name/code.');
+  const divObj = state.divisions.find(d => d.name === divName);
+  if (!divObj) return;
+  if (!divObj.fields.includes(fldName)) divObj.fields.push(fldName);
+  state.meta.activeDivision = divName;
+  state.meta.activeField = fldName;
+  document.getElementById('newFieldName').value = '';
+  saveState();
+  renderAll();
+}
+
+function renderDivFieldTree() {
+  const el = document.getElementById('divFieldTreeList');
+  if (state.divisions.length === 0) {
+    el.innerHTML = `<div style="color:#64748b;">No divisions created yet.</div>`;
     return;
   }
-
-  const sortedEntries = [...state.loads].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-
-  const cumFieldTotals = {};
-  fields.forEach(f => cumFieldTotals[f.code] = 0);
-  let progressiveTotal = 0;
-
-  let html = `<table class="register-table"><thead><tr>
-    <th style="width:74px;">DATE</th>
-    <th style="width:65px;">T. NO</th>
-    <th style="width:115px;">VEHICLE NO.</th>`;
-
-  fields.forEach(f => {
-    html += `<th style="min-width:78px;">${f.code}</th>`;
-  });
-
-  html += `
-    <th class="page-spine" style="width:92px;">DAY'S TOTAL</th>
-    <th style="width:95px;">PRO. TOTAL</th>
-    <th style="min-width:270px;">NAME, ATT & SPLIT</th>
-  </tr></thead><tbody>`;
-
-  if (sortedEntries.length === 0) {
-    html += `<tr><td colspan="${fields.length + 6}" style="text-align:center;padding:24px;color:#64748b;">No transport entries recorded yet. Click <strong>+ Add Transport Entry</strong> to add weigh slips.</td></tr>`;
-  }
-
-  sortedEntries.forEach(entry => {
-    const tickets = entry.tickets || [];
-    const dayFieldTotals = {};
-    fields.forEach(f => dayFieldTotals[f.code] = 0);
-    let entryTotal = 0;
-
-    tickets.forEach(t => {
-      fields.forEach(f => {
-        const w = Number(t.fieldWeights?.[f.code] || 0);
-        dayFieldTotals[f.code] += w;
-        entryTotal += w;
-      });
-    });
-
-    fields.forEach(f => {
-      cumFieldTotals[f.code] += dayFieldTotals[f.code];
-    });
-    progressiveTotal += entryTotal;
-
-    let workerHtml = '';
-    let workerSum = 0;
-
-    const renderWorkerLine = (ws) => {
-      const w = getWorkerById(ws.workerId);
-      const att = Number(ws.att ?? 1);
-      workerSum += Number(ws.qty) || 0;
-      const attBadge = att === 0
-        ? `<span class="w-att extra-inc" title="0 Attendance = Extra/Other Work (Incentive)">0d (Inc)</span>`
-        : `<span class="w-att">${fmtNum(att)}d</span>`;
-      return `<div class="worker-split-line">
-        <span class="w-code">${w.code}</span>
-        <span class="w-name">${w.name}</span>
-        ${attBadge}
-        <span class="w-qty">${fmtNum(ws.qty)}</span>
-      </div>`;
-    };
-
-    if (entry.splitMode === 'per_ticket') {
-      tickets.forEach((t, tIdx) => {
-        const tW = getTicketWeight(t);
-        workerHtml += `<div style="font-size:10.5px;font-weight:700;color:#1e293b;margin-top:${tIdx>0?'4px':'0'};">Ticket #${t.ticketNo || (tIdx+1)} (${fmtNum(tW)} kg):</div>`;
-        (t.workerSplits || []).forEach(ws => { workerHtml += renderWorkerLine(ws); });
-      });
-    } else {
-      (entry.workerSplits || []).forEach(ws => { workerHtml += renderWorkerLine(ws); });
-    }
-
-    if (workerSum > 0) {
-      workerHtml += `<div class="worker-split-total">${fmtNum(workerSum)}</div>`;
-    }
-
-    const rowCount = Math.max(1, tickets.length);
-    const totalRowsInBlock = rowCount + 2;
-
-    if (tickets.length === 0) {
-      html += `<tr class="date-block-start">
-        <td style="text-align:center;font-weight:700;">${fmtDateDDMMYY(entry.date)}</td>
-        <td>-</td><td>-</td>
-        ${fields.map(() => `<td></td>`).join('')}
-        <td class="page-spine num green-ink">0</td>
-        <td></td>
-        <td>${workerHtml}</td>
-      </tr>`;
-    } else {
-      tickets.forEach((t, idx) => {
-        const isFirst = idx === 0;
-        html += `<tr class="${isFirst ? 'date-block-start' : ''}">
-          <td style="text-align:center;font-weight:700;">${isFirst ? fmtDateDDMMYY(entry.date) : ''}</td>
-          <td style="text-align:center;font-weight:600;">${t.ticketNo || '-'}</td>
-          <td style="text-align:center;font-size:11px;">${t.vehicleNo || '-'}</td>`;
-
-        fields.forEach(f => {
-          const fw = Number(t.fieldWeights?.[f.code] || 0);
-          html += `<td class="num">${fw > 0 ? fmtNum(fw) : ''}</td>`;
-        });
-
-        if (isFirst) {
-          html += `
-            <td rowspan="${rowCount}" class="page-spine num green-ink" style="vertical-align:middle;font-size:13px;">${fmtNum(entryTotal)}</td>
-            <td rowspan="${rowCount}" class="num" style="vertical-align:middle;"></td>
-            <td rowspan="${totalRowsInBlock}" style="background:#fffdf9;padding:5px 8px;">${workerHtml}</td>
-          `;
-        }
-        html += `</tr>`;
-      });
-    }
-
-    html += `<tr class="day-green-row">
-      <td></td><td></td><td style="text-align:right;font-size:10px;font-family:var(--font-sans);">DAY FIELD TOT</td>`;
-    fields.forEach(f => {
-      const val = dayFieldTotals[f.code];
-      html += `<td class="num">${val > 0 ? fmtNum(val) : '-'}</td>`;
-    });
-    html += `<td class="page-spine num">${fmtNum(entryTotal)}</td><td></td></tr>`;
-
-    html += `<tr class="day-prog-row">
-      <td></td><td></td><td style="text-align:right;font-size:10px;font-family:var(--font-sans);">CUMULATIVE</td>`;
-    fields.forEach(f => {
-      const cVal = cumFieldTotals[f.code];
-      html += `<td class="num green-ink">${cVal > 0 ? fmtNum(cVal) : '-'}</td>`;
-    });
-    html += `<td class="page-spine"></td><td class="num red-ink" style="font-size:13px;">${fmtNum(progressiveTotal)}</td></tr>`;
-  });
-
-  html += `</tbody></table>`;
-  container.innerHTML = html;
-}
-
-// TAB 2: DIGITAL DASHBOARD
-function renderDashboard() {
-  const query = (document.getElementById('loadSearchInput').value || '').toLowerCase().trim();
-  const tbody = document.getElementById('dashboardLoadsBody');
-  const sorted = [...state.loads].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-
-  const filtered = sorted.filter(entry => {
-    if (!query) return true;
-    const ticketsText = (entry.tickets || []).map(t => `${t.ticketNo} ${t.vehicleNo}`).join(' ').toLowerCase();
-    const allSplits = entry.splitMode === 'per_ticket'
-      ? (entry.tickets || []).flatMap(t => t.workerSplits || [])
-      : (entry.workerSplits || []);
-    const workerText = allSplits.map(ws => {
-      const w = getWorkerById(ws.workerId);
-      return `${w.code} ${w.name}`;
-    }).join(' ').toLowerCase();
-    return (entry.date || '').includes(query) || ticketsText.includes(query) || workerText.includes(query);
-  });
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:16px;color:var(--text-muted);">No transport entries found.</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = filtered.map(entry => {
-    const totalW = getEntryTotalWeight(entry);
-    const tickets = entry.tickets || [];
-
-    const ticketSummary = tickets.map(t =>
-      `<div class="mono" style="font-size:11px;"><strong>T#${t.ticketNo || '-'}</strong> • ${t.vehicleNo || '-'} (${fmtNum(getTicketWeight(t))} kg)</div>`
-    ).join('');
-
-    const fieldAgg = {};
-    tickets.forEach(t => {
-      Object.entries(t.fieldWeights || {}).forEach(([fc, w]) => {
-        if (Number(w) > 0) fieldAgg[fc] = (fieldAgg[fc] || 0) + Number(w);
-      });
-    });
-    const fieldBadges = Object.entries(fieldAgg)
-      .map(([k, v]) => `<span class="tag tag-green">${k}: ${fmtNum(v)} kg</span>`)
-      .join(' ');
-
-    const fmtBadge = (ws) => {
-      const w = getWorkerById(ws.workerId);
-      const attVal = Number(ws.att ?? 1);
-      const attLabel = attVal === 0 ? '0 MD [Inc]' : `${fmtNum(attVal)} MD`;
-      return `<span class="tag" style="margin:1px;">${w.code} ${w.name} (${attLabel}): <strong>${fmtNum(ws.qty)}</strong></span>`;
-    };
-
-    let workerBadges = '';
-    if (entry.splitMode === 'per_ticket') {
-      workerBadges = tickets.map((t, i) => {
-        const items = (t.workerSplits || []).map(fmtBadge).join(' ');
-        return `<div style="margin-bottom:3px;"><span style="font-size:10px;font-weight:700;color:#475569;">T#${t.ticketNo || (i+1)}:</span> ${items}</div>`;
-      }).join('');
-    } else {
-      workerBadges = (entry.workerSplits || []).map(fmtBadge).join(' ');
-    }
-
-    return `<tr>
-      <td class="mono" style="white-space:nowrap;font-weight:700;">${fmtDateDDMMYY(entry.date)}</td>
-      <td><span class="tag ${entry.splitMode === 'per_ticket' ? 'tag-blue' : 'tag-green'}">${entry.splitMode === 'per_ticket' ? 'Per Ticket' : 'Combined Load'}</span></td>
-      <td>${ticketSummary || '-'}</td>
-      <td>${fieldBadges || '-'}</td>
-      <td class="num green-ink">${fmtNum(totalW)}</td>
-      <td>${workerBadges || '<span style="color:#94a3b8;">Unassigned</span>'}</td>
-      <td class="no-print" style="text-align:center;white-space:nowrap;">
-        <button class="btn btn-sm" onclick="openLoadModal('${entry.id}')" title="Edit Entry"><span class="material-symbols-outlined">edit</span></button>
-        <button class="btn btn-sm btn-danger" onclick="deleteLoad('${entry.id}')" title="Delete Entry"><span class="material-symbols-outlined">delete</span></button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-// TAB 3: FIELD CONTROL
-function renderFieldControls() {
-  const grid = document.getElementById('fieldControlGrid');
-  if (state.fields.length === 0) {
-    grid.innerHTML = `<div style="color:#64748b;padding:8px;">No fields added yet. Enter a field code above and click <strong>+ Add Field Column</strong>.</div>`;
-    return;
-  }
-
-  grid.innerHTML = state.fields.map((f, idx) => {
-    let transTotal = 0;
-    let ticketCount = 0;
-    state.loads.forEach(entry => {
-      (entry.tickets || []).forEach(t => {
-        const w = Number(t.fieldWeights?.[f.code] || 0);
-        if (w > 0) { transTotal += w; ticketCount++; }
-      });
-    });
-    const openB = Number(f.openingBalance || 0);
-    const closeB = Number(f.closingBalance || 0);
-    const netHarvest = transTotal - openB + closeB;
-
-    return `<div class="field-card">
-      <div class="field-card-hdr">
-        <span class="mono" style="font-size:13px;color:var(--primary);">${f.code}</span>
-        <div style="display:flex;gap:3px;">
-          ${idx > 0 ? `<button class="btn btn-sm" onclick="moveField(${idx}, -1)" title="Move Left">◀</button>` : ''}
-          ${idx < state.fields.length - 1 ? `<button class="btn btn-sm" onclick="moveField(${idx}, 1)" title="Move Right">▶</button>` : ''}
-          <button class="btn btn-sm btn-danger" onclick="removeDivisionField(${idx})" title="Remove Field">✕</button>
-        </div>
+  el.innerHTML = state.divisions.map(d => `
+    <div style="padding:6px 8px;border:1px solid var(--border-color);background:#f8fafc;margin-bottom:6px;border-radius:2px;">
+      <strong>Division: ${d.name}</strong>
+      <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
+        ${(d.fields || []).length ? d.fields.map(f => `<span class="tag">${f}</span>`).join('') : '<span style="color:#64748b;font-size:11px;">No fields yet</span>'}
       </div>
-      <div class="field-card-row">
-        <span>Opening Balance (kg):</span>
-        <input type="number" step="any" value="${openB}" style="width:95px;text-align:right;" onchange="updateFieldBalance(${idx}, 'openingBalance', this.value)">
-      </div>
-      <div class="field-card-row">
-        <span>Closing Field Bal (kg):</span>
-        <input type="number" step="any" value="${closeB}" style="width:95px;text-align:right;" onchange="updateFieldBalance(${idx}, 'closingBalance', this.value)">
-      </div>
-      <div class="field-card-row" style="border-top:1px dashed var(--border-color);padding-top:4px;margin-top:4px;">
-        <span>Register Transported:</span>
-        <strong class="mono green-ink">${fmtNum(transTotal)} kg (${ticketCount} tkt)</strong>
-      </div>
-      <div class="field-card-row">
-        <span>Net Field Harvest:</span>
-        <strong class="mono">${fmtNum(netHarvest)} kg</strong>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function addDivisionField() {
-  const input = document.getElementById('newFieldCodeInput');
-  const code = (input.value || '').trim().toUpperCase();
-  if (!code) return alert('Enter a valid Field Code (e.g., YC1).');
-  if (state.fields.some(f => f.code === code)) return alert('Field code already exists.');
-  state.fields.push({ code, openingBalance: 0, closingBalance: 0 });
-  input.value = '';
-  saveState();
-  renderAll();
-}
-
-function removeDivisionField(idx) {
-  const code = state.fields[idx].code;
-  if (!confirm(`Remove field column ${code}?`)) return;
-  state.fields.splice(idx, 1);
-  saveState();
-  renderAll();
-}
-
-function moveField(idx, dir) {
-  const target = idx + dir;
-  if (target < 0 || target >= state.fields.length) return;
-  const temp = state.fields[idx];
-  state.fields[idx] = state.fields[target];
-  state.fields[target] = temp;
-  saveState();
-  renderAll();
-}
-
-function updateFieldBalance(idx, key, val) {
-  state.fields[idx][key] = Number(val) || 0;
-  saveState();
-  renderAll();
-}
-
-// TAB 4: ROSTER MASTER
-function renderRoster() {
-  const q = (document.getElementById('rosterSearch').value || '').toLowerCase().trim();
-  const tbody = document.getElementById('rosterTableBody');
-  const filtered = state.roster.filter(w =>
-    !q || w.code.toLowerCase().includes(q) || w.name.toLowerCase().includes(q) || (w.role || '').toLowerCase().includes(q)
-  );
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:14px;color:#64748b;">No workers in roster yet. Add workers above or import a CSV file.</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = filtered.map((w, i) => `
-    <tr>
-      <td class="mono">${i + 1}</td>
-      <td><input type="text" value="${w.code}" style="width:90px;font-family:var(--font-mono);" onchange="editWorker('${w.id}', 'code', this.value)"></td>
-      <td><input type="text" value="${w.name}" style="width:100%;" onchange="editWorker('${w.id}', 'name', this.value)"></td>
-      <td>
-        <select onchange="editWorker('${w.id}', 'role', this.value)" style="width:100%;">
-          <option value="Cutter" ${w.role === 'Cutter' ? 'selected' : ''}>Cutter</option>
-          <option value="Carrier" ${w.role === 'Carrier' ? 'selected' : ''}>Carrier</option>
-          <option value="Loader" ${w.role === 'Loader' ? 'selected' : ''}>Loader</option>
-        </select>
-      </td>
-      <td><input type="text" value="${w.fieldCode || ''}" style="width:85px;" onchange="editWorker('${w.id}', 'fieldCode', this.value)"></td>
-      <td style="text-align:center;">
-        <button class="btn btn-sm btn-danger" onclick="deleteWorker('${w.id}')">✕</button>
-      </td>
-    </tr>
+    </div>
   `).join('');
 }
 
-function addWorker() {
-  const code = document.getElementById('addWCode').value.trim();
-  const name = document.getElementById('addWName').value.trim();
-  const role = document.getElementById('addWRole').value;
-  const fieldCode = document.getElementById('addWField').value.trim().toUpperCase();
-  if (!code || !name) return alert('Both Code No and Worker Name are required.');
-  state.roster.push({ id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2,5), code, name, role, fieldCode });
-  document.getElementById('addWCode').value = '';
-  document.getElementById('addWName').value = '';
-  saveState();
-  renderRoster();
-}
-
-function editWorker(id, field, val) {
-  const w = state.roster.find(x => x.id === id);
-  if (w) {
-    w[field] = val.trim();
-    saveState();
-    renderAll();
-  }
-}
-
-function deleteWorker(id) {
-  if (!confirm('Remove this worker from the roster?')) return;
-  state.roster = state.roster.filter(w => w.id !== id);
-  saveState();
-  renderRoster();
-}
-
-function importRosterCSV(e) {
+function uploadWorkerCSV(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -1491,545 +908,720 @@ function importRosterCSV(e) {
     rows.forEach(r => {
       const code = String(r['Code No'] || r['Code'] || r['code'] || '').trim();
       const name = String(r['Name'] || r['name'] || '').trim();
-      const role = String(r['Role'] || r['role'] || 'Cutter').trim();
-      const fieldCode = String(r['Field Code'] || r['Field'] || r['fieldCode'] || '').trim();
+      const genderRaw = String(r['Gender'] || r['Sex'] || 'M').trim().toUpperCase();
+      const gender = genderRaw.startsWith('F') || genderRaw.startsWith('W') ? 'F' : 'M';
+      const division = String(r['Division'] || state.meta.activeDivision || '').trim();
+      const field = String(r['Field'] || r['Field Code'] || state.meta.activeField || '').trim();
       if (code && name) {
-        const existing = state.roster.find(w => w.code === code);
-        if (existing) {
-          existing.name = name;
-          existing.role = role;
-          existing.fieldCode = fieldCode;
-        } else {
-          state.roster.push({ id: 'w_' + code + '_' + Math.random().toString(36).slice(2,6), code, name, role, fieldCode });
-        }
+        state.roster.push({
+          id: 'w_' + code + '_' + Math.random().toString(36).slice(2, 6),
+          code, name, gender, division, field
+        });
         count++;
       }
     });
     saveState();
-    renderRoster();
+    renderAll();
     alert(`Imported ${count} workers.`);
   };
   reader.readAsBinaryString(file);
   e.target.value = '';
 }
 
+function quickAddWorker() {
+  const code = document.getElementById('quickWCode').value.trim();
+  const name = document.getElementById('quickWName').value.trim();
+  const gender = document.getElementById('quickWGender').value;
+  if (!code || !name) return alert('Enter Code No and Name.');
+  state.roster.push({
+    id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 5),
+    code, name, gender,
+    division: state.meta.activeDivision || '',
+    field: state.meta.activeField || ''
+  });
+  document.getElementById('quickWCode').value = '';
+  document.getElementById('quickWName').value = '';
+  saveState();
+  renderAll();
+}
+
+function deleteRosterWorker(id) {
+  state.roster = state.roster.filter(w => w.id !== id);
+  saveState();
+  renderAll();
+}
+
 function exportRosterCSV() {
   const rows = state.roster.map(w => ({
-    Role: w.role,
     'Code No': w.code,
     Name: w.name,
-    'Field Code': w.fieldCode || ''
+    Gender: w.gender,
+    Division: w.division,
+    Field: w.field
   }));
   const ws = XLSX.utils.json_to_sheet(rows);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Roster');
-  XLSX.writeFile(wb, `OPIL_Roster_${state.meta.division || 'Division'}.csv`);
+  XLSX.utils.book_append_sheet(wb, ws, 'Workers');
+  XLSX.writeFile(wb, 'OPIL_Checkroll_Roster.csv');
 }
 
-// Compute Worker Attendance Quota Summary (0 attendance => targetQuota = 0 => totalLoad becomes incentiveLoad)
-function computeWorkerQuotaSummary() {
-  const norm = Number(state.meta.mandayNorm ?? 1670);
-  const workerMap = new Map();
-
-  state.loads.forEach(entry => {
-    const splits = entry.splitMode === 'per_ticket'
-      ? (entry.tickets || []).flatMap(t => t.workerSplits || [])
-      : (entry.workerSplits || []);
-
-    splits.forEach(ws => {
-      const cur = workerMap.get(ws.workerId) || { att: 0, totalLoad: 0 };
-      cur.att += Number(ws.att ?? 1);
-      cur.totalLoad += Number(ws.qty) || 0;
-      workerMap.set(ws.workerId, cur);
-    });
-  });
-
-  const rows = [];
-  workerMap.forEach((stats, wId) => {
-    const w = getWorkerById(wId);
-    const att = Number(stats.att.toFixed(2));
-    const totalLoad = Number(stats.totalLoad.toFixed(2));
-    const targetQuota = Number((att * norm).toFixed(2));
-    const cappedLoad = Number(Math.min(totalLoad, targetQuota).toFixed(2));
-    const incentiveLoad = Number(Math.max(0, totalLoad - targetQuota).toFixed(2));
-    const wageCut = Number(Math.max(0, targetQuota - totalLoad).toFixed(2));
-    rows.push({
-      code: w.code,
-      name: w.name,
-      role: w.role,
-      att,
-      targetQuota,
-      totalLoad,
-      cappedLoad,
-      incentiveLoad,
-      wageCut
-    });
-  });
-
-  rows.sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
-  return rows;
+function renderRosterMasterTable() {
+  const tbody = document.getElementById('rosterMasterBody');
+  if (state.roster.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#64748b;padding:12px;">No workers mapped yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = state.roster.map(w => `
+    <tr>
+      <td class="mono" style="font-weight:700;">${w.code}</td>
+      <td>${w.name}</td>
+      <td>${w.gender === 'F' ? 'Female' : 'Male'}</td>
+      <td class="mono">${[w.division, w.field].filter(Boolean).join(' / ') || '-'}</td>
+      <td style="text-align:center;"><button class="btn btn-sm btn-danger" onclick="deleteRosterWorker('${w.id}')">✕</button></td>
+    </tr>
+  `).join('');
 }
 
-// TAB 5: RECONCILIATION & ATTENDANCE QUOTA TABLE
-function renderReconciliation() {
-  let totOpen = 0, totTrans = 0, totClose = 0, totNet = 0, totTickets = 0;
-  const fRows = state.fields.map(f => {
-    let fTrans = 0, fTkts = 0;
-    state.loads.forEach(entry => {
-      (entry.tickets || []).forEach(t => {
-        const w = Number(t.fieldWeights?.[f.code] || 0);
-        if (w > 0) { fTrans += w; fTkts++; }
-      });
-    });
-    const open = Number(f.openingBalance || 0);
-    const close = Number(f.closingBalance || 0);
-    const net = fTrans - open + close;
-    totOpen += open; totTrans += fTrans; totClose += close; totNet += net; totTickets += fTkts;
+// WORK TYPES & WORKS MANAGEMENT
+function getWorkById(id) {
+  return state.works.find(w => w.id === id) || null;
+}
+function getWorkTypeById(typeId) {
+  return state.workTypes.find(t => t.id === typeId) || { name: 'Normal Work', color: '#0f172a' };
+}
+function isWorkAssignedAnywhere(workId) {
+  return Object.values(state.entries || {}).some(dayMap =>
+    Object.values(dayMap || {}).some(cell => cell && cell.workId === workId)
+  );
+}
 
+function renderWorkTypesList() {
+  const container = document.getElementById('workTypesList');
+  container.innerHTML = state.workTypes.map((wt, idx) => `
+    <div style="display:flex;gap:6px;align-items:center;background:#f8fafc;padding:6px 8px;border:1px solid var(--border-color);">
+      <input type="color" value="${wt.color || '#0f172a'}" onchange="updateWorkType(${idx}, 'color', this.value)" title="Choose display color">
+      <input type="text" value="${wt.name}" style="flex:1;font-weight:600;color:${wt.color || '#0f172a'};" onchange="updateWorkType(${idx}, 'name', this.value)">
+      ${state.workTypes.length > 1 ? `<button class="btn btn-sm btn-danger" onclick="deleteWorkType(${idx})">✕</button>` : ''}
+    </div>
+  `).join('');
+
+  const sel = document.getElementById('newWorkTypeSelect');
+  sel.innerHTML = state.workTypes.map(wt => `<option value="${wt.id}">${wt.name}</option>`).join('');
+}
+
+function addWorkType() {
+  const name = prompt('Enter new Work Type name (e.g., Special Work):');
+  if (!name || !name.trim()) return;
+  state.workTypes.push({ id: 'wt_' + Date.now(), name: name.trim(), color: '#0f62fe' });
+  saveState();
+  renderAll();
+}
+
+function updateWorkType(idx, field, val) {
+  state.workTypes[idx][field] = val;
+  saveState();
+  renderAll();
+}
+
+function deleteWorkType(idx) {
+  if (state.workTypes.length <= 1) return alert('Keep at least one work type.');
+  state.workTypes.splice(idx, 1);
+  saveState();
+  renderAll();
+}
+
+function renderWorksTable() {
+  const tbody = document.getElementById('worksTableBody');
+  tbody.innerHTML = state.works.map(wk => {
+    const wt = getWorkTypeById(wk.typeId);
     return `<tr>
-      <td class="mono" style="font-weight:700;">${f.code}</td>
-      <td class="num">${fmtNum(open)}</td>
-      <td class="num green-ink">${fmtNum(fTrans)}</td>
-      <td class="num">${fmtNum(close)}</td>
-      <td class="num" style="font-weight:700;">${fmtNum(net)}</td>
-      <td class="num">${fTkts}</td>
+      <td><input type="text" value="${wk.abbr}" style="width:70px;font-family:var(--font-mono);font-weight:700;color:${wt.color};" onchange="editWorkItem('${wk.id}', 'abbr', this.value.toUpperCase())"></td>
+      <td><input type="text" value="${wk.name}" style="width:100%;" onchange="editWorkItem('${wk.id}', 'name', this.value)"></td>
+      <td>
+        <select onchange="editWorkItem('${wk.id}', 'typeId', this.value)" style="width:100%;color:${wt.color};font-weight:600;">
+          ${state.workTypes.map(t => `<option value="${t.id}" ${wk.typeId === t.id ? 'selected' : ''}>${t.name}</option>`).join('')}
+        </select>
+      </td>
+      <td style="text-align:center;">
+        <button class="btn btn-sm btn-danger" onclick="tryDeleteWork('${wk.id}')">Delete</button>
+      </td>
     </tr>`;
   }).join('');
+}
 
-  document.getElementById('reconFieldBody').innerHTML = fRows + `
-    <tr style="background:#f1f5f9;font-weight:700;">
-      <td>DIVISION TOTAL</td>
-      <td class="num">${fmtNum(totOpen)}</td>
-      <td class="num green-ink">${fmtNum(totTrans)}</td>
-      <td class="num">${fmtNum(totClose)}</td>
-      <td class="num">${fmtNum(totNet)}</td>
-      <td class="num">${totTickets}</td>
-    </tr>`;
+function addWorkItem() {
+  const abbr = document.getElementById('newWorkAbbr').value.trim().toUpperCase();
+  const name = document.getElementById('newWorkName').value.trim();
+  const typeId = document.getElementById('newWorkTypeSelect').value;
+  if (!abbr || !name) return alert('Enter both Work Abbreviation and Work Name.');
+  state.works.push({ id: 'wk_' + abbr.toLowerCase() + '_' + Date.now(), abbr, name, typeId });
+  document.getElementById('newWorkAbbr').value = '';
+  document.getElementById('newWorkName').value = '';
+  saveState();
+  renderAll();
+}
 
-  const quotaRows = computeWorkerQuotaSummary();
-  let sumAtt = 0, sumTarget = 0, sumLoad = 0, sumCapped = 0, sumInc = 0, sumCut = 0;
+function editWorkItem(id, field, val) {
+  const wk = getWorkById(id);
+  if (!wk) return;
+  if (isWorkAssignedAnywhere(id)) {
+    alert(`Alert: Work "${wk.abbr} - ${wk.name}" is already assigned in checkroll entries. Editing will update existing attendance records.`);
+  }
+  wk[field] = val;
+  saveState();
+  renderAll();
+}
 
-  const qHtml = quotaRows.map((r, idx) => {
-    sumAtt += r.att;
-    sumTarget += r.targetQuota;
-    sumLoad += r.totalLoad;
-    sumCapped += r.cappedLoad;
-    sumInc += r.incentiveLoad;
-    sumCut += r.wageCut;
+function tryDeleteWork(id) {
+  const wk = getWorkById(id);
+  if (!wk) return;
+  if (isWorkAssignedAnywhere(id)) {
+    alert(`Cannot delete "${wk.abbr} - ${wk.name}": It is already assigned to workers in checkroll entries and would affect attendance.`);
+    return;
+  }
+  if (!confirm(`Delete work "${wk.abbr} - ${wk.name}"?`)) return;
+  state.works = state.works.filter(w => w.id !== id);
+  saveState();
+  renderAll();
+}
 
+function renderWorkLegend() {
+  const bar = document.getElementById('workLegendBar');
+  bar.innerHTML = state.works.map(wk => {
+    const wt = getWorkTypeById(wk.typeId);
+    return `<span style="border:1px solid var(--border-color);background:#fff;padding:2px 6px;border-radius:2px;color:${wt.color};font-weight:700;">
+      ${wk.abbr} = ${wk.name} <span style="font-weight:400;opacity:0.8;">(${wt.name})</span>
+    </span>`;
+  }).join('');
+}
+
+// MONTHLY CHECKROLL GRID
+function getDaysInSelectedMonth() {
+  const mStr = state.meta.activeMonth || todayISO().slice(0, 7);
+  const [y, m] = mStr.split('-').map(Number);
+  if (!y || !m) return [];
+  const totalDays = new Date(y, m, 0).getDate();
+  const dates = [];
+  for (let d = 1; d <= totalDays; d++) {
+    const dd = String(d).padStart(2, '0');
+    const mm = String(m).padStart(2, '0');
+    dates.push({ day: d, iso: `${y}-${mm}-${dd}` });
+  }
+  return dates;
+}
+
+function getFilteredRoster() {
+  const gFilter = document.getElementById('checkrollGenderFilter')?.value || 'ALL';
+  const q = (document.getElementById('checkrollSearch')?.value || '').toLowerCase().trim();
+  return state.roster.filter(w => {
+    if (gFilter !== 'ALL' && w.gender !== gFilter) return false;
+    if (q && !w.code.toLowerCase().includes(q) && !w.name.toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderCheckrollGrid() {
+  renderCheckrollTitle();
+  renderWorkLegend();
+  const days = getDaysInSelectedMonth();
+  const workers = getFilteredRoster();
+
+  const thead = document.getElementById('checkrollThead');
+  const tbody = document.getElementById('checkrollTbody');
+  const tfoot = document.getElementById('checkrollTfoot');
+
+  thead.innerHTML = `<tr>
+    <th style="width:40px;">Sl</th>
+    <th style="width:75px;">Code No</th>
+    <th style="min-width:155px;">Name</th>
+    ${days.map(d => `<th style="min-width:34px;text-align:center;">${d.day}</th>`).join('')}
+    <th style="min-width:62px;text-align:right;">Total</th>
+  </tr>`;
+
+  if (workers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="${days.length + 4}" style="text-align:center;padding:18px;color:#64748b;">No workers match filter. Add workers in <strong>Division, Field & Roster Setup</strong>.</td></tr>`;
+    tfoot.innerHTML = '';
+    return;
+  }
+
+  const dayTotals = days.map(() => 0);
+  let grandTotal = 0;
+
+  tbody.innerHTML = workers.map((w, idx) => {
+    let rowTotal = 0;
+    const cellsHtml = days.map((d, dIdx) => {
+      const cell = state.entries?.[d.iso]?.[w.id];
+      if (!cell || !cell.workId) {
+        return `<td class="chk-cell" onclick="openDateMarkModal('${d.iso}')"></td>`;
+      }
+      const wk = getWorkById(cell.workId);
+      const wt = wk ? getWorkTypeById(wk.typeId) : { color: '#0f172a' };
+      const val = Number(cell.value ?? 1);
+      rowTotal += val;
+      dayTotals[dIdx] += val;
+
+      const lendTag = cell.isLend && cell.lendTo
+        ? `<span class="lend-sup" title="Lent to ${cell.lendTo}">${cell.lendTo}</span>`
+        : '';
+      const halfTag = val === 0.5 ? `<span style="font-size:9px;color:#b45309;">(½)</span>` : '';
+
+      return `<td class="chk-cell" style="color:${wt.color};" onclick="openDateMarkModal('${d.iso}')" title="${wk ? wk.abbr + ' - ' + wk.name : ''} (${val} MD)${cell.isLend ? ' • Lend: ' + cell.lendTo : ''}">
+        ${wk ? wk.abbr : '?'}${halfTag}${lendTag}
+      </td>`;
+    }).join('');
+
+    grandTotal += rowTotal;
     return `<tr>
       <td class="mono">${idx + 1}</td>
-      <td class="mono" style="font-weight:700;">${r.code}</td>
-      <td style="font-weight:600;">${r.name}</td>
-      <td>${r.role}</td>
-      <td class="num">${fmtNum(r.att)}</td>
-      <td class="num">${fmtNum(r.targetQuota)}</td>
-      <td class="num" style="font-weight:700;">${fmtNum(r.totalLoad)}</td>
-      <td class="num green-ink">${fmtNum(r.cappedLoad)}</td>
-      <td class="num ${r.incentiveLoad > 0 ? 'green-ink' : ''}">${r.incentiveLoad > 0 ? fmtNum(r.incentiveLoad) : '0'}</td>
-      <td class="num ${r.wageCut > 0 ? 'red-ink' : ''}">${r.wageCut > 0 ? fmtNum(r.wageCut) : '0'}</td>
+      <td class="mono" style="font-weight:700;">${w.code}</td>
+      <td style="font-weight:600;">${w.name}</td>
+      ${cellsHtml}
+      <td class="num" style="font-weight:700;">${rowTotal}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('reconWorkerQuotaBody').innerHTML = qHtml + `
-    <tr style="background:#f1f5f9;font-weight:700;">
-      <td colspan="4">GRAND TOTAL</td>
-      <td class="num">${fmtNum(sumAtt)}</td>
-      <td class="num">${fmtNum(sumTarget)}</td>
-      <td class="num">${fmtNum(sumLoad)}</td>
-      <td class="num green-ink">${fmtNum(sumCapped)}</td>
-      <td class="num green-ink">${fmtNum(sumInc)}</td>
-      <td class="num red-ink">${fmtNum(sumCut)}</td>
-    </tr>`;
+  tfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
+    <td colspan="3">Total Attendance</td>
+    ${dayTotals.map(dt => `<td class="chk-cell">${dt > 0 ? dt : ''}</td>`).join('')}
+    <td class="num" style="color:var(--green-ink);">${grandTotal}</td>
+  </tr>`;
 }
 
-// LOAD ENTRY MODAL (WITH ATTENDANCE 0, 0.5, 1 PER WORKER)
-function openLoadModal(entryId = null) {
-  if (state.fields.length === 0) {
-    return alert('Please add at least one Division Field in "Field Control & Balances" before adding a load entry.');
-  }
-  const modal = document.getElementById('loadModal');
-  document.getElementById('editLoadId').value = entryId || '';
-  document.getElementById('loadModalTitle').textContent = entryId ? 'Edit Transport Entry' : 'Add Transport / Weigh-Slip Entry';
-
-  const existing = entryId ? state.loads.find(l => l.id === entryId) : null;
-  document.getElementById('ldDate').value = existing ? existing.date : '';
-  document.getElementById('ldSplitMethod').value = existing ? (existing.splitMode || 'combined') : 'combined';
-  document.getElementById('ldAutoSplitCheck').checked = existing ? (existing.autoSplit !== false) : true;
-
-  if (existing) {
-    modalTickets = JSON.parse(JSON.stringify(existing.tickets || []));
-    modalWorkerRows = JSON.parse(JSON.stringify(existing.workerSplits || []));
-  } else {
-    modalTickets = [{ ticketNo: '', vehicleNo: '', fieldWeights: {}, workerSplits: [] }];
-    modalWorkerRows = [];
-  }
-
-  renderTicketRows();
-  onSplitMethodChange(false);
-  document.getElementById('workerSearchBox').value = '';
-  document.getElementById('workerSearchDropdown').classList.remove('open');
-  modal.classList.add('open');
+// DATE ATTENDANCE MARKING MODAL (WITH SEARCHABLE WORK LIST + LEND LABOUR)
+function openDateMarkModal(isoDate = null) {
+  const targetDate = isoDate || `${state.meta.activeMonth || todayISO().slice(0, 7)}-01`;
+  document.getElementById('markDateInput').value = targetDate;
+  document.getElementById('workFilterSearch').value = '';
+  selectedModalWorkId = state.works[0]?.id || null;
+  renderWorkDropdownOptions();
+  loadDateIntoModal(targetDate);
+  document.getElementById('dateMarkModal').classList.add('open');
 }
 
-function closeLoadModal() {
-  document.getElementById('loadModal').classList.remove('open');
+function closeDateMarkModal() {
+  document.getElementById('dateMarkModal').classList.remove('open');
 }
 
-function addTicketRow() {
-  modalTickets.push({ ticketNo: '', vehicleNo: '', fieldWeights: {}, workerSplits: [] });
-  renderTicketRows();
-  onSplitMethodChange(true);
-}
+function renderWorkDropdownOptions() {
+  const q = (document.getElementById('workFilterSearch').value || '').toLowerCase().trim();
+  const panel = document.getElementById('workDropdownPanel');
+  const matches = state.works.filter(wk =>
+    !q || wk.abbr.toLowerCase().includes(q) || wk.name.toLowerCase().includes(q)
+  );
 
-function removeTicketRow(tIdx) {
-  if (modalTickets.length <= 1) return alert('At least one ticket row is required.');
-  modalTickets.splice(tIdx, 1);
-  renderTicketRows();
-  onSplitMethodChange(true);
-}
-
-function renderTicketRows() {
-  const container = document.getElementById('ldTicketsContainer');
-  container.innerHTML = modalTickets.map((t, tIdx) => {
-    const fieldInputs = state.fields.map(f => {
-      const val = t.fieldWeights?.[f.code] ?? '';
-      return `<div class="field-item">
-        <label>${f.code} (kg)</label>
-        <input type="number" step="any" class="mono" value="${val}" placeholder="0" oninput="onTicketFieldChange(${tIdx}, '${f.code}', this.value)">
-      </div>`;
-    }).join('');
-
-    return `<div class="ticket-row-card">
-      <div class="ticket-row-top">
-        <span class="tag tag-blue">Ticket #${tIdx + 1}</span>
-        <input type="text" placeholder="Ticket No." value="${t.ticketNo || ''}" style="width:110px;" oninput="modalTickets[${tIdx}].ticketNo = this.value">
-        <input type="text" placeholder="Vehicle No." value="${t.vehicleNo || ''}" style="width:140px;" oninput="modalTickets[${tIdx}].vehicleNo = this.value.toUpperCase()">
-        <span class="mono" style="margin-left:auto;font-size:11.5px;font-weight:700;">Subtotal: <span id="tktSub_${tIdx}">${fmtNum(getTicketWeight(t))}</span> kg</span>
-        ${modalTickets.length > 1 ? `<button type="button" class="btn btn-sm btn-danger" onclick="removeTicketRow(${tIdx})">✕</button>` : ''}
-      </div>
-      <div class="ticket-field-inputs">${fieldInputs}</div>
+  panel.innerHTML = matches.map(wk => {
+    const wt = getWorkTypeById(wk.typeId);
+    const isSel = wk.id === selectedModalWorkId;
+    return `<div class="work-option ${isSel ? 'selected' : ''}" onclick="selectWorkForMarking('${wk.id}')">
+      <span style="color:${wt.color};"><strong class="mono">${wk.abbr}</strong> — ${wk.name}</span>
+      <span class="tag">${wt.name}</span>
     </div>`;
+  }).join('') || `<div class="work-option" style="color:#64748b;">No matching work</div>`;
+}
+
+function selectWorkForMarking(workId) {
+  selectedModalWorkId = workId;
+  renderWorkDropdownOptions();
+}
+
+function loadDateIntoModal(isoDate) {
+  const existingDay = state.entries?.[isoDate] || {};
+  tempDateDraft = {};
+  state.roster.forEach(w => {
+    if (existingDay[w.id]) {
+      tempDateDraft[w.id] = { ...existingDay[w.id] };
+    }
+  });
+  renderDateMarkRows();
+}
+
+function renderDateMarkRows() {
+  const tbody = document.getElementById('dateMarkRowsBody');
+  if (state.roster.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:#64748b;padding:12px;">Add workers in roster first.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = state.roster.map(w => {
+    const dRow = tempDateDraft[w.id] || { workId: '', value: 1, isLend: false, lendTo: '' };
+    const workOptionsHtml = `<option value="">-- Absent / Blank --</option>` + state.works.map(wk => {
+      const wt = getWorkTypeById(wk.typeId);
+      return `<option value="${wk.id}" ${dRow.workId === wk.id ? 'selected' : ''}>${wk.abbr} — ${wk.name} (${wt.name})</option>`;
+    }).join('');
+
+    return `<tr>
+      <td class="mono" style="font-weight:700;">${w.code}</td>
+      <td style="font-weight:600;">${w.name}</td>
+      <td>${w.gender}</td>
+      <td>
+        <select style="width:100%;" onchange="onModalRowWorkChange('${w.id}', this.value)">
+          ${workOptionsHtml}
+        </select>
+      </td>
+      <td>
+        <select style="width:100%;font-family:var(--font-mono);" onchange="onModalRowValChange('${w.id}', Number(this.value))">
+          <option value="1" ${(dRow.value ?? 1) === 1 ? 'selected' : ''}>1 (Full)</option>
+          <option value="0.5" ${dRow.value === 0.5 ? 'selected' : ''}>0.5 (Half)</option>
+        </select>
+      </td>
+      <td style="text-align:center;">
+        <input type="checkbox" ${dRow.isLend ? 'checked' : ''} onchange="onModalRowLendToggle('${w.id}', this.checked)">
+      </td>
+      <td>
+        <input type="text" placeholder="e.g. YC4" value="${dRow.lendTo || ''}" ${dRow.isLend ? '' : 'disabled'} style="width:100%;text-transform:uppercase;" oninput="onModalRowLendField('${w.id}', this.value)">
+      </td>
+      <td style="text-align:center;">
+        <button type="button" class="btn btn-sm" onclick="clearModalRow('${w.id}')" title="Clear row">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function onModalRowWorkChange(wId, workId) {
+  if (!workId) {
+    delete tempDateDraft[wId];
+  } else {
+    tempDateDraft[wId] = {
+      workId,
+      value: tempDateDraft[wId]?.value ?? 1,
+      isLend: tempDateDraft[wId]?.isLend ?? false,
+      lendTo: tempDateDraft[wId]?.lendTo ?? ''
+    };
+  }
+}
+
+function onModalRowValChange(wId, val) {
+  if (!tempDateDraft[wId]) tempDateDraft[wId] = { workId: selectedModalWorkId || state.works[0]?.id || '', value: val, isLend: false, lendTo: '' };
+  tempDateDraft[wId].value = val;
+}
+
+function onModalRowLendToggle(wId, checked) {
+  if (!tempDateDraft[wId]) tempDateDraft[wId] = { workId: selectedModalWorkId || state.works[0]?.id || '', value: 1, isLend: checked, lendTo: '' };
+  tempDateDraft[wId].isLend = checked;
+  if (!checked) tempDateDraft[wId].lendTo = '';
+  renderDateMarkRows();
+}
+
+function onModalRowLendField(wId, rawVal) {
+  if (!tempDateDraft[wId]) return;
+  // Normalize case and trim spaces (e.g. "yc 4 " -> "YC4")
+  tempDateDraft[wId].lendTo = rawVal.toUpperCase().replace(/\s+/g, '');
+}
+
+function clearModalRow(wId) {
+  delete tempDateDraft[wId];
+  renderDateMarkRows();
+}
+
+function saveDateAttendance() {
+  const isoDate = document.getElementById('markDateInput').value;
+  if (!isoDate) return alert('Select a date.');
+  if (!state.entries) state.entries = {};
+  const cleanDay = {};
+  Object.entries(tempDateDraft).forEach(([wId, rec]) => {
+    if (rec && rec.workId) {
+      cleanDay[wId] = {
+        workId: rec.workId,
+        value: Number(rec.value ?? 1),
+        isLend: Boolean(rec.isLend),
+        lendTo: rec.isLend ? (rec.lendTo || '').toUpperCase().replace(/\s+/g, '') : ''
+      };
+    }
+  });
+  state.entries[isoDate] = cleanDay;
+  saveState();
+  closeDateMarkModal();
+  renderAll();
+}
+
+// CHECKROLL ABSTRACT & SUMMARIES
+function matchFieldFilter(cell, filterText) {
+  const q = (filterText || '').trim().toUpperCase().replace(/\s+/g, '');
+  if (!q) return true;
+  if (!cell || !cell.isLend || !cell.lendTo) return false;
+  return cell.lendTo.toUpperCase().replace(/\s+/g, '').startsWith(q);
+}
+
+function renderAbstractSection() {
+  const gFilter = document.getElementById('absGenderFilter')?.value || 'ALL';
+  const fMatch = document.getElementById('absFieldMatch')?.value || '';
+  const days = getDaysInSelectedMonth();
+  const workers = state.roster.filter(w => gFilter === 'ALL' || w.gender === gFilter);
+
+  // 1. Pocket Abstract: Work Abbreviation × Day
+  const pThead = document.getElementById('pocketAbsThead');
+  const pTbody = document.getElementById('pocketAbsTbody');
+  const pTfoot = document.getElementById('pocketAbsTfoot');
+
+  pThead.innerHTML = `<tr>
+    <th>Abbr</th>
+    <th>Work Name</th>
+    <th>Work Type</th>
+    ${days.map(d => `<th style="text-align:center;">${d.day}</th>`).join('')}
+    <th class="num">Total</th>
+    <th>Lend Details</th>
+  </tr>`;
+
+  const dayGrand = days.map(() => 0);
+  let allWorkGrand = 0;
+
+  pTbody.innerHTML = state.works.map(wk => {
+    const wt = getWorkTypeById(wk.typeId);
+    let wkTotal = 0;
+    const lendNotes = new Set();
+
+    const dayCells = days.map((d, dIdx) => {
+      let dSum = 0;
+      workers.forEach(w => {
+        const cell = state.entries?.[d.iso]?.[w.id];
+        if (cell && cell.workId === wk.id && matchFieldFilter(cell, fMatch)) {
+          const v = Number(cell.value ?? 1);
+          dSum += v;
+          if (cell.isLend && cell.lendTo) lendNotes.add(`${cell.lendTo} (${w.code})`);
+        }
+      });
+      wkTotal += dSum;
+      dayGrand[dIdx] += dSum;
+      return `<td class="chk-cell">${dSum > 0 ? dSum : ''}</td>`;
+    }).join('');
+
+    allWorkGrand += wkTotal;
+    return `<tr>
+      <td class="mono" style="font-weight:700;color:${wt.color};">${wk.abbr}</td>
+      <td style="font-weight:600;">${wk.name}</td>
+      <td style="color:${wt.color};font-weight:600;">${wt.name}</td>
+      ${dayCells}
+      <td class="num" style="font-weight:700;">${wkTotal}</td>
+      <td style="font-size:10.5px;color:#1d4ed8;">${[...lendNotes].join(', ') || '-'}</td>
+    </tr>`;
   }).join('');
 
-  updateModalTotalWeightDisplay();
-}
+  pTfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
+    <td colspan="3">Total Attendance</td>
+    ${dayGrand.map(v => `<td class="chk-cell">${v > 0 ? v : ''}</td>`).join('')}
+    <td class="num" style="color:var(--green-ink);">${allWorkGrand}</td>
+    <td></td>
+  </tr>`;
 
-function onTicketFieldChange(tIdx, fCode, val) {
-  if (!modalTickets[tIdx].fieldWeights) modalTickets[tIdx].fieldWeights = {};
-  modalTickets[tIdx].fieldWeights[fCode] = Number(val) || 0;
-  const subEl = document.getElementById(`tktSub_${tIdx}`);
-  if (subEl) subEl.textContent = fmtNum(getTicketWeight(modalTickets[tIdx]));
-  updateModalTotalWeightDisplay();
-  if (document.getElementById('ldAutoSplitCheck').checked) {
-    recalcModalWorkerSplits();
-  } else {
-    updateModalAllocatedSummary();
-  }
-}
+  // 2. Work-Wise & Lend Labour Details Table (Worker × Date)
+  const wdThead = document.getElementById('workerDateThead');
+  const wdTbody = document.getElementById('workerDateTbody');
 
-function getModalTotalWeight() {
-  return modalTickets.reduce((s, t) => s + getTicketWeight(t), 0);
-}
+  wdThead.innerHTML = `<tr>
+    <th>Code No</th>
+    <th>Name</th>
+    ${days.map(d => `<th style="text-align:center;">${d.day}</th>`).join('')}
+    <th class="num">Days</th>
+  </tr>`;
 
-function updateModalTotalWeightDisplay() {
-  document.getElementById('ldTotalWeightDisplay').textContent = fmtNum(getModalTotalWeight());
-}
-
-function onSplitMethodChange(shouldRecalc = true) {
-  const mode = document.getElementById('ldSplitMethod').value;
-  document.getElementById('workerSplitSectionTitle').textContent = mode === 'per_ticket'
-    ? 'Per-Ticket Worker Attendance & Split'
-    : 'Combined Total Load Worker Attendance & Split (Across All Tickets Above)';
-
-  if (mode === 'per_ticket') {
-    modalTickets.forEach(t => {
-      if (!Array.isArray(t.workerSplits) || t.workerSplits.length === 0) {
-        t.workerSplits = JSON.parse(JSON.stringify(modalWorkerRows));
+  wdTbody.innerHTML = workers.map(w => {
+    let wDays = 0;
+    const cells = days.map(d => {
+      const cell = state.entries?.[d.iso]?.[w.id];
+      if (!cell || !cell.workId || !matchFieldFilter(cell, fMatch)) {
+        return `<td class="chk-cell"></td>`;
       }
-    });
-  } else {
-    if (modalWorkerRows.length === 0 && modalTickets[0]?.workerSplits?.length) {
-      modalWorkerRows = JSON.parse(JSON.stringify(modalTickets[0].workerSplits));
-    }
-  }
-
-  if (shouldRecalc && document.getElementById('ldAutoSplitCheck').checked) {
-    recalcModalWorkerSplits();
-  } else {
-    renderWorkerSplitArea();
-  }
-}
-
-function filterWorkerDropdown() {
-  const q = (document.getElementById('workerSearchBox').value || '').toLowerCase().trim();
-  const dd = document.getElementById('workerSearchDropdown');
-  const matches = state.roster.filter(w =>
-    !q || w.code.toLowerCase().includes(q) || w.name.toLowerCase().includes(q)
-  ).slice(0, 25);
-
-  if (matches.length === 0) {
-    dd.innerHTML = `<div class="search-item" style="color:#64748b;">No matching workers in roster</div>`;
-  } else {
-    dd.innerHTML = matches.map(w => `
-      <div class="search-item" onclick="addWorkerToSplit('${w.id}')">
-        <span><strong class="mono">${w.code}</strong> — ${w.name}</span>
-        <span class="tag">${w.role} ${w.fieldCode ? '• ' + w.fieldCode : ''}</span>
-      </div>
-    `).join('');
-  }
-  dd.classList.add('open');
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.search-wrapper')) {
-    document.getElementById('workerSearchDropdown').classList.remove('open');
-  }
-});
-
-function addWorkerToSplit(workerId) {
-  const mode = document.getElementById('ldSplitMethod').value;
-  if (mode === 'per_ticket') {
-    modalTickets.forEach(t => {
-      if (!t.workerSplits) t.workerSplits = [];
-      if (!t.workerSplits.some(r => r.workerId === workerId)) {
-        t.workerSplits.push({ workerId, att: 1, qty: 0, locked: false });
-      }
-    });
-  } else {
-    if (!modalWorkerRows.some(r => r.workerId === workerId)) {
-      modalWorkerRows.push({ workerId, att: 1, qty: 0, locked: false });
-    }
-  }
-  document.getElementById('workerSearchBox').value = '';
-  document.getElementById('workerSearchDropdown').classList.remove('open');
-  if (document.getElementById('ldAutoSplitCheck').checked) {
-    recalcModalWorkerSplits();
-  } else {
-    renderWorkerSplitArea();
-  }
-}
-
-function distributeWeightAcrossRows(rows, totalWeight, roundInt) {
-  let lockedSum = 0;
-  const unlockedIndices = [];
-  rows.forEach((r, idx) => {
-    if (r.locked) lockedSum += Number(r.qty) || 0;
-    else unlockedIndices.push(idx);
-  });
-  const remaining = Math.max(0, totalWeight - lockedSum);
-  const count = unlockedIndices.length;
-  if (count > 0) {
-    if (roundInt) {
-      const baseShare = Math.floor(remaining / count);
-      let remainder = Math.round(remaining - baseShare * count);
-      unlockedIndices.forEach(rowIdx => {
-        const extra = remainder > 0 ? 1 : 0;
-        if (remainder > 0) remainder--;
-        rows[rowIdx].qty = baseShare + extra;
-      });
-    } else {
-      const exact = Number((remaining / count).toFixed(2));
-      let running = 0;
-      unlockedIndices.forEach((rowIdx, i) => {
-        if (i === count - 1) rows[rowIdx].qty = Number((remaining - running).toFixed(2));
-        else { rows[rowIdx].qty = exact; running += exact; }
-      });
-    }
-  }
-}
-
-function recalcModalWorkerSplits(forceResetLocks = false) {
-  const mode = document.getElementById('ldSplitMethod').value;
-  const roundInt = document.getElementById('roundDigitCheck').checked;
-
-  if (mode === 'per_ticket') {
-    modalTickets.forEach(t => {
-      if (!t.workerSplits) t.workerSplits = [];
-      if (forceResetLocks) t.workerSplits.forEach(r => r.locked = false);
-      distributeWeightAcrossRows(t.workerSplits, getTicketWeight(t), roundInt);
-    });
-  } else {
-    if (forceResetLocks) modalWorkerRows.forEach(r => r.locked = false);
-    distributeWeightAcrossRows(modalWorkerRows, getModalTotalWeight(), roundInt);
-  }
-  renderWorkerSplitArea();
-}
-
-function attSelectHtml(curVal, onChangeExpr) {
-  const v = Number(curVal ?? 1);
-  return `<select style="width:94px;font-family:var(--font-mono);" onchange="${onChangeExpr}">
-    <option value="0" ${v === 0 ? 'selected' : ''}>0 (Extra/Inc)</option>
-    <option value="0.5" ${v === 0.5 ? 'selected' : ''}>0.5 (Half)</option>
-    <option value="1" ${v === 1 ? 'selected' : ''}>1 (Full)</option>
-  </select>`;
-}
-
-function renderWorkerSplitArea() {
-  const mode = document.getElementById('ldSplitMethod').value;
-  const area = document.getElementById('ldWorkerSplitArea');
-
-  if (mode === 'per_ticket') {
-    area.innerHTML = modalTickets.map((t, tIdx) => {
-      const rows = t.workerSplits || [];
-      const tW = getTicketWeight(t);
-      const bodyHtml = rows.length === 0
-        ? `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:8px;">Search worker above to assign to Ticket #${tIdx+1}</td></tr>`
-        : rows.map((row, rIdx) => {
-            const w = getWorkerById(row.workerId);
-            return `<tr>
-              <td class="mono" style="font-weight:700;">${w.code}</td>
-              <td style="font-weight:600;">${w.name}</td>
-              <td>${attSelectHtml(row.att, `modalTickets[${tIdx}].workerSplits[${rIdx}].att = Number(this.value)`)}</td>
-              <td><input type="number" step="any" class="num" value="${row.qty}" style="width:100%;" onchange="onPerTicketQtyChange(${tIdx}, ${rIdx}, this.value)"></td>
-              <td style="text-align:center;"><input type="checkbox" ${row.locked ? 'checked' : ''} onchange="onPerTicketLockChange(${tIdx}, ${rIdx}, this.checked)"></td>
-              <td style="text-align:center;"><button type="button" class="btn btn-sm btn-danger" onclick="onPerTicketRemove(${tIdx}, ${rIdx})">✕</button></td>
-            </tr>`;
-          }).join('');
-
-      return `<div style="margin-bottom:8px;border:1px solid #e2e8f0;padding:6px;background:#fafafa;">
-        <div style="font-size:11px;font-weight:700;margin-bottom:4px;">Ticket #${t.ticketNo || (tIdx+1)} (${t.vehicleNo || '-'}) — Weight: ${fmtNum(tW)} kg</div>
-        <div class="table-wrap"><table class="data-table"><thead><tr>
-          <th style="width:80px;">Code</th><th>Name</th><th style="width:105px;">Att (0/0.5/1)</th>
-          <th style="width:110px;" class="num">Qty (kg)</th><th style="width:50px;text-align:center;">Lock</th><th style="width:40px;">Del</th>
-        </tr></thead><tbody>${bodyHtml}</tbody></table></div>
-      </div>`;
+      const wk = getWorkById(cell.workId);
+      const wt = wk ? getWorkTypeById(wk.typeId) : { color: '#0f172a' };
+      const v = Number(cell.value ?? 1);
+      wDays += v;
+      const lendStr = cell.isLend && cell.lendTo ? `<span class="lend-sup">${cell.lendTo}</span>` : '';
+      return `<td class="chk-cell" style="color:${wt.color};">${wk ? wk.abbr : ''}${v === 0.5 ? '½' : ''}${lendStr}</td>`;
     }).join('');
+
+    return `<tr>
+      <td class="mono" style="font-weight:700;">${w.code}</td>
+      <td style="font-weight:600;">${w.name}</td>
+      ${cells}
+      <td class="num" style="font-weight:700;">${wDays}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="${days.length + 3}" style="text-align:center;color:#64748b;padding:10px;">No records.</td></tr>`;
+
+  // 3. Per-Worker & Work-Type / Category Summary
+  const wcThead = document.getElementById('workerCatThead');
+  const wcTbody = document.getElementById('workerCatTbody');
+  const wcTfoot = document.getElementById('workerCatTfoot');
+
+  wcThead.innerHTML = `<tr>
+    <th>Code No</th>
+    <th>Worker Name</th>
+    <th>Gender</th>
+    ${state.workTypes.map(wt => `<th class="num" style="color:${wt.color};">${wt.name}</th>`).join('')}
+    <th class="num">All-Type Total</th>
+  </tr>`;
+
+  const typeGrand = state.workTypes.map(() => 0);
+  let grandAllTypes = 0;
+
+  wcTbody.innerHTML = workers.map(w => {
+    const typeSums = state.workTypes.map(() => 0);
+    let rowSum = 0;
+
+    days.forEach(d => {
+      const cell = state.entries?.[d.iso]?.[w.id];
+      if (cell && cell.workId && matchFieldFilter(cell, fMatch)) {
+        const wk = getWorkById(cell.workId);
+        const tIdx = state.workTypes.findIndex(t => t.id === wk?.typeId);
+        const v = Number(cell.value ?? 1);
+        if (tIdx !== -1) {
+          typeSums[tIdx] += v;
+          typeGrand[tIdx] += v;
+        }
+        rowSum += v;
+      }
+    });
+    grandAllTypes += rowSum;
+
+    return `<tr>
+      <td class="mono" style="font-weight:700;">${w.code}</td>
+      <td style="font-weight:600;">${w.name}</td>
+      <td>${w.gender}</td>
+      ${typeSums.map(s => `<td class="num">${s > 0 ? s : '0'}</td>`).join('')}
+      <td class="num" style="font-weight:700;color:var(--green-ink);">${rowSum}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="${state.workTypes.length + 4}" style="text-align:center;color:#64748b;padding:10px;">No records.</td></tr>`;
+
+  wcTfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
+    <td colspan="3">Grand Total (All Types)</td>
+    ${typeGrand.map(g => `<td class="num">${g}</td>`).join('')}
+    <td class="num" style="color:var(--green-ink);">${grandAllTypes}</td>
+  </tr>`;
+}
+
+// CSV & EXCEL EXPORTS
+function exportCheckrollCSV() {
+  const days = getDaysInSelectedMonth();
+  const workers = getFilteredRoster();
+  const rows = workers.map(w => {
+    const r = { 'Code No': w.code, Name: w.name, Gender: w.gender };
+    let tot = 0;
+    days.forEach(d => {
+      const cell = state.entries?.[d.iso]?.[w.id];
+      const wk = cell?.workId ? getWorkById(cell.workId) : null;
+      const val = cell?.workId ? Number(cell.value ?? 1) : 0;
+      tot += val;
+      r[`Day ${d.day}`] = wk ? `${wk.abbr}${val === 0.5 ? '(0.5)' : ''}${cell.isLend && cell.lendTo ? '[' + cell.lendTo + ']' : ''}` : '';
+    });
+    r['Total Attendance'] = tot;
+    return r;
+  });
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Monthly Checkroll');
+  XLSX.writeFile(wb, `OPIL_Checkroll_${state.meta.activeMonth || 'Month'}.csv`);
+}
+
+function exportAbstractCSV(mode) {
+  const days = getDaysInSelectedMonth();
+  const gFilter = document.getElementById('absGenderFilter')?.value || 'ALL';
+  const fMatch = document.getElementById('absFieldMatch')?.value || '';
+  const workers = state.roster.filter(w => gFilter === 'ALL' || w.gender === gFilter);
+
+  let rows = [];
+  if (mode === 'pocket') {
+    rows = state.works.map(wk => {
+      const wt = getWorkTypeById(wk.typeId);
+      const r = { Abbr: wk.abbr, 'Work Name': wk.name, 'Work Type': wt.name };
+      let tot = 0;
+      days.forEach(d => {
+        let sum = 0;
+        workers.forEach(w => {
+          const c = state.entries?.[d.iso]?.[w.id];
+          if (c && c.workId === wk.id && matchFieldFilter(c, fMatch)) sum += Number(c.value ?? 1);
+        });
+        tot += sum;
+        r[`Day ${d.day}`] = sum;
+      });
+      r['Total'] = tot;
+      return r;
+    });
+  } else if (mode === 'worker_day') {
+    rows = workers.map(w => {
+      const r = { 'Code No': w.code, Name: w.name };
+      let tot = 0;
+      days.forEach(d => {
+        const c = state.entries?.[d.iso]?.[w.id];
+        if (c && c.workId && matchFieldFilter(c, fMatch)) {
+          const wk = getWorkById(c.workId);
+          const v = Number(c.value ?? 1);
+          tot += v;
+          r[`Day ${d.day}`] = `${wk ? wk.abbr : ''}${c.isLend && c.lendTo ? '(' + c.lendTo + ')' : ''}`;
+        } else {
+          r[`Day ${d.day}`] = '';
+        }
+      });
+      r['Total Days'] = tot;
+      return r;
+    });
   } else {
-    const bodyHtml = modalWorkerRows.length === 0
-      ? `<tr><td colspan="6" style="text-align:center;color:#64748b;padding:12px;">Search and select workers above to mark attendance (0, 0.5, 1) and split load weight.</td></tr>`
-      : modalWorkerRows.map((row, idx) => {
-          const w = getWorkerById(row.workerId);
-          return `<tr>
-            <td class="mono" style="font-weight:700;">${w.code}</td>
-            <td style="font-weight:600;">${w.name}</td>
-            <td>${attSelectHtml(row.att, `modalWorkerRows[${idx}].att = Number(this.value)`)}</td>
-            <td><input type="number" step="any" class="num" value="${row.qty}" style="width:100%;" onchange="onCombinedQtyChange(${idx}, this.value)"></td>
-            <td style="text-align:center;"><input type="checkbox" ${row.locked ? 'checked' : ''} onchange="onCombinedLockChange(${idx}, this.checked)"></td>
-            <td style="text-align:center;"><button type="button" class="btn btn-sm btn-danger" onclick="onCombinedRemove(${idx})">✕</button></td>
-          </tr>`;
-        }).join('');
-
-    area.innerHTML = `<div class="table-wrap"><table class="data-table"><thead><tr>
-      <th style="width:85px;">Code No</th><th>Worker Name</th><th style="width:108px;">Att (0/0.5/1)</th>
-      <th style="width:120px;" class="num">Split Qty (kg)</th><th style="width:65px;text-align:center;">Lock</th><th style="width:45px;text-align:center;">Del</th>
-    </tr></thead><tbody>${bodyHtml}</tbody></table></div>`;
+    rows = workers.map(w => {
+      const r = { 'Code No': w.code, Name: w.name, Gender: w.gender };
+      let all = 0;
+      state.workTypes.forEach(wt => {
+        let s = 0;
+        days.forEach(d => {
+          const c = state.entries?.[d.iso]?.[w.id];
+          if (c && c.workId && matchFieldFilter(c, fMatch)) {
+            const wk = getWorkById(c.workId);
+            if (wk?.typeId === wt.id) s += Number(c.value ?? 1);
+          }
+        });
+        r[wt.name] = s;
+        all += s;
+      });
+      r['All-Type Total'] = all;
+      return r;
+    });
   }
 
-  updateModalAllocatedSummary();
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Abstract');
+  XLSX.writeFile(wb, `OPIL_Abstract_${mode}_${state.meta.activeMonth || 'Month'}.csv`);
 }
 
-function onCombinedQtyChange(idx, val) {
-  modalWorkerRows[idx].qty = Number(val) || 0;
-  modalWorkerRows[idx].locked = true;
-  if (document.getElementById('ldAutoSplitCheck').checked) recalcModalWorkerSplits();
-  else renderWorkerSplitArea();
-}
-function onCombinedLockChange(idx, checked) {
-  modalWorkerRows[idx].locked = checked;
-  if (document.getElementById('ldAutoSplitCheck').checked) recalcModalWorkerSplits();
-}
-function onCombinedRemove(idx) {
-  modalWorkerRows.splice(idx, 1);
-  if (document.getElementById('ldAutoSplitCheck').checked) recalcModalWorkerSplits();
-  else renderWorkerSplitArea();
-}
+function exportAllExcel() {
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.roster), 'Roster');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(state.works), 'Works');
 
-function onPerTicketQtyChange(tIdx, rIdx, val) {
-  modalTickets[tIdx].workerSplits[rIdx].qty = Number(val) || 0;
-  modalTickets[tIdx].workerSplits[rIdx].locked = true;
-  if (document.getElementById('ldAutoSplitCheck').checked) recalcModalWorkerSplits();
-  else renderWorkerSplitArea();
-}
-function onPerTicketLockChange(tIdx, rIdx, checked) {
-  modalTickets[tIdx].workerSplits[rIdx].locked = checked;
-  if (document.getElementById('ldAutoSplitCheck').checked) recalcModalWorkerSplits();
-}
-function onPerTicketRemove(tIdx, rIdx) {
-  modalTickets[tIdx].workerSplits.splice(rIdx, 1);
-  if (document.getElementById('ldAutoSplitCheck').checked) recalcModalWorkerSplits();
-  else renderWorkerSplitArea();
+  const flatEntries = [];
+  Object.entries(state.entries || {}).forEach(([date, dayMap]) => {
+    Object.entries(dayMap || {}).forEach(([wId, c]) => {
+      const w = state.roster.find(x => x.id === wId);
+      const wk = getWorkById(c.workId);
+      flatEntries.push({
+        Date: date,
+        'Code No': w?.code || wId,
+        Name: w?.name || '',
+        Gender: w?.gender || '',
+        'Work Abbr': wk?.abbr || '',
+        'Work Name': wk?.name || '',
+        Attendance: c.value ?? 1,
+        'Is Lend': c.isLend ? 'Yes' : 'No',
+        'Lend To': c.lendTo || ''
+      });
+    });
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(flatEntries), 'Daily Entries');
+  XLSX.writeFile(wb, `OPIL_Checkroll_Full_${state.meta.activeMonth || 'Export'}.xlsx`);
 }
 
-function getModalAllocatedSum() {
-  const mode = document.getElementById('ldSplitMethod').value;
-  if (mode === 'per_ticket') {
-    return modalTickets.reduce((s, t) => s + (t.workerSplits || []).reduce((a, r) => a + (Number(r.qty) || 0), 0), 0);
-  }
-  return modalWorkerRows.reduce((s, r) => s + (Number(r.qty) || 0), 0);
-}
-
-function updateModalAllocatedSummary() {
-  const totalW = getModalTotalWeight();
-  const allocSum = getModalAllocatedSum();
-  const diff = Number((totalW - allocSum).toFixed(2));
-  document.getElementById('ldAllocatedSumDisplay').textContent = fmtNum(allocSum);
-  const el = document.getElementById('ldDiffStatus');
-  if (Math.abs(diff) < 0.01) {
-    el.innerHTML = `<span class="green-ink">Matched</span>`;
-  } else {
-    el.innerHTML = `<span class="red-ink">Diff: ${diff > 0 ? '+' : ''}${fmtNum(diff)} kg</span>`;
-  }
-}
-
-function saveLoadEntry() {
-  const date = document.getElementById('ldDate').value;
-  if (!date) return alert('Please select the transporting date.');
-  const totalW = getModalTotalWeight();
-  if (totalW <= 0) return alert('Enter a weight greater than 0 kg in at least one field.');
-
-  const allocSum = getModalAllocatedSum();
-  if (allocSum > 0 && Math.abs(totalW - allocSum) > 0.05) {
-    if (!confirm(`Allocated worker sum (${fmtNum(allocSum)} kg) differs from total load (${fmtNum(totalW)} kg). Save anyway?`)) {
-      return;
-    }
-  }
-
-  const editId = document.getElementById('editLoadId').value;
-  const payload = {
-    id: editId || ('ld_' + Date.now()),
-    date,
-    splitMode: document.getElementById('ldSplitMethod').value,
-    autoSplit: document.getElementById('ldAutoSplitCheck').checked,
-    tickets: JSON.parse(JSON.stringify(modalTickets)),
-    workerSplits: JSON.parse(JSON.stringify(modalWorkerRows))
-  };
-
-  if (editId) {
-    const idx = state.loads.findIndex(l => l.id === editId);
-    if (idx !== -1) state.loads[idx] = payload;
-  } else {
-    state.loads.push(payload);
-  }
-
-  saveState();
-  closeLoadModal();
-  renderAll();
-}
-
-function deleteLoad(id) {
-  if (!confirm('Delete this transport entry?')) return;
-  state.loads = state.loads.filter(l => l.id !== id);
-  saveState();
-  renderAll();
-}
-
-// JSON EXPORT & IMPORT
+// JSON SAVE & LOAD
 function exportJSON() {
-  const bundle = {
-    appVersion: 'OPIL_TransportingRegister_v4.0',
+  const payload = {
+    appVersion: 'OPIL_DailyCheckroll_v1.0',
     exportedAt: new Date().toISOString(),
     estateName: state.meta.estateName,
-    division: state.meta.division,
-    monthYear: state.meta.monthYear,
+    division: state.meta.activeDivision,
+    field: state.meta.activeField,
+    month: state.meta.activeMonth,
     state
   };
-  const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  const safeDiv = (state.meta.division || 'Division').replace(/[^a-zA-Z0-9_-]/g, '_');
-  const safeMon = (state.meta.monthYear || 'Month').replace(/[^a-zA-Z0-9_-]/g, '_');
-  a.download = `OPIL_TransportRegister_${safeDiv}_${safeMon}.json`;
+  a.download = `OPIL_Checkroll_${state.meta.activeDivision || 'Div'}_${state.meta.activeMonth || 'Month'}.json`;
   a.click();
 }
 
@@ -2040,156 +1632,59 @@ function importJSON(e) {
   reader.onload = function(evt) {
     try {
       const parsed = JSON.parse(evt.target.result);
-      const importedState = parsed.state ? parsed.state : parsed;
-      if (!importedState.meta || !Array.isArray(importedState.fields) || !Array.isArray(importedState.loads)) {
-        throw new Error('Invalid JSON structure.');
-      }
-      if (!importedState.meta.mandayNorm) importedState.meta.mandayNorm = 1670;
-      state = importedState;
+      const imp = parsed.state ? parsed.state : parsed;
+      if (!imp.meta || !Array.isArray(imp.works)) throw new Error('Invalid JSON format.');
+      state = imp;
       saveState();
       renderAll();
-      alert(`Loaded register for ${state.meta.division || 'Division'} (${state.meta.monthYear || ''}).`);
+      alert('Checkroll JSON state loaded successfully.');
     } catch (err) {
-      alert('Failed to load JSON file: ' + err.message);
+      alert('Import error: ' + err.message);
     }
   };
   reader.readAsText(file);
   e.target.value = '';
 }
 
-// EXPORT ADDITIONAL ATTENDANCE QUOTA SUMMARY CSV
-function exportQuotaSummaryCSV() {
-  const qRows = computeWorkerQuotaSummary().map((r, i) => ({
-    'Sl. No': i + 1,
-    'Code No': r.code,
-    'Worker Name': r.name,
-    'Role': r.role,
-    'Attendance (MD)': r.att,
-    'Target Quota (kg)': r.targetQuota,
-    'Total Load (kg)': r.totalLoad,
-    'Attendance Load Capped (kg)': r.cappedLoad,
-    'Incentive Load (kg)': r.incentiveLoad,
-    'Wage Cut (kg)': r.wageCut
-  }));
-  const ws = XLSX.utils.json_to_sheet(qRows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Attendance Quota Summary');
-  const safeDiv = (state.meta.division || 'Division').replace(/[^a-zA-Z0-9_-]/g, '_');
-  XLSX.writeFile(wb, `OPIL_Attendance_Quota_Summary_${safeDiv}.csv`);
-}
-
-// FULL MULTI-SHEET EXCEL EXPORT
-function exportExcel() {
-  const wb = XLSX.utils.book_new();
-  const rows = [];
-  state.loads.forEach(entry => {
-    (entry.tickets || []).forEach(t => {
-      const r = {
-        Date: fmtDateDDMMYY(entry.date),
-        'Ticket No': t.ticketNo,
-        'Vehicle No': t.vehicleNo,
-        'Split Mode': entry.splitMode
-      };
-      state.fields.forEach(f => r[f.code] = Number(t.fieldWeights?.[f.code] || 0));
-      r['Ticket Total (kg)'] = getTicketWeight(t);
-      rows.push(r);
-    });
-  });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), 'Transport Register');
-
-  const fRows = state.fields.map(f => {
-    let trans = 0;
-    state.loads.forEach(entry => (entry.tickets || []).forEach(t => trans += Number(t.fieldWeights?.[f.code] || 0)));
-    const open = Number(f.openingBalance || 0);
-    const close = Number(f.closingBalance || 0);
-    return {
-      'Field Code': f.code,
-      'Opening Balance (kg)': open,
-      'Total Transported (kg)': trans,
-      'Closing Balance (kg)': close,
-      'Net Harvest (kg)': trans - open + close
-    };
-  });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(fRows), 'Field Reconciliation');
-
-  const qRows = computeWorkerQuotaSummary().map((r, i) => ({
-    'Sl. No': i + 1,
-    'Code No': r.code,
-    'Worker Name': r.name,
-    'Role': r.role,
-    'Attendance (MD)': r.att,
-    'Target Quota (kg)': r.targetQuota,
-    'Total Load (kg)': r.totalLoad,
-    'Attendance Load Capped (kg)': r.cappedLoad,
-    'Incentive Load (kg)': r.incentiveLoad,
-    'Wage Cut (kg)': r.wageCut
-  }));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(qRows), 'Attendance Quota Summary');
-
-  const safeDiv = (state.meta.division || 'Division').replace(/[^a-zA-Z0-9_-]/g, '_');
-  XLSX.writeFile(wb, `OPIL_TransportRegister_${safeDiv}.xlsx`);
-}
-
-// CUSTOMIZE & PRINT MODAL
-function openPrintCustomizer(defaultTabId = null) {
-  const activeTab = defaultTabId || document.querySelector('.tab-panel.active')?.id || 'both_report';
-  document.getElementById('printTargetSelect').value = activeTab === 'tab-register' ? 'both_report' : activeTab;
-  document.getElementById('printModal').classList.add('open');
-}
-function closePrintModal() {
-  document.getElementById('printModal').classList.remove('open');
-}
-function syncPrintWrapOptions() {
-  const wrapAll = document.getElementById('printWrapAllCheck').checked;
-  if (wrapAll) document.getElementById('printWrapNamesCheck').checked = true;
-}
-function executeCustomPrint() {
-  const fontSize = document.getElementById('printFontRange').value;
-  const targetMode = document.getElementById('printTargetSelect').value;
+// PRINT & CLEAR MODALS
+function openPrintModal() { document.getElementById('printModal').classList.add('open'); }
+function closePrintModal() { document.getElementById('printModal').classList.remove('open'); }
+function executePrint() {
+  const fontSize = document.getElementById('printFontSlider').value;
+  const viewMode = document.getElementById('printViewSelect').value;
   document.documentElement.style.setProperty('--print-font-size', fontSize + 'px');
-
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('print-target-active'));
-  if (targetMode === 'both_report') {
-    document.getElementById('tab-register').classList.add('print-target-active');
-    document.getElementById('tab-reconciliation').classList.add('print-target-active');
+  if (viewMode === 'both') {
+    document.getElementById('tab-checkroll').classList.add('print-target-active');
+    document.getElementById('tab-abstract').classList.add('print-target-active');
   } else {
-    const el = document.getElementById(targetMode);
-    if (el) el.classList.add('print-target-active');
+    document.getElementById(viewMode)?.classList.add('print-target-active');
   }
-
   closePrintModal();
   setTimeout(() => window.print(), 80);
 }
 
-// PROTECTED CLEAR & EXIT
 function openClearModal() {
-  document.getElementById('clearConfirmInput').value = '';
-  document.getElementById('confirmClearBtn').disabled = true;
+  document.getElementById('clearWordInput').value = '';
+  document.getElementById('clearConfirmBtn').disabled = true;
   document.getElementById('clearModal').classList.add('open');
 }
-function closeClearModal() {
-  document.getElementById('clearModal').classList.remove('open');
-}
-function checkClearWord() {
-  const val = document.getElementById('clearConfirmInput').value.trim().toUpperCase();
-  document.getElementById('confirmClearBtn').disabled = val !== 'CLEAR';
-}
-function executeClearWorkspace() {
+function closeClearModal() { document.getElementById('clearModal').classList.remove('open'); }
+function confirmClear() {
   localStorage.removeItem(STORAGE_KEY);
-  hasActiveWork = false;
-  state = getEmptyState();
+  state = getInitialState();
   closeClearModal();
   renderAll();
 }
 
 function renderAll() {
-  syncMetaInputs();
-  renderKPIs();
-  renderPhysicalRegister();
-  renderDashboard();
-  renderFieldControls();
-  renderRoster();
-  renderReconciliation();
+  syncContextSelectors();
+  renderCheckrollGrid();
+  renderDivFieldTree();
+  renderRosterMasterTable();
+  renderWorkTypesList();
+  renderWorksTable();
+  renderAbstractSection();
 }
 
 renderAll();

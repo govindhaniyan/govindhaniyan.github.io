@@ -122,6 +122,11 @@
     color: var(--text-main);
     font-family: var(--font-sans);
   }
+  input:disabled, select:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
   input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
@@ -180,7 +185,7 @@
   }
 
   /* Main Container */
-  .container { padding: 12px 14px; max-width: 1800px; margin: 0 auto; }
+  .container { padding: 12px 14px; max-width: 1850px; margin: 0 auto; }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
@@ -213,7 +218,7 @@
   .table-wrap { overflow-x: auto; border: 1px solid var(--border-color); }
   table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   table.data-table th, table.data-table td {
-    padding: 4px 7px;
+    padding: 4px 6px;
     border: 1px solid var(--border-color);
     vertical-align: middle;
   }
@@ -241,18 +246,35 @@
     font-weight: 700;
     font-size: 11px;
     cursor: pointer;
-    min-width: 34px;
+    min-width: 36px;
+    height: 34px;
     user-select: none;
+    line-height: 1.05;
   }
   .chk-cell:hover { background: #eff6ff !important; outline: 1px solid var(--primary); }
-  .lend-sup {
-    font-size: 9px;
+
+  .chk-stack {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.05;
+  }
+  .chk-lend-top {
+    font-size: 8px;
     font-weight: 700;
-    color: #1d4ed8;
-    background: #dbeafe;
-    padding: 0 2px;
-    border-radius: 2px;
-    margin-left: 2px;
+    letter-spacing: -0.2px;
+    color: inherit;
+    opacity: 0.9;
+    margin-bottom: 1px;
+  }
+  .chk-work-abbr {
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .chk-half-overline {
+    border-top: 1.5px solid currentColor;
+    padding-top: 1px;
   }
 
   .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 12px; }
@@ -266,17 +288,37 @@
     color: #334155;
   }
 
+  .section-subhdr {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--primary);
+    padding: 6px 10px;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-subhdr h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #0f172a;
+  }
+
   /* Searchable Dropdown inside Date Marking Modal */
   .work-dropdown-panel {
     border: 1px solid var(--primary);
     background: #fff;
-    max-height: 175px;
+    max-height: 150px;
     overflow-y: auto;
     margin-top: 4px;
     border-radius: 2px;
   }
   .work-option {
-    padding: 5px 8px;
+    padding: 4px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -304,7 +346,7 @@
     border: 1px solid #475569;
     border-radius: 2px;
     width: 100%;
-    max-width: 860px;
+    max-width: 920px;
     max-height: 92vh;
     display: flex;
     flex-direction: column;
@@ -433,7 +475,7 @@
       </button>
     </div>
     <div style="font-size:11px;color:var(--text-muted);padding:4px 0;">
-      Click any date cell in Monthly Checkroll to mark or edit attendance
+      Overline (<span class="mono" style="border-top:1.5px solid #0f172a;padding-top:1px;">H</span>) = Half Day (0.5) • Tiny top text = Lend Field
     </div>
   </nav>
 
@@ -474,7 +516,6 @@
     <!-- TAB 2: DIVISION, FIELD & ROSTER SETUP -->
     <section id="tab-setup" class="tab-panel">
       <div class="grid-2">
-        <!-- Create Division & Field -->
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title"><span class="material-symbols-outlined">domain_add</span> 1. Create Division & Field</div>
@@ -493,7 +534,6 @@
           </div>
         </div>
 
-        <!-- Upload & Manage Worker CSV -->
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title"><span class="material-symbols-outlined">group_add</span> 2. Map Worker CSV to Active Division / Field</div>
@@ -507,7 +547,7 @@
           </div>
           <div class="panel-body">
             <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">
-              CSV columns needed: <strong>Code No</strong>, <strong>Name</strong> (optional: <strong>Gender</strong> M/F, <strong>Division</strong>, <strong>Field</strong>). Cutter/Carrier is not required.
+              CSV columns needed: <strong>Code No</strong>, <strong>Name</strong> (optional: <strong>Gender</strong> M/F, <strong>Division</strong>, <strong>Field</strong>).
             </p>
             <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
               <input type="text" id="quickWCode" placeholder="Code No" style="width:85px;">
@@ -540,7 +580,6 @@
     <!-- TAB 3: WORK TYPES & WORK SYMBOLS -->
     <section id="tab-works" class="tab-panel">
       <div class="grid-2">
-        <!-- Customize Work Types -->
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title"><span class="material-symbols-outlined">palette</span> 1. Customize Work Types & Colors</div>
@@ -554,7 +593,6 @@
           </div>
         </div>
 
-        <!-- Add / Edit / Delete Works -->
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title"><span class="material-symbols-outlined">assignment</span> 2. Work Abbreviations & Symbols</div>
@@ -588,25 +626,26 @@
     <section id="tab-abstract" class="tab-panel">
       <div class="panel">
         <div class="panel-header">
-          <div class="panel-title"><span class="material-symbols-outlined">filter_alt</span> Abstract Filters & Exports</div>
+          <div class="panel-title"><span class="material-symbols-outlined">filter_alt</span> Abstract Global Filters & Exports</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;">
             <select id="absGenderFilter" onchange="renderAbstractSection()">
               <option value="ALL">Men & Women Together</option>
               <option value="M">Men Only</option>
               <option value="F">Women Only</option>
             </select>
-            <input type="text" id="absFieldMatch" placeholder="Field / Lend Filter (e.g. YC, YD, Y or YC4)" style="width:210px;" oninput="renderAbstractSection()">
             <button class="btn btn-sm" onclick="exportAbstractCSV('pocket')">Export Pocket Abstract CSV</button>
             <button class="btn btn-sm" onclick="exportAbstractCSV('worker_day')">Export Worker-Day Matrix CSV</button>
+            <button class="btn btn-sm" onclick="exportAbstractCSV('lend_details')">Export Lend Labour CSV</button>
             <button class="btn btn-sm" onclick="exportAbstractCSV('category_summary')">Export Category Summary CSV</button>
           </div>
         </div>
         <div class="panel-body">
+
           <!-- 1. Pocket Abstract of Work & Datewise Totals -->
-          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">
-            1. Pocket Abstract — Work Abbreviation × Day of Month (with Lend Labour Details)
-          </h3>
-          <div class="table-wrap" style="margin-bottom:14px;">
+          <div class="section-subhdr" style="margin-top:0;">
+            <h3>1. Pocket Abstract — Work Abbreviation × Day of Month</h3>
+          </div>
+          <div class="table-wrap">
             <table class="data-table summary-table">
               <thead id="pocketAbsThead"></thead>
               <tbody id="pocketAbsTbody"></tbody>
@@ -614,21 +653,41 @@
             </table>
           </div>
 
-          <!-- 2. Work-Wise Labour Details (Datewise Table per Worker) -->
-          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">
-            2. Work-Wise & Lend Labour Details Table (Worker × Date)
-          </h3>
-          <div class="table-wrap" style="margin-bottom:14px;">
+          <!-- 2. Lend Labour Details (Dedicated Table with Match Including / Match Excluding & Prefix/Code Filter) -->
+          <div class="section-subhdr">
+            <h3>Lend Labour Details (Datewise & Workerwise Lent Mandays)</h3>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;" class="no-print">
+              <select id="lendMatchMode" onchange="renderAbstractSection()">
+                <option value="include">Match Including</option>
+                <option value="exclude">Match Excluding</option>
+              </select>
+              <input type="text" id="lendCodeFilter" placeholder="Code/Prefix (e.g. YA, YB, YD, YC4)" style="width:215px;" oninput="renderAbstractSection()">
+              <span style="font-size:11px;color:var(--text-muted);">Matches prefix or exact code (comma-separated allowed, e.g. YA, YB)</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table summary-table">
+              <thead id="lendTableThead"></thead>
+              <tbody id="lendTableTbody"></tbody>
+              <tfoot id="lendTableTfoot"></tfoot>
+            </table>
+          </div>
+
+          <!-- 3. Work-Wise & Lend Labour Details Table (Worker × Date) -->
+          <div class="section-subhdr">
+            <h3>2. Work-Wise Labour Details Table (Worker × Date)</h3>
+          </div>
+          <div class="table-wrap">
             <table class="data-table summary-table">
               <thead id="workerDateThead"></thead>
               <tbody id="workerDateTbody"></tbody>
             </table>
           </div>
 
-          <!-- 3. Category / Work-Type & Per-Worker Monthly Summary -->
-          <h3 style="font-size:12px;text-transform:uppercase;color:#334155;margin-bottom:6px;">
-            3. Per-Worker & Work-Type / Category Summary (Monthly & All-Type Totals)
-          </h3>
+          <!-- 4. Per-Worker & Work-Type / Category Summary (Work Type Filter Shown Directly Against Each Worker Row) -->
+          <div class="section-subhdr">
+            <h3>3. Per-Worker & Work-Type / Category Summary (Monthly & All-Type Totals)</h3>
+          </div>
           <div class="table-wrap">
             <table class="data-table summary-table">
               <thead id="workerCatThead"></thead>
@@ -636,6 +695,7 @@
               <tfoot id="workerCatTfoot"></tfoot>
             </table>
           </div>
+
         </div>
       </div>
     </section>
@@ -644,21 +704,24 @@
 
   <!-- DATE ATTENDANCE MARKING MODAL -->
   <div class="modal-backdrop" id="dateMarkModal">
-    <div class="modal-box" style="max-width:780px;">
+    <div class="modal-box" style="max-width:820px;">
       <div class="modal-hdr">
         <strong id="dateMarkModalTitle">Mark Daily Checkroll Attendance</strong>
         <button class="btn btn-sm" style="background:transparent;color:#fff;border-color:#475569;" onclick="closeDateMarkModal()">✕</button>
       </div>
       <div class="modal-body">
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;background:#f8fafc;padding:8px;border:1px solid var(--border-color);">
+        <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px;background:#f8fafc;padding:8px;border:1px solid var(--border-color);">
           <div class="field-item">
             <label>Select Date</label>
             <input type="date" id="markDateInput" onchange="loadDateIntoModal(this.value)">
           </div>
-          <div class="field-item" style="flex:1;min-width:220px;">
+          <div class="field-item" style="flex:1;min-width:240px;">
             <label>Search & Select Work (Shows Abbr + Work Name)</label>
             <input type="text" id="workFilterSearch" placeholder="Type abbreviation or work name to filter..." oninput="renderWorkDropdownOptions()">
             <div class="work-dropdown-panel" id="workDropdownPanel"></div>
+          </div>
+          <div class="field-item" style="justify-content:flex-end;align-self:center;">
+            <button type="button" class="btn btn-sm btn-green" onclick="applySelectedWorkToAll()">Apply Selected Work to All</button>
           </div>
         </div>
 
@@ -668,11 +731,11 @@
               <tr>
                 <th style="width:75px;">Code No</th>
                 <th>Worker Name</th>
-                <th style="width:70px;">Gender</th>
-                <th style="width:175px;">Work Marked</th>
-                <th style="width:90px;">Day Value</th>
-                <th style="width:75px;text-align:center;">Lend?</th>
-                <th style="width:115px;">Lend To Field</th>
+                <th style="width:65px;">Gender</th>
+                <th style="width:185px;">Work Marked</th>
+                <th style="width:100px;">Attendance</th>
+                <th style="width:65px;text-align:center;">Lend?</th>
+                <th style="width:120px;">Lend To Field</th>
                 <th style="width:45px;">Clr</th>
               </tr>
             </thead>
@@ -735,7 +798,7 @@
   </div>
 
 <script>
-const STORAGE_KEY = 'OPIL_DAILY_CHECKROLL_V1';
+const STORAGE_KEY = 'OPIL_DAILY_CHECKROLL_V3_LEND_TABLE';
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
@@ -750,8 +813,8 @@ function getInitialState() {
       activeField: '',
       activeMonth: new Date().toISOString().slice(0, 7)
     },
-    divisions: [], // { name, fields: [] }
-    roster: [],    // { id, code, name, gender: 'M'|'F', division, field }
+    divisions: [],
+    roster: [],
     workTypes: [
       { id: 'wt_skilled', name: 'Skilled Work', color: '#15803d' },
       { id: 'wt_semiskilled', name: 'Semi-Skilled Work', color: '#b91c1c' },
@@ -768,8 +831,8 @@ function getInitialState() {
       { id: 'wk_rr', abbr: 'RR', name: 'Road Repairs', typeId: 'wt_normal' },
       { id: 'wk_rt', abbr: 'RT', name: 'Repairing Tools', typeId: 'wt_normal' }
     ],
-    // entries[dateISO][workerId] = { workId, value: 1 | 0.5, isLend: boolean, lendTo: string }
-    entries: {}
+    entries: {},
+    perWorkerTypeFilter: {}
   };
 }
 
@@ -783,6 +846,7 @@ function loadState() {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && parsed.meta && Array.isArray(parsed.workTypes) && Array.isArray(parsed.works)) {
+        if (!parsed.perWorkerTypeFilter) parsed.perWorkerTypeFilter = {};
         return parsed;
       }
     }
@@ -853,6 +917,19 @@ function renderCheckrollTitle() {
   const fld = state.meta.activeField || 'All Fields';
   const mon = state.meta.activeMonth || '';
   document.getElementById('checkrollTitle').textContent = `Monthly Pocket Checkroll • Division: ${div} • Field: ${fld} (${mon})`;
+}
+
+function formatCheckrollCellHTML(cell, wk) {
+  if (!cell || !cell.workId) return '';
+  const abbr = wk ? wk.abbr : '?';
+  const val = Number(cell.value ?? 1);
+  const isHalf = val === 0.5;
+  const lendCode = cell.isLend && cell.lendTo ? cell.lendTo : '';
+
+  const lendTopHtml = lendCode ? `<span class="chk-lend-top">${lendCode}</span>` : '';
+  const abbrClass = isHalf ? 'chk-work-abbr chk-half-overline' : 'chk-work-abbr';
+
+  return `<span class="chk-stack">${lendTopHtml}<span class="${abbrClass}">${abbr}</span></span>`;
 }
 
 // DIVISION, FIELD & ROSTER SETUP
@@ -1134,7 +1211,7 @@ function renderCheckrollGrid() {
     <th style="width:40px;">Sl</th>
     <th style="width:75px;">Code No</th>
     <th style="min-width:155px;">Name</th>
-    ${days.map(d => `<th style="min-width:34px;text-align:center;">${d.day}</th>`).join('')}
+    ${days.map(d => `<th style="min-width:36px;text-align:center;">${d.day}</th>`).join('')}
     <th style="min-width:62px;text-align:right;">Total</th>
   </tr>`;
 
@@ -1160,13 +1237,8 @@ function renderCheckrollGrid() {
       rowTotal += val;
       dayTotals[dIdx] += val;
 
-      const lendTag = cell.isLend && cell.lendTo
-        ? `<span class="lend-sup" title="Lent to ${cell.lendTo}">${cell.lendTo}</span>`
-        : '';
-      const halfTag = val === 0.5 ? `<span style="font-size:9px;color:#b45309;">(½)</span>` : '';
-
-      return `<td class="chk-cell" style="color:${wt.color};" onclick="openDateMarkModal('${d.iso}')" title="${wk ? wk.abbr + ' - ' + wk.name : ''} (${val} MD)${cell.isLend ? ' • Lend: ' + cell.lendTo : ''}">
-        ${wk ? wk.abbr : '?'}${halfTag}${lendTag}
+      return `<td class="chk-cell" style="color:${wt.color};" onclick="openDateMarkModal('${d.iso}')" title="${wk ? wk.abbr + ' - ' + wk.name : ''} (${val} MD)${cell.isLend && cell.lendTo ? ' • Lend: ' + cell.lendTo : ''}">
+        ${formatCheckrollCellHTML(cell, wk)}
       </td>`;
     }).join('');
 
@@ -1182,12 +1254,12 @@ function renderCheckrollGrid() {
 
   tfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
     <td colspan="3">Total Attendance</td>
-    ${dayTotals.map(dt => `<td class="chk-cell">${dt > 0 ? dt : ''}</td>`).join('')}
+    ${dayTotals.map(dt => `<td class="chk-cell" style="height:auto;">${dt > 0 ? dt : ''}</td>`).join('')}
     <td class="num" style="color:var(--green-ink);">${grandTotal}</td>
   </tr>`;
 }
 
-// DATE ATTENDANCE MARKING MODAL (WITH SEARCHABLE WORK LIST + LEND LABOUR)
+// DATE ATTENDANCE MARKING MODAL
 function openDateMarkModal(isoDate = null) {
   const targetDate = isoDate || `${state.meta.activeMonth || todayISO().slice(0, 7)}-01`;
   document.getElementById('markDateInput').value = targetDate;
@@ -1224,6 +1296,19 @@ function selectWorkForMarking(workId) {
   renderWorkDropdownOptions();
 }
 
+function applySelectedWorkToAll() {
+  if (!selectedModalWorkId) return alert('Select a work from the list first.');
+  state.roster.forEach(w => {
+    tempDateDraft[w.id] = {
+      workId: selectedModalWorkId,
+      value: tempDateDraft[w.id]?.value ?? 1,
+      isLend: tempDateDraft[w.id]?.isLend ?? false,
+      lendTo: tempDateDraft[w.id]?.isLend ? (tempDateDraft[w.id]?.lendTo || '') : ''
+    };
+  });
+  renderDateMarkRows();
+}
+
 function loadDateIntoModal(isoDate) {
   const existingDay = state.entries?.[isoDate] || {};
   tempDateDraft = {};
@@ -1244,6 +1329,7 @@ function renderDateMarkRows() {
 
   tbody.innerHTML = state.roster.map(w => {
     const dRow = tempDateDraft[w.id] || { workId: '', value: 1, isLend: false, lendTo: '' };
+    const isLendChecked = Boolean(dRow.isLend);
     const workOptionsHtml = `<option value="">-- Absent / Blank --</option>` + state.works.map(wk => {
       const wt = getWorkTypeById(wk.typeId);
       return `<option value="${wk.id}" ${dRow.workId === wk.id ? 'selected' : ''}>${wk.abbr} — ${wk.name} (${wt.name})</option>`;
@@ -1265,10 +1351,10 @@ function renderDateMarkRows() {
         </select>
       </td>
       <td style="text-align:center;">
-        <input type="checkbox" ${dRow.isLend ? 'checked' : ''} onchange="onModalRowLendToggle('${w.id}', this.checked)">
+        <input type="checkbox" ${isLendChecked ? 'checked' : ''} onchange="onModalRowLendToggle('${w.id}', this.checked)">
       </td>
       <td>
-        <input type="text" placeholder="e.g. YC4" value="${dRow.lendTo || ''}" ${dRow.isLend ? '' : 'disabled'} style="width:100%;text-transform:uppercase;" oninput="onModalRowLendField('${w.id}', this.value)">
+        <input type="text" placeholder="e.g. YC4 or YA3" value="${isLendChecked ? (dRow.lendTo || '') : ''}" ${isLendChecked ? '' : 'disabled'} style="width:100%;text-transform:uppercase;" oninput="onModalRowLendField('${w.id}', this.value)">
       </td>
       <td style="text-align:center;">
         <button type="button" class="btn btn-sm" onclick="clearModalRow('${w.id}')" title="Clear row">✕</button>
@@ -1285,7 +1371,7 @@ function onModalRowWorkChange(wId, workId) {
       workId,
       value: tempDateDraft[wId]?.value ?? 1,
       isLend: tempDateDraft[wId]?.isLend ?? false,
-      lendTo: tempDateDraft[wId]?.lendTo ?? ''
+      lendTo: tempDateDraft[wId]?.isLend ? (tempDateDraft[wId]?.lendTo ?? '') : ''
     };
   }
 }
@@ -1304,7 +1390,6 @@ function onModalRowLendToggle(wId, checked) {
 
 function onModalRowLendField(wId, rawVal) {
   if (!tempDateDraft[wId]) return;
-  // Normalize case and trim spaces (e.g. "yc 4 " -> "YC4")
   tempDateDraft[wId].lendTo = rawVal.toUpperCase().replace(/\s+/g, '');
 }
 
@@ -1334,17 +1419,30 @@ function saveDateAttendance() {
   renderAll();
 }
 
-// CHECKROLL ABSTRACT & SUMMARIES
-function matchFieldFilter(cell, filterText) {
-  const q = (filterText || '').trim().toUpperCase().replace(/\s+/g, '');
-  if (!q) return true;
-  if (!cell || !cell.isLend || !cell.lendTo) return false;
-  return cell.lendTo.toUpperCase().replace(/\s+/g, '').startsWith(q);
+// LEND LABOUR MATCHING (Supports comma-separated prefixes like YA, YB, YD or exact codes like YC4 + Including / Excluding)
+function isLendMatch(cell) {
+  if (!cell || !cell.isLend) return false;
+  const rawFilter = (document.getElementById('lendCodeFilter')?.value || '').trim().toUpperCase();
+  const mode = document.getElementById('lendMatchMode')?.value || 'include';
+
+  if (!rawFilter) return true; // If no filter code typed, show all lent records
+
+  const tokens = rawFilter.split(',').map(s => s.replace(/\s+/g, '')).filter(Boolean);
+  const code = (cell.lendTo || '').toUpperCase().replace(/\s+/g, '');
+
+  const matchedAny = tokens.some(tok => code.startsWith(tok));
+  return mode === 'include' ? matchedAny : !matchedAny;
 }
 
+function onPerWorkerTypeFilterChange(workerId, typeId) {
+  state.perWorkerTypeFilter[workerId] = typeId;
+  saveState();
+  renderAbstractSection();
+}
+
+// CHECKROLL ABSTRACT & SUMMARIES
 function renderAbstractSection() {
   const gFilter = document.getElementById('absGenderFilter')?.value || 'ALL';
-  const fMatch = document.getElementById('absFieldMatch')?.value || '';
   const days = getDaysInSelectedMonth();
   const workers = state.roster.filter(w => gFilter === 'ALL' || w.gender === gFilter);
 
@@ -1359,7 +1457,6 @@ function renderAbstractSection() {
     <th>Work Type</th>
     ${days.map(d => `<th style="text-align:center;">${d.day}</th>`).join('')}
     <th class="num">Total</th>
-    <th>Lend Details</th>
   </tr>`;
 
   const dayGrand = days.map(() => 0);
@@ -1368,21 +1465,18 @@ function renderAbstractSection() {
   pTbody.innerHTML = state.works.map(wk => {
     const wt = getWorkTypeById(wk.typeId);
     let wkTotal = 0;
-    const lendNotes = new Set();
 
     const dayCells = days.map((d, dIdx) => {
       let dSum = 0;
       workers.forEach(w => {
         const cell = state.entries?.[d.iso]?.[w.id];
-        if (cell && cell.workId === wk.id && matchFieldFilter(cell, fMatch)) {
-          const v = Number(cell.value ?? 1);
-          dSum += v;
-          if (cell.isLend && cell.lendTo) lendNotes.add(`${cell.lendTo} (${w.code})`);
+        if (cell && cell.workId === wk.id) {
+          dSum += Number(cell.value ?? 1);
         }
       });
       wkTotal += dSum;
       dayGrand[dIdx] += dSum;
-      return `<td class="chk-cell">${dSum > 0 ? dSum : ''}</td>`;
+      return `<td class="chk-cell" style="height:auto;">${dSum > 0 ? dSum : ''}</td>`;
     }).join('');
 
     allWorkGrand += wkTotal;
@@ -1392,18 +1486,75 @@ function renderAbstractSection() {
       <td style="color:${wt.color};font-weight:600;">${wt.name}</td>
       ${dayCells}
       <td class="num" style="font-weight:700;">${wkTotal}</td>
-      <td style="font-size:10.5px;color:#1d4ed8;">${[...lendNotes].join(', ') || '-'}</td>
     </tr>`;
   }).join('');
 
   pTfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
     <td colspan="3">Total Attendance</td>
-    ${dayGrand.map(v => `<td class="chk-cell">${v > 0 ? v : ''}</td>`).join('')}
+    ${dayGrand.map(v => `<td class="chk-cell" style="height:auto;">${v > 0 ? v : ''}</td>`).join('')}
     <td class="num" style="color:var(--green-ink);">${allWorkGrand}</td>
+  </tr>`;
+
+  // 2. Dedicated Lend Labour Details Table
+  const lThead = document.getElementById('lendTableThead');
+  const lTbody = document.getElementById('lendTableTbody');
+  const lTfoot = document.getElementById('lendTableTfoot');
+
+  lThead.innerHTML = `<tr>
+    <th>Code No</th>
+    <th>Worker Name</th>
+    <th>Gender</th>
+    ${days.map(d => `<th style="text-align:center;">${d.day}</th>`).join('')}
+    <th class="num">Lent Days</th>
+    <th>Fields Lent To</th>
+  </tr>`;
+
+  const lendDayTotals = days.map(() => 0);
+  let grandLentDays = 0;
+
+  const lendRowsHtml = workers.map(w => {
+    let wLentDays = 0;
+    const lentFieldsSet = new Set();
+    let hasAnyLent = false;
+
+    const cells = days.map((d, dIdx) => {
+      const cell = state.entries?.[d.iso]?.[w.id];
+      if (!cell || !cell.workId || !isLendMatch(cell)) {
+        return `<td class="chk-cell" style="height:auto;"></td>`;
+      }
+      hasAnyLent = true;
+      const wk = getWorkById(cell.workId);
+      const wt = wk ? getWorkTypeById(wk.typeId) : { color: '#0f172a' };
+      const v = Number(cell.value ?? 1);
+      wLentDays += v;
+      lendDayTotals[dIdx] += v;
+      if (cell.lendTo) lentFieldsSet.add(cell.lendTo);
+      return `<td class="chk-cell" style="color:${wt.color};">${formatCheckrollCellHTML(cell, wk)}</td>`;
+    }).join('');
+
+    if (!hasAnyLent) return '';
+    grandLentDays += wLentDays;
+
+    return `<tr>
+      <td class="mono" style="font-weight:700;">${w.code}</td>
+      <td style="font-weight:600;">${w.name}</td>
+      <td>${w.gender}</td>
+      ${cells}
+      <td class="num" style="font-weight:700;color:#1d4ed8;">${wLentDays}</td>
+      <td class="mono" style="font-size:11px;">${[...lentFieldsSet].join(', ') || '-'}</td>
+    </tr>`;
+  }).filter(Boolean).join('');
+
+  lTbody.innerHTML = lendRowsHtml || `<tr><td colspan="${days.length + 5}" style="text-align:center;color:#64748b;padding:10px;">No Lend Labour records match the current filter.</td></tr>`;
+
+  lTfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
+    <td colspan="3">Total Lend Labour</td>
+    ${lendDayTotals.map(v => `<td class="chk-cell" style="height:auto;">${v > 0 ? v : ''}</td>`).join('')}
+    <td class="num" style="color:#1d4ed8;">${grandLentDays}</td>
     <td></td>
   </tr>`;
 
-  // 2. Work-Wise & Lend Labour Details Table (Worker × Date)
+  // 3. Work-Wise Labour Details Table (Worker × Date)
   const wdThead = document.getElementById('workerDateThead');
   const wdTbody = document.getElementById('workerDateTbody');
 
@@ -1418,15 +1569,14 @@ function renderAbstractSection() {
     let wDays = 0;
     const cells = days.map(d => {
       const cell = state.entries?.[d.iso]?.[w.id];
-      if (!cell || !cell.workId || !matchFieldFilter(cell, fMatch)) {
+      if (!cell || !cell.workId) {
         return `<td class="chk-cell"></td>`;
       }
       const wk = getWorkById(cell.workId);
       const wt = wk ? getWorkTypeById(wk.typeId) : { color: '#0f172a' };
       const v = Number(cell.value ?? 1);
       wDays += v;
-      const lendStr = cell.isLend && cell.lendTo ? `<span class="lend-sup">${cell.lendTo}</span>` : '';
-      return `<td class="chk-cell" style="color:${wt.color};">${wk ? wk.abbr : ''}${v === 0.5 ? '½' : ''}${lendStr}</td>`;
+      return `<td class="chk-cell" style="color:${wt.color};">${formatCheckrollCellHTML(cell, wk)}</td>`;
     }).join('');
 
     return `<tr>
@@ -1437,7 +1587,7 @@ function renderAbstractSection() {
     </tr>`;
   }).join('') || `<tr><td colspan="${days.length + 3}" style="text-align:center;color:#64748b;padding:10px;">No records.</td></tr>`;
 
-  // 3. Per-Worker & Work-Type / Category Summary
+  // 4. Per-Worker & Work-Type / Category Summary (With Work Type Select Filter on Each Worker Row)
   const wcThead = document.getElementById('workerCatThead');
   const wcTbody = document.getElementById('workerCatTbody');
   const wcTfoot = document.getElementById('workerCatTfoot');
@@ -1446,20 +1596,24 @@ function renderAbstractSection() {
     <th>Code No</th>
     <th>Worker Name</th>
     <th>Gender</th>
+    <th style="width:155px;">Work Type Filter</th>
+    <th class="num">Selected Type Days</th>
     ${state.workTypes.map(wt => `<th class="num" style="color:${wt.color};">${wt.name}</th>`).join('')}
     <th class="num">All-Type Total</th>
   </tr>`;
 
   const typeGrand = state.workTypes.map(() => 0);
+  let grandSelectedType = 0;
   let grandAllTypes = 0;
 
   wcTbody.innerHTML = workers.map(w => {
+    const selectedTypeId = state.perWorkerTypeFilter[w.id] || 'ALL';
     const typeSums = state.workTypes.map(() => 0);
-    let rowSum = 0;
+    let rowAllSum = 0;
 
     days.forEach(d => {
       const cell = state.entries?.[d.iso]?.[w.id];
-      if (cell && cell.workId && matchFieldFilter(cell, fMatch)) {
+      if (cell && cell.workId) {
         const wk = getWorkById(cell.workId);
         const tIdx = state.workTypes.findIndex(t => t.id === wk?.typeId);
         const v = Number(cell.value ?? 1);
@@ -1467,22 +1621,38 @@ function renderAbstractSection() {
           typeSums[tIdx] += v;
           typeGrand[tIdx] += v;
         }
-        rowSum += v;
+        rowAllSum += v;
       }
     });
-    grandAllTypes += rowSum;
+
+    let selectedTypeDays = rowAllSum;
+    if (selectedTypeId !== 'ALL') {
+      const idxFound = state.workTypes.findIndex(t => t.id === selectedTypeId);
+      selectedTypeDays = idxFound !== -1 ? typeSums[idxFound] : 0;
+    }
+
+    grandSelectedType += selectedTypeDays;
+    grandAllTypes += rowAllSum;
+
+    const filterSelectHtml = `<select style="width:100%;font-size:11px;" onchange="onPerWorkerTypeFilterChange('${w.id}', this.value)">
+      <option value="ALL" ${selectedTypeId === 'ALL' ? 'selected' : ''}>All Types</option>
+      ${state.workTypes.map(wt => `<option value="${wt.id}" ${selectedTypeId === wt.id ? 'selected' : ''}>${wt.name}</option>`).join('')}
+    </select>`;
 
     return `<tr>
       <td class="mono" style="font-weight:700;">${w.code}</td>
       <td style="font-weight:600;">${w.name}</td>
       <td>${w.gender}</td>
+      <td>${filterSelectHtml}</td>
+      <td class="num" style="font-weight:700;color:var(--primary);">${selectedTypeDays}</td>
       ${typeSums.map(s => `<td class="num">${s > 0 ? s : '0'}</td>`).join('')}
-      <td class="num" style="font-weight:700;color:var(--green-ink);">${rowSum}</td>
+      <td class="num" style="font-weight:700;color:var(--green-ink);">${rowAllSum}</td>
     </tr>`;
-  }).join('') || `<tr><td colspan="${state.workTypes.length + 4}" style="text-align:center;color:#64748b;padding:10px;">No records.</td></tr>`;
+  }).join('') || `<tr><td colspan="${state.workTypes.length + 5}" style="text-align:center;color:#64748b;padding:10px;">No records.</td></tr>`;
 
   wcTfoot.innerHTML = `<tr style="background:#f1f5f9;font-weight:700;">
-    <td colspan="3">Grand Total (All Types)</td>
+    <td colspan="4">Grand Total</td>
+    <td class="num" style="color:var(--primary);">${grandSelectedType}</td>
     ${typeGrand.map(g => `<td class="num">${g}</td>`).join('')}
     <td class="num" style="color:var(--green-ink);">${grandAllTypes}</td>
   </tr>`;
@@ -1500,7 +1670,7 @@ function exportCheckrollCSV() {
       const wk = cell?.workId ? getWorkById(cell.workId) : null;
       const val = cell?.workId ? Number(cell.value ?? 1) : 0;
       tot += val;
-      r[`Day ${d.day}`] = wk ? `${wk.abbr}${val === 0.5 ? '(0.5)' : ''}${cell.isLend && cell.lendTo ? '[' + cell.lendTo + ']' : ''}` : '';
+      r[`Day ${d.day}`] = wk ? `${val === 0.5 ? '-' : ''}${wk.abbr}${cell.isLend && cell.lendTo ? '[' + cell.lendTo + ']' : ''}` : '';
     });
     r['Total Attendance'] = tot;
     return r;
@@ -1514,7 +1684,6 @@ function exportCheckrollCSV() {
 function exportAbstractCSV(mode) {
   const days = getDaysInSelectedMonth();
   const gFilter = document.getElementById('absGenderFilter')?.value || 'ALL';
-  const fMatch = document.getElementById('absFieldMatch')?.value || '';
   const workers = state.roster.filter(w => gFilter === 'ALL' || w.gender === gFilter);
 
   let rows = [];
@@ -1527,7 +1696,7 @@ function exportAbstractCSV(mode) {
         let sum = 0;
         workers.forEach(w => {
           const c = state.entries?.[d.iso]?.[w.id];
-          if (c && c.workId === wk.id && matchFieldFilter(c, fMatch)) sum += Number(c.value ?? 1);
+          if (c && c.workId === wk.id) sum += Number(c.value ?? 1);
         });
         tot += sum;
         r[`Day ${d.day}`] = sum;
@@ -1535,17 +1704,37 @@ function exportAbstractCSV(mode) {
       r['Total'] = tot;
       return r;
     });
+  } else if (mode === 'lend_details') {
+    workers.forEach(w => {
+      let lentSum = 0;
+      const r = { 'Code No': w.code, Name: w.name, Gender: w.gender };
+      let hasLent = false;
+      days.forEach(d => {
+        const c = state.entries?.[d.iso]?.[w.id];
+        if (c && c.workId && isLendMatch(c)) {
+          hasLent = true;
+          const wk = getWorkById(c.workId);
+          const v = Number(c.value ?? 1);
+          lentSum += v;
+          r[`Day ${d.day}`] = `${v === 0.5 ? '-' : ''}${wk ? wk.abbr : ''}[${c.lendTo}]`;
+        } else {
+          r[`Day ${d.day}`] = '';
+        }
+      });
+      r['Lent Days'] = lentSum;
+      if (hasLent) rows.push(r);
+    });
   } else if (mode === 'worker_day') {
     rows = workers.map(w => {
       const r = { 'Code No': w.code, Name: w.name };
       let tot = 0;
       days.forEach(d => {
         const c = state.entries?.[d.iso]?.[w.id];
-        if (c && c.workId && matchFieldFilter(c, fMatch)) {
+        if (c && c.workId) {
           const wk = getWorkById(c.workId);
           const v = Number(c.value ?? 1);
           tot += v;
-          r[`Day ${d.day}`] = `${wk ? wk.abbr : ''}${c.isLend && c.lendTo ? '(' + c.lendTo + ')' : ''}`;
+          r[`Day ${d.day}`] = `${v === 0.5 ? '-' : ''}${wk ? wk.abbr : ''}${c.isLend && c.lendTo ? '[' + c.lendTo + ']' : ''}`;
         } else {
           r[`Day ${d.day}`] = '';
         }
@@ -1561,7 +1750,7 @@ function exportAbstractCSV(mode) {
         let s = 0;
         days.forEach(d => {
           const c = state.entries?.[d.iso]?.[w.id];
-          if (c && c.workId && matchFieldFilter(c, fMatch)) {
+          if (c && c.workId) {
             const wk = getWorkById(c.workId);
             if (wk?.typeId === wt.id) s += Number(c.value ?? 1);
           }
@@ -1610,7 +1799,7 @@ function exportAllExcel() {
 // JSON SAVE & LOAD
 function exportJSON() {
   const payload = {
-    appVersion: 'OPIL_DailyCheckroll_v1.0',
+    appVersion: 'OPIL_DailyCheckroll_v3.0',
     exportedAt: new Date().toISOString(),
     estateName: state.meta.estateName,
     division: state.meta.activeDivision,
@@ -1634,6 +1823,7 @@ function importJSON(e) {
       const parsed = JSON.parse(evt.target.result);
       const imp = parsed.state ? parsed.state : parsed;
       if (!imp.meta || !Array.isArray(imp.works)) throw new Error('Invalid JSON format.');
+      if (!imp.perWorkerTypeFilter) imp.perWorkerTypeFilter = {};
       state = imp;
       saveState();
       renderAll();

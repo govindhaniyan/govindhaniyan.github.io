@@ -1,0 +1,3877 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enscygen PrepImg — Professional Image Resizing, Cropping & Exam Utility</title>
+  
+  <!-- Google Fonts & Material Symbols Outlined -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&family=Courier+Prime:wght@400;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
+
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEME TOKENS (Exact MarkImg Matte Charcoal & Slate Palette)
+       ========================================================================== */
+    :root {
+      --bg-app: #121316;
+      --bg-panel: #181a1f;
+      --bg-surface: #202329;
+      --bg-surface-hover: #282c34;
+      --bg-input: #14161a;
+      --bg-canvas: #0e0f12;
+      --border-subtle: #272a30;
+      --border-strong: #373b44;
+      --text-primary: #eceef2;
+      --text-secondary: #9ba1ae;
+      --text-muted: #6c727f;
+      /* MarkImg Muted Periwinkle / Steel Accent (No Neon Glow) */
+      --accent-primary: #93b4eb;
+      --accent-primary-hover: #a8c4f2;
+      --accent-primary-text: #11151d;
+      --accent-subtle: rgba(147, 180, 235, 0.12);
+      --accent-border: rgba(147, 180, 235, 0.32);
+      --changed-bg: rgba(234, 179, 8, 0.14);
+      --changed-text: #facc15;
+      --changed-border: rgba(234, 179, 8, 0.35);
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --shadow-flat: 0 4px 14px rgba(0, 0, 0, 0.38);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 10px;
+      --radius-pill: 999px;
+      --header-h: 50px;
+      --subbar-h: 42px;
+      --footer-h: 28px;
+      --left-w: 280px;
+      --right-w: 350px;
+    }
+
+    [data-theme="light"] {
+      --bg-app: #f0f1f4;
+      --bg-panel: #ffffff;
+      --bg-surface: #f5f6f8;
+      --bg-surface-hover: #eaedf2;
+      --bg-input: #ffffff;
+      --bg-canvas: #e4e6eb;
+      --border-subtle: #dcdfe6;
+      --border-strong: #c2c7d1;
+      --text-primary: #181a1f;
+      --text-secondary: #525866;
+      --text-muted: #828998;
+      --accent-primary: #2c5aa0;
+      --accent-primary-hover: #234982;
+      --accent-primary-text: #ffffff;
+      --accent-subtle: rgba(44, 90, 160, 0.09);
+      --accent-border: rgba(44, 90, 160, 0.3);
+      --changed-bg: rgba(217, 119, 6, 0.12);
+      --changed-text: #b45309;
+      --changed-border: rgba(217, 119, 6, 0.35);
+      --shadow-flat: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .material-symbols-outlined {
+      font-size: 18px;
+      line-height: 1;
+      vertical-align: middle;
+      user-select: none;
+    }
+
+    /* ==========================================================================
+       APP SHELL LAYOUT
+       ========================================================================== */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100dvh;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* TOP HEADER BAR */
+    .top-header {
+      height: var(--header-h);
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      gap: 10px;
+      flex-shrink: 0;
+      z-index: 30;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    /* Exact MarkImg Framed Icon Badge (Matte Charcoal + Muted Periwinkle) */
+    .app-logo {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      border: 1px solid var(--accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    .title-menu-stack {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .doc-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-title {
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .badge-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .menu-bar {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin-top: 1px;
+    }
+
+    .menu-item {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--font-sans);
+    }
+
+    .menu-item:hover {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 31px;
+      padding: 0 11px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.14s ease, border-color 0.14s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--border-strong);
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      border-color: transparent;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      padding: 0 15px;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-primary-hover);
+      border-color: transparent;
+    }
+
+    .btn-accent-soft {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border-color: var(--accent-border);
+    }
+
+    .btn-icon {
+      width: 31px;
+      padding: 0;
+    }
+
+    .brand-watermark {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      padding-left: 8px;
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    /* SECONDARY TOOLBAR */
+    .sub-toolbar {
+      height: var(--subbar-h);
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      gap: 8px;
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .sub-toolbar::-webkit-scrollbar { display: none; }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .tool-divider {
+      width: 1px;
+      height: 18px;
+      background: var(--border-subtle);
+      margin: 0 4px;
+    }
+
+    .tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 29px;
+      padding: 0 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tool-btn:hover {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+    }
+
+    .tool-btn.active {
+      background: var(--accent-subtle);
+      color: var(--accent-primary);
+      border-color: var(--accent-border);
+    }
+
+    /* MAIN WORKSPACE GRID */
+    .workspace-main {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    /* LEFT SIDEBAR: PRESETS & QUICK TELEMETRY */
+    .sidebar-left {
+      width: var(--left-w);
+      height: 100%;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 25;
+      overflow: hidden;
+    }
+
+    .sidebar-left.collapsed {
+      width: 0;
+      border-right: none;
+    }
+
+    .panel-header {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+
+    .search-box-wrap {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .search-input-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0 8px;
+      height: 30px;
+    }
+
+    .search-input-box:focus-within {
+      border-color: var(--accent-primary);
+    }
+
+    .search-input-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .preset-scroll {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 8px;
+    }
+
+    .preset-category {
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 6px 6px 4px;
+    }
+
+    .preset-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      margin-bottom: 3px;
+    }
+
+    .preset-item:hover {
+      background: var(--bg-surface);
+    }
+
+    .preset-item.active {
+      background: var(--accent-subtle);
+      border-color: var(--accent-border);
+    }
+
+    .preset-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .preset-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .preset-sub {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-secondary);
+    }
+
+    /* BOTTOM LEFT LIVE OUTPUT STATS (Matches MarkImg Statistics Block) */
+    .live-stats-panel {
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      padding: 10px 12px;
+      flex-shrink: 0;
+    }
+
+    .stats-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4px 10px;
+      font-size: 11.5px;
+    }
+
+    .stat-label { color: var(--text-secondary); }
+    .stat-val {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      color: var(--text-primary);
+      text-align: right;
+    }
+    .stat-val.good { color: var(--success); }
+    .stat-val.warn { color: var(--warning); }
+
+    /* CENTER CANVAS STAGE */
+    .canvas-stage {
+      flex: 1;
+      position: relative;
+      background-color: var(--bg-canvas);
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 20px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    [data-theme="light"] .canvas-stage {
+      background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    }
+
+    #mainCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Empty State Dropzone */
+    .empty-dropzone {
+      position: absolute;
+      inset: 20px;
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      gap: 14px;
+      z-index: 10;
+    }
+
+    .empty-dropzone.dragover {
+      border-color: var(--accent-primary);
+      background: var(--bg-surface);
+    }
+
+    .empty-dropzone.hidden {
+      display: none;
+    }
+
+    .drop-icon-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Floating Minimap (Bottom Left of Canvas) */
+    .minimap-box {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      width: 112px;
+      height: 76px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-flat);
+      z-index: 12;
+      pointer-events: none;
+    }
+
+    #minimapCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Floating View Mode Pill (Top Center of Canvas) */
+    .canvas-top-pill {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      z-index: 12;
+      box-shadow: var(--shadow-flat);
+    }
+
+    .pill-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .pill-tab.active {
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      font-weight: 600;
+    }
+
+    /* Floating Zoom / Grid Controls (Bottom Right of Canvas) */
+    .canvas-bottom-controls {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 12;
+    }
+
+    .floating-group {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-pill);
+      padding: 3px 6px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      box-shadow: var(--shadow-flat);
+    }
+
+    .float-btn {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .float-btn:hover, .float-btn.active {
+      background: var(--bg-surface-hover);
+      color: var(--accent-primary);
+    }
+
+    /* Sidebar Edge Collapse Handles */
+    .edge-toggle {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 44px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 15;
+    }
+    .edge-toggle:hover { color: var(--text-primary); background: var(--bg-surface); }
+    .edge-toggle.left { left: 0; border-left: none; border-radius: 0 6px 6px 0; }
+    .edge-toggle.right { right: 0; border-right: none; border-radius: 6px 0 0 6px; }
+
+    /* RIGHT SIDEBAR: INSPECTOR TABS (Crop, Resize, Name/Date, Adjust, Metadata, Export) */
+    .sidebar-right {
+      width: var(--right-w);
+      height: 100%;
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 25;
+      overflow: hidden;
+    }
+
+    .sidebar-right.collapsed {
+      width: 0;
+      border-left: none;
+    }
+
+    .inspector-tabs {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-panel);
+      padding: 4px 2px 0;
+      flex-shrink: 0;
+    }
+
+    .insp-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 6px 2px;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 10.5px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .insp-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .insp-tab.active {
+      color: var(--accent-primary);
+      border-bottom-color: var(--accent-primary);
+    }
+
+    .inspector-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 12px 12px 36px;
+    }
+
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* FORM CONTROLS IN INSPECTOR */
+    .section-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-title-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-ctrl, .select-ctrl {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .input-ctrl.mono {
+      font-family: var(--font-mono);
+    }
+
+    .input-ctrl:focus, .select-ctrl:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .input-ctrl:disabled, .select-ctrl:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+
+    .chip-btn {
+      padding: 6px 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    .chip-btn.active {
+      background: var(--accent-subtle);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      accent-color: var(--accent-primary);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 30px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      background: var(--bg-input);
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    /* METADATA COMPARISON TABLE */
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .meta-table th {
+      text-align: left;
+      padding: 6px 6px;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-strong);
+      position: sticky;
+      top: 0;
+    }
+
+    .meta-table td {
+      padding: 6px 6px;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: top;
+      word-break: break-word;
+    }
+
+    .meta-table td.prop-col {
+      color: var(--text-secondary);
+      font-weight: 500;
+      width: 34%;
+    }
+
+    .meta-table td.orig-col {
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      width: 33%;
+    }
+
+    .meta-table td.new-col {
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+      width: 33%;
+    }
+
+    .meta-table tr.is-changed {
+      background: var(--changed-bg);
+    }
+
+    .meta-table tr.is-changed td.new-col {
+      color: var(--changed-text);
+      font-weight: 600;
+    }
+
+    .change-badge {
+      display: inline-block;
+      font-size: 9px;
+      padding: 0 4px;
+      border-radius: 3px;
+      background: var(--changed-bg);
+      border: 1px solid var(--changed-border);
+      color: var(--changed-text);
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* STATUS BAR FOOTER */
+    .status-footer {
+      height: var(--footer-h);
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      z-index: 30;
+    }
+
+    .status-left, .status-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .status-mono {
+      font-family: var(--font-mono);
+      color: var(--text-primary);
+    }
+
+    /* TOAST & DRAWER BACKDROP */
+    .drawer-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 22;
+    }
+    .drawer-backdrop.visible {
+      display: block;
+    }
+
+    .drawer-close-btn {
+      display: none;
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 42px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border-strong);
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      box-shadow: var(--shadow-flat);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE MOBILE & TABLET ADAPTATIONS (Full Scroll & Drawer Toggles)
+       ========================================================================== */
+    .mobile-drawer-bar {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      .brand-watermark, .menu-bar, .hide-mobile {
+        display: none !important;
+      }
+
+      .doc-title {
+        max-width: 130px;
+      }
+
+      .sidebar-left {
+        position: fixed;
+        left: 0;
+        top: var(--header-h);
+        bottom: var(--footer-h);
+        height: auto;
+        width: 290px;
+        max-width: 86vw;
+        transform: translateX(-100%);
+        transition: transform 0.22s ease;
+        box-shadow: var(--shadow-flat);
+      }
+
+      .sidebar-left.mobile-open {
+        transform: translateX(0);
+        width: 290px;
+      }
+
+      .sidebar-right {
+        position: fixed;
+        right: 0;
+        top: var(--header-h);
+        bottom: var(--footer-h);
+        height: auto;
+        width: 340px;
+        max-width: 92vw;
+        transform: translateX(100%);
+        transition: transform 0.22s ease;
+        box-shadow: var(--shadow-flat);
+      }
+
+      .sidebar-right.mobile-open {
+        transform: translateX(0);
+        width: 340px;
+      }
+
+      .drawer-close-btn {
+        display: inline-flex;
+      }
+
+      .edge-toggle {
+        display: none;
+      }
+
+      .minimap-box {
+        width: 80px;
+        height: 54px;
+        left: 10px;
+        bottom: 54px;
+      }
+
+      .canvas-bottom-controls {
+        right: 10px;
+        bottom: 54px;
+      }
+
+      .mobile-drawer-bar {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        z-index: 18;
+        background: var(--bg-panel);
+        padding: 4px 8px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--shadow-flat);
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- ======================================================================
+         1. TOP APPLICATION HEADER
+         ====================================================================== -->
+    <header class="top-header">
+      <div class="brand-section">
+        <div class="app-logo" title="Enscygen PrepImg Studio">
+          <span class="material-symbols-outlined">crop_free</span>
+        </div>
+        <div class="title-menu-stack">
+          <div class="doc-title-row">
+            <span class="doc-title" id="docFileName">No Image Loaded</span>
+            <span class="badge-pill" id="headerDimBadge">0 × 0 px</span>
+            <span class="badge-pill hide-mobile" id="headerDpiBadge">300 DPI</span>
+          </div>
+          <nav class="menu-bar">
+            <button class="menu-item" onclick="triggerUpload()">File</button>
+            <button class="menu-item" onclick="undoState()">Edit</button>
+            <button class="menu-item" onclick="fitToScreen()">View</button>
+            <button class="menu-item" onclick="switchInspectorTab('crop')">Crop</button>
+            <button class="menu-item" onclick="switchInspectorTab('resize')">Resize</button>
+            <button class="menu-item" onclick="switchInspectorTab('caption')">Name/Date Strip</button>
+            <button class="menu-item" onclick="switchInspectorTab('meta')">Metadata Diff</button>
+          </nav>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <button class="btn" onclick="triggerUpload()" title="Upload Photo from Device">
+          <span class="material-symbols-outlined">add_photo_alternate</span>
+          <span>Open</span>
+        </button>
+        <button class="btn btn-primary" onclick="downloadFinalImage()" title="Export Processed Image">
+          <span class="material-symbols-outlined">download</span>
+          <span>Export</span>
+        </button>
+        <button class="btn btn-icon" id="themeToggleBtn" onclick="toggleTheme()" title="Switch Dark / Light Theme">
+          <span class="material-symbols-outlined">light_mode</span>
+        </button>
+        <button class="btn btn-icon" onclick="switchInspectorTab('meta')" title="Compare Original vs Output Metadata">
+          <span class="material-symbols-outlined">compare_arrows</span>
+        </button>
+        <div class="brand-watermark">
+          <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">deployed_code</span>
+          <span>ENSCYGEN</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         2. SECONDARY QUICK-ACTION TOOLBAR
+         ====================================================================== -->
+    <div class="sub-toolbar">
+      <div class="tool-group">
+        <button class="tool-btn" onclick="toggleMobileDrawer('left')" title="Toggle Presets Sidebar">
+          <span class="material-symbols-outlined">dock_to_right</span>
+          <span class="hide-mobile">Presets</span>
+        </button>
+        <button class="tool-btn" onclick="toggleMobileDrawer('right')" title="Toggle Inspector Sidebar">
+          <span class="material-symbols-outlined">dock_to_left</span>
+          <span class="hide-mobile">Inspector</span>
+        </button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" onclick="undoState()" title="Undo (Ctrl+Z)">
+          <span class="material-symbols-outlined">undo</span>
+        </button>
+        <button class="tool-btn" onclick="redoState()" title="Redo (Ctrl+Y)">
+          <span class="material-symbols-outlined">redo</span>
+        </button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn active" id="toolCropBtn" onclick="setCanvasMode('crop')">
+          <span class="material-symbols-outlined">crop</span>
+          <span>Crop</span>
+        </button>
+        <button class="tool-btn" id="toolPreviewBtn" onclick="setCanvasMode('preview')">
+          <span class="material-symbols-outlined">visibility</span>
+          <span>Preview</span>
+        </button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" onclick="rotateImage(-90)" title="Rotate 90° Left">
+          <span class="material-symbols-outlined">rotate_left</span>
+        </button>
+        <button class="tool-btn" onclick="rotateImage(90)" title="Rotate 90° Right">
+          <span class="material-symbols-outlined">rotate_right</span>
+        </button>
+        <button class="tool-btn" onclick="flipImage('h')" title="Flip Horizontal">
+          <span class="material-symbols-outlined">flip</span>
+        </button>
+        <button class="tool-btn" onclick="flipImage('v')" title="Flip Vertical">
+          <span class="material-symbols-outlined" style="transform:rotate(90deg);">flip</span>
+        </button>
+      </div>
+
+      <div class="tool-group">
+        <button class="tool-btn" onclick="switchInspectorTab('caption')" title="Add Exam Name & Date Box">
+          <span class="material-symbols-outlined">badge</span>
+          <span>Name/Date</span>
+        </button>
+        <button class="tool-btn" onclick="switchInspectorTab('meta')" title="View Metadata Comparison">
+          <span class="material-symbols-outlined">data_object</span>
+          <span>Metadata</span>
+        </button>
+        <button class="tool-btn" onclick="autoTrimBorder()" title="Auto-Trim Solid Outer Margins">
+          <span class="material-symbols-outlined">content_cut</span>
+          <span class="hide-mobile">Auto-Trim</span>
+        </button>
+        <button class="tool-btn" onclick="resetAllEdits()" title="Reset All Changes">
+          <span class="material-symbols-outlined">restart_alt</span>
+          <span class="hide-mobile">Reset</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Backdrop for Mobile Drawers -->
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMobileDrawers()"></div>
+
+    <!-- ======================================================================
+         3. MAIN THREE-COLUMN WORKSPACE
+         ====================================================================== -->
+    <div class="workspace-main">
+      
+      <!-- LEFT PANEL: EXAM / DOCUMENT PRESETS & QUICK TELEMETRY -->
+      <aside class="sidebar-left" id="sidebarLeft">
+        <div class="panel-header">
+          <span>Exam & Form Presets</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="badge-pill">India & Global</span>
+            <button class="btn btn-icon drawer-close-btn" style="height:24px;width:24px;" onclick="closeMobileDrawers()" title="Close Drawer">
+              <span class="material-symbols-outlined" style="font-size:15px;">close</span>
+            </button>
+          </div>
+        </div>
+        <div class="search-box-wrap">
+          <div class="search-input-box">
+            <span class="material-symbols-outlined" style="font-size:16px;color:var(--text-muted);">search</span>
+            <input type="text" id="presetSearchInput" placeholder="Filter UPSC, SSC, Passport, KB..." oninput="renderPresets()" />
+          </div>
+        </div>
+        <div class="preset-scroll" id="presetListContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- BOTTOM LEFT QUICK TELEMETRY CARD -->
+        <div class="live-stats-panel">
+          <div class="stats-header">
+            <span style="display:flex;align-items:center;gap:5px;">
+              <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">analytics</span>
+              Quick Summary
+            </span>
+            <button class="menu-item" style="color:var(--accent-primary);" onclick="switchInspectorTab('meta')">Compare All</button>
+          </div>
+          <div class="stats-grid">
+            <span class="stat-label">Source Dim</span>
+            <span class="stat-val" id="statSrcDim">—</span>
+
+            <span class="stat-label">Final Pixels</span>
+            <span class="stat-val" id="statOutPx">—</span>
+
+            <span class="stat-label">Physical Size</span>
+            <span class="stat-val" id="statOutPhys">—</span>
+
+            <span class="stat-label">Print DPI</span>
+            <span class="stat-val" id="statOutDpi">300 DPI</span>
+
+            <span class="stat-label">Est. File Size</span>
+            <span class="stat-val good" id="statOutSize">—</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER STAGE: INTERACTIVE CROP & LIVE FINAL PREVIEW CANVAS -->
+      <main class="canvas-stage" id="canvasStage">
+        <button class="edge-toggle left" onclick="toggleLeftPanel()" title="Toggle Presets Panel">
+          <span class="material-symbols-outlined" style="font-size:14px;">chevron_left</span>
+        </button>
+
+        <!-- Floating Canvas Mode Switcher -->
+        <div class="canvas-top-pill">
+          <button class="pill-tab active" id="pillModeCrop" onclick="setCanvasMode('crop')">Crop Box</button>
+          <button class="pill-tab" id="pillModePreview" onclick="setCanvasMode('preview')">Final Preview</button>
+          <button class="pill-tab" id="pillModeSplit" onclick="setCanvasMode('split')">Split Compare</button>
+        </div>
+
+        <canvas id="mainCanvas"></canvas>
+
+        <!-- Empty State Uploader -->
+        <div class="empty-dropzone" id="emptyDropzone">
+          <div class="drop-icon-circle">
+            <span class="material-symbols-outlined" style="font-size:26px;">cloud_upload</span>
+          </div>
+          <div>
+            <h3 style="font-size:15px;font-weight:600;margin-bottom:4px;">Drop your photo, signature, or document here</h3>
+            <p style="color:var(--text-secondary);font-size:12px;max-width:410px;">
+              Precision cropping & resizing in px, cm, mm, inches & DPI. Add exam Name & Date strips, compare full image metadata, and export in JPG, PNG, or WEBP.
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+            <button class="btn btn-primary" onclick="triggerUpload()">
+              <span class="material-symbols-outlined">folder_open</span>
+              Select Image File
+            </button>
+            <button class="btn" onclick="loadSamplePortrait()">
+              <span class="material-symbols-outlined">person</span>
+              Load Sample Portrait
+            </button>
+          </div>
+        </div>
+
+        <!-- Minimap -->
+        <div class="minimap-box" id="minimapBox">
+          <canvas id="minimapCanvas"></canvas>
+        </div>
+
+        <!-- Floating Zoom & Overlay Controls -->
+        <div class="canvas-bottom-controls">
+          <div class="floating-group">
+            <button class="float-btn" onclick="fitToScreen()" title="Fit to Screen">
+              <span class="material-symbols-outlined">fit_screen</span>
+            </button>
+            <button class="float-btn active" id="toggleRuleThirdsBtn" onclick="toggleRuleOfThirds()" title="Toggle Rule of Thirds Grid">
+              <span class="material-symbols-outlined">grid_on</span>
+            </button>
+            <button class="float-btn" id="toggleFaceGuideBtn" onclick="toggleFaceGuide()" title="Toggle Passport Face/Head Oval Guide">
+              <span class="material-symbols-outlined">face</span>
+            </button>
+          </div>
+          <div class="floating-group">
+            <button class="float-btn" onclick="adjustZoom(-0.15)" title="Zoom Out">
+              <span class="material-symbols-outlined">remove</span>
+            </button>
+            <span id="zoomBadge" style="font-family:var(--font-mono);font-size:11px;padding:0 5px;color:var(--text-primary);">100%</span>
+            <button class="float-btn" onclick="adjustZoom(0.15)" title="Zoom In">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Drawer Triggers -->
+        <div class="mobile-drawer-bar">
+          <button class="btn btn-accent-soft" style="height:28px;font-size:11px;padding:0 10px;" onclick="toggleMobileDrawer('left')">
+            <span class="material-symbols-outlined" style="font-size:15px;">list_alt</span>
+            Presets
+          </button>
+          <button class="btn" style="height:28px;font-size:11px;padding:0 10px;" onclick="switchInspectorTab('meta')">
+            <span class="material-symbols-outlined" style="font-size:15px;">compare_arrows</span>
+            Metadata
+          </button>
+          <button class="btn btn-primary" style="height:28px;font-size:11px;padding:0 12px;" onclick="toggleMobileDrawer('right')">
+            <span class="material-symbols-outlined" style="font-size:15px;">tune</span>
+            Edit Tools
+          </button>
+        </div>
+
+        <button class="edge-toggle right" onclick="toggleRightPanel()" title="Toggle Inspector Panel">
+          <span class="material-symbols-outlined" style="font-size:14px;">chevron_right</span>
+        </button>
+      </main>
+
+      <!-- RIGHT PANEL: COMPLETE MANIPULATION INSPECTOR & METADATA COMPARISON -->
+      <aside class="sidebar-right" id="sidebarRight">
+        <div class="panel-header drawer-close-btn" style="justify-content:space-between;">
+          <span>Inspector & Tools</span>
+          <button class="btn btn-icon" style="height:24px;width:24px;" onclick="closeMobileDrawers()" title="Close Panel">
+            <span class="material-symbols-outlined" style="font-size:15px;">close</span>
+          </button>
+        </div>
+
+        <div class="inspector-tabs">
+          <button class="insp-tab active" data-tab="crop" onclick="switchInspectorTab('crop')">
+            <span class="material-symbols-outlined">crop</span>
+            <span>Crop</span>
+          </button>
+          <button class="insp-tab" data-tab="resize" onclick="switchInspectorTab('resize')">
+            <span class="material-symbols-outlined">aspect_ratio</span>
+            <span>Resize</span>
+          </button>
+          <button class="insp-tab" data-tab="caption" onclick="switchInspectorTab('caption')">
+            <span class="material-symbols-outlined">badge</span>
+            <span>Name/Date</span>
+          </button>
+          <button class="insp-tab" data-tab="adjust" onclick="switchInspectorTab('adjust')">
+            <span class="material-symbols-outlined">tune</span>
+            <span>Adjust</span>
+          </button>
+          <button class="insp-tab" data-tab="meta" onclick="switchInspectorTab('meta')">
+            <span class="material-symbols-outlined">compare_arrows</span>
+            <span>Metadata</span>
+          </button>
+          <button class="insp-tab" data-tab="export" onclick="switchInspectorTab('export')">
+            <span class="material-symbols-outlined">save</span>
+            <span>Export</span>
+          </button>
+        </div>
+
+        <div class="inspector-body">
+          <!-- ================================================================
+               TAB 1: CROP (Aspect Ratio, Interactive Box, Exact px/cm/mm/in)
+               ================================================================ -->
+          <div class="tab-pane active" id="pane-crop">
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">crop_free</span>
+                  Aspect Ratio Presets
+                </span>
+                <label class="toggle-row" style="font-size:11px;color:var(--text-secondary);">
+                  <input type="checkbox" id="cropLockRatio" onchange="onCropLockToggle()" />
+                  Lock
+                </label>
+              </div>
+              <div class="chip-grid" id="aspectRatioChips">
+                <button class="chip-btn active" data-ratio="free" onclick="setAspectRatio('free', this)">Free</button>
+                <button class="chip-btn" data-ratio="1:1" onclick="setAspectRatio('1:1', this)">1:1 Sq</button>
+                <button class="chip-btn" data-ratio="3.5:4.5" onclick="setAspectRatio('3.5:4.5', this)">3.5×4.5</button>
+                <button class="chip-btn" data-ratio="2:2" onclick="setAspectRatio('2:2', this)">2×2 in</button>
+                <button class="chip-btn" data-ratio="4:3" onclick="setAspectRatio('4:3', this)">4:3</button>
+                <button class="chip-btn" data-ratio="16:9" onclick="setAspectRatio('16:9', this)">16:9</button>
+                <button class="chip-btn" data-ratio="3:1" onclick="setAspectRatio('3:1', this)">3:1 Sign</button>
+                <button class="chip-btn" data-ratio="1.414:1" onclick="setAspectRatio('1.414:1', this)">A4 Doc</button>
+                <button class="chip-btn" data-ratio="custom" onclick="setAspectRatio('custom', this)">Custom</button>
+              </div>
+              <div class="form-grid-2" id="customRatioInputs" style="display:none;">
+                <div class="field-group">
+                  <span class="field-label">Ratio W</span>
+                  <input type="number" class="input-ctrl mono" id="customRatioW" value="3.5" step="0.1" min="0.1" oninput="applyCustomRatio()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Ratio H</span>
+                  <input type="number" class="input-ctrl mono" id="customRatioH" value="4.5" step="0.1" min="0.1" oninput="applyCustomRatio()" />
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">straighten</span>
+                  Exact Crop Selection Dimensions
+                </span>
+                <select class="select-ctrl" id="cropUnitSelect" style="width:72px;padding:2px 4px;font-size:11px;" onchange="syncCropInputsFromState()">
+                  <option value="px">px</option>
+                  <option value="cm">cm</option>
+                  <option value="mm">mm</option>
+                  <option value="in">in</option>
+                </select>
+              </div>
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Width (<span class="cropUnitLbl">px</span>)</span>
+                  <input type="number" class="input-ctrl mono" id="cropWInput" step="any" onchange="updateCropFromInputs()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Height (<span class="cropUnitLbl">px</span>)</span>
+                  <input type="number" class="input-ctrl mono" id="cropHInput" step="any" onchange="updateCropFromInputs()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Offset X (<span class="cropUnitLbl">px</span>)</span>
+                  <input type="number" class="input-ctrl mono" id="cropXInput" step="any" onchange="updateCropFromInputs()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Offset Y (<span class="cropUnitLbl">px</span>)</span>
+                  <input type="number" class="input-ctrl mono" id="cropYInput" step="any" onchange="updateCropFromInputs()" />
+                </div>
+              </div>
+              <div class="form-grid-2">
+                <button class="btn" onclick="centerCropBox()">
+                  <span class="material-symbols-outlined" style="font-size:15px;">filter_center_focus</span>
+                  Center Box
+                </button>
+                <button class="btn" onclick="selectFullImageCrop()">
+                  <span class="material-symbols-outlined" style="font-size:15px;">select_all</span>
+                  Full Image
+                </button>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">rotate_90_degrees_cw</span>
+                  Straighten & Orientation
+                </span>
+                <span class="status-mono" id="straightenValLbl">0°</span>
+              </div>
+              <input type="range" id="straightenSlider" min="-45" max="45" step="0.5" value="0" oninput="onStraightenChange(this.value)" />
+              <div class="form-grid-3">
+                <button class="btn" onclick="rotateImage(-90)">-90°</button>
+                <button class="btn" onclick="rotateImage(90)">+90°</button>
+                <button class="btn" onclick="resetTransform()">0° Reset</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               TAB 2: RESIZE (px, cm, mm, in, %, DPI, Fit Mode, Borders)
+               ================================================================ -->
+          <div class="tab-pane" id="pane-resize">
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">photo_size_select_large</span>
+                  Output Dimensions & Units
+                </span>
+                <label class="toggle-row" style="font-size:11px;color:var(--text-secondary);">
+                  <input type="checkbox" id="resizeLockAspect" checked onchange="onResizeLockToggle()" />
+                  Lock Ratio
+                </label>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Measurement Unit</span>
+                  <select class="select-ctrl" id="resizeUnitSelect" onchange="onResizeUnitChange()">
+                    <option value="px">Pixels (px)</option>
+                    <option value="cm">Centimeters (cm)</option>
+                    <option value="mm">Millimeters (mm)</option>
+                    <option value="in">Inches (in)</option>
+                    <option value="pct">Percentage (%)</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Print DPI / PPI</span>
+                  <div style="display:flex;gap:4px;">
+                    <input type="number" class="input-ctrl mono" id="dpiInput" value="300" min="1" max="2400" onchange="onDpiChange()" />
+                    <select class="select-ctrl" style="width:64px;padding:4px;" onchange="setQuickDpi(this.value)">
+                      <option value="72">72</option>
+                      <option value="96">96</option>
+                      <option value="150">150</option>
+                      <option value="200">200</option>
+                      <option value="300" selected>300</option>
+                      <option value="600">600</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Target Width (<span class="resUnitLbl">px</span>)</span>
+                  <input type="number" class="input-ctrl mono" id="resizeWInput" step="any" min="1" oninput="onResizeDimensionInput('w')" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Target Height (<span class="resUnitLbl">px</span>)</span>
+                  <input type="number" class="input-ctrl mono" id="resizeHInput" step="any" min="1" oninput="onResizeDimensionInput('h')" />
+                </div>
+              </div>
+
+              <div class="chip-grid" style="grid-template-columns:repeat(4, 1fr);">
+                <button class="chip-btn" onclick="scaleByPercent(25)">25%</button>
+                <button class="chip-btn" onclick="scaleByPercent(50)">50%</button>
+                <button class="chip-btn" onclick="scaleByPercent(75)">75%</button>
+                <button class="chip-btn" onclick="scaleByPercent(100)">100%</button>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">fit_screen</span>
+                  Resampling & Outer Frame Border
+                </span>
+              </div>
+              <div class="field-group">
+                <span class="field-label">Scaling Fit Mode</span>
+                <select class="select-ctrl" id="resizeFitMode" onchange="scheduleRender()">
+                  <option value="stretch">Exact Stretch / Match Aspect</option>
+                  <option value="contain">Contain (Pad with Background Color)</option>
+                  <option value="cover">Cover (Center Fill)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <span class="field-label">Pad / Canvas Background Color</span>
+                <input type="color" id="canvasBgColor" value="#ffffff" onchange="scheduleRender()" />
+              </div>
+
+              <label class="toggle-row" style="padding-top:4px;border-top:1px solid var(--border-subtle);">
+                <span>Enable Outer Frame Border</span>
+                <input type="checkbox" id="outerBorderEnabled" onchange="toggleOuterBorderControls()" />
+              </label>
+              <div class="form-grid-2" id="outerBorderFields" style="opacity:0.45;">
+                <div class="field-group">
+                  <span class="field-label">Border Width (px)</span>
+                  <input type="number" class="input-ctrl mono" id="outerBorderPx" value="2" min="1" max="200" disabled oninput="scheduleRender()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Border Color</span>
+                  <input type="color" id="outerBorderColor" value="#000000" disabled onchange="scheduleRender()" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               TAB 3: NAME & DATE STRIP (Exam Slate / Footer Caption Box)
+               ================================================================ -->
+          <div class="tab-pane" id="pane-caption">
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">badge</span>
+                  Exam Name & Date Strip Box
+                </span>
+                <label class="toggle-row">
+                  <input type="checkbox" id="captionEnabled" onchange="scheduleRender()" />
+                  <span style="font-size:11.5px;color:var(--accent-primary);font-weight:600;">Enable</span>
+                </label>
+              </div>
+
+              <div class="field-group">
+                <span class="field-label">Placement Mode</span>
+                <select class="select-ctrl" id="captionPlacement" onchange="scheduleRender()">
+                  <option value="outside">Outside Bottom (Expands Image Height)</option>
+                  <option value="inside">Inside Bottom Overlay (Fixed Image Height)</option>
+                </select>
+              </div>
+
+              <div class="field-group">
+                <span class="field-label">
+                  <span>Line 1 (Candidate Name)</span>
+                  <button class="menu-item" style="color:var(--accent-primary);" onclick="insertTodayDate()">+ Today's Date</button>
+                </span>
+                <input type="text" class="input-ctrl" id="captionLine1" placeholder="e.g. RAHUL SHARMA" value="CANDIDATE FULL NAME" oninput="scheduleRender()" />
+              </div>
+
+              <div class="field-group">
+                <span class="field-label">Line 2 (DOP / Date / Roll No.)</span>
+                <input type="text" class="input-ctrl" id="captionLine2" placeholder="e.g. DOP: 28-11-2026" oninput="scheduleRender()" />
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">text_fields</span>
+                  Typography, Sizing & Box Borders
+                </span>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Font Family</span>
+                  <select class="select-ctrl" id="captionFontFamily" onchange="scheduleRender()">
+                    <option value="Arial, Helvetica, sans-serif">Arial / Sans</option>
+                    <option value="'Inter', sans-serif">Inter</option>
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Courier Prime', monospace">Courier Mono</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Font Weight</span>
+                  <select class="select-ctrl" id="captionFontWeight" onchange="scheduleRender()">
+                    <option value="400">Regular (400)</option>
+                    <option value="600">Semi-Bold (600)</option>
+                    <option value="700" selected>Bold (700)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Font Size (px)</span>
+                  <input type="number" class="input-ctrl mono" id="captionFontSize" value="22" min="8" max="200" oninput="scheduleRender()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Line Spacing (×)</span>
+                  <input type="number" class="input-ctrl mono" id="captionLineHeight" value="1.25" step="0.05" min="0.8" max="2.5" oninput="scheduleRender()" />
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Vertical Padding (px)</span>
+                  <input type="number" class="input-ctrl mono" id="captionPadY" value="12" min="0" max="150" oninput="scheduleRender()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Text Alignment</span>
+                  <select class="select-ctrl" id="captionAlign" onchange="scheduleRender()">
+                    <option value="center" selected>Center</option>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-grid-3">
+                <div class="field-group">
+                  <span class="field-label">Text Color</span>
+                  <input type="color" id="captionTextColor" value="#000000" onchange="scheduleRender()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Box BG</span>
+                  <input type="color" id="captionBgColor" value="#ffffff" onchange="scheduleRender()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">BG Opacity %</span>
+                  <input type="number" class="input-ctrl mono" id="captionBgOpacity" value="100" min="0" max="100" oninput="scheduleRender()" />
+                </div>
+              </div>
+
+              <!-- Independent Divider & Box Outline Toggles -->
+              <div style="border-top:1px solid var(--border-subtle);padding-top:8px;display:flex;flex-direction:column;gap:8px;">
+                <label class="toggle-row">
+                  <span>Show Top Divider Line</span>
+                  <input type="checkbox" id="captionDividerEnabled" checked onchange="toggleCaptionLineControls()" />
+                </label>
+                <div class="form-grid-2" id="captionDividerFields">
+                  <div class="field-group">
+                    <span class="field-label">Divider Thickness (px)</span>
+                    <input type="number" class="input-ctrl mono" id="captionBorderWidth" value="2" min="1" max="20" oninput="scheduleRender()" />
+                  </div>
+                  <div class="field-group">
+                    <span class="field-label">Divider Color</span>
+                    <input type="color" id="captionBorderColor" value="#000000" onchange="scheduleRender()" />
+                  </div>
+                </div>
+
+                <label class="toggle-row">
+                  <span>Show Box Outer Border</span>
+                  <input type="checkbox" id="captionBoxBorderEnabled" onchange="toggleCaptionLineControls()" />
+                </label>
+                <div class="form-grid-2" id="captionBoxBorderFields" style="opacity:0.45;">
+                  <div class="field-group">
+                    <span class="field-label">Box Border (px)</span>
+                    <input type="number" class="input-ctrl mono" id="captionBoxBorderWidth" value="2" min="1" max="20" disabled oninput="scheduleRender()" />
+                  </div>
+                  <div class="field-group">
+                    <span class="field-label">Box Border Color</span>
+                    <input type="color" id="captionBoxBorderColor" value="#000000" disabled onchange="scheduleRender()" />
+                  </div>
+                </div>
+              </div>
+
+              <label class="toggle-row">
+                <span>Auto-Uppercase Text</span>
+                <input type="checkbox" id="captionUppercase" checked onchange="scheduleRender()" />
+              </label>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               TAB 4: IMAGE ADJUSTMENTS & DOCUMENT ENHANCEMENTS
+               ================================================================ -->
+          <div class="tab-pane" id="pane-adjust">
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">brightness_6</span>
+                  Tone, Clarity & Signature Prep
+                </span>
+                <button class="menu-item" style="color:var(--accent-primary);" onclick="resetAdjustments()">Reset</button>
+              </div>
+
+              <div class="field-group">
+                <span class="field-label"><span>Brightness</span><span class="status-mono" id="valBrightness">100%</span></span>
+                <input type="range" id="adjBrightness" min="30" max="200" value="100" oninput="onAdjustChange()" />
+              </div>
+
+              <div class="field-group">
+                <span class="field-label"><span>Contrast</span><span class="status-mono" id="valContrast">100%</span></span>
+                <input type="range" id="adjContrast" min="30" max="220" value="100" oninput="onAdjustChange()" />
+              </div>
+
+              <div class="field-group">
+                <span class="field-label"><span>Saturation</span><span class="status-mono" id="valSaturation">100%</span></span>
+                <input type="range" id="adjSaturation" min="0" max="200" value="100" oninput="onAdjustChange()" />
+              </div>
+
+              <div class="field-group">
+                <span class="field-label"><span>Sharpness</span><span class="status-mono" id="valSharpness">0%</span></span>
+                <input type="range" id="adjSharpness" min="0" max="100" value="0" oninput="onAdjustChange()" />
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">ink_pen</span>
+                  Quick Document & Signature Filters
+                </span>
+              </div>
+              <div class="form-grid-2">
+                <button class="btn" onclick="applyPresetFilter('normal')">Original Color</button>
+                <button class="btn" onclick="applyPresetFilter('grayscale')">Grayscale</button>
+                <button class="btn" onclick="applyPresetFilter('signature')">Crisp Signature</button>
+                <button class="btn" onclick="applyPresetFilter('docscan')">White Paper Scan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               TAB 5: METADATA COMPARISON TABLE (Original vs Final Highlighted)
+               ================================================================ -->
+          <div class="tab-pane" id="pane-meta">
+            <div class="section-card" style="padding:8px;">
+              <div class="section-title" style="padding:2px 4px;">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">compare_arrows</span>
+                  Original vs. Output Metadata
+                </span>
+                <label class="toggle-row" style="font-size:11px;color:var(--text-secondary);">
+                  <input type="checkbox" id="metaOnlyChanged" onchange="renderMetadataComparisonTable()" />
+                  Changed Only
+                </label>
+              </div>
+              <p style="font-size:11px;color:var(--text-secondary);padding:0 4px;">
+                Highlighted rows indicate properties modified from the source file.
+              </p>
+              <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);">
+                <table class="meta-table">
+                  <thead>
+                    <tr>
+                      <th>Property</th>
+                      <th>Original</th>
+                      <th>Final Output</th>
+                    </tr>
+                  </thead>
+                  <tbody id="metaComparisonBody">
+                    <tr>
+                      <td colspan="3" style="text-align:center;color:var(--text-muted);padding:16px;">Upload an image to inspect full metadata</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               TAB 6: EXPORT & TARGET FILE SIZE (KB) ENGINE
+               ================================================================ -->
+          <div class="tab-pane" id="pane-export">
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">save_as</span>
+                  Format, Quality & Physical DPI
+                </span>
+              </div>
+
+              <div class="field-group">
+                <span class="field-label">Output File Name</span>
+                <input type="text" class="input-ctrl" id="exportFileName" value="processed_photo" oninput="scheduleSizeEstimation()" />
+              </div>
+
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">File Format</span>
+                  <select class="select-ctrl" id="exportFormat" onchange="onExportSettingsChange()">
+                    <option value="image/jpeg" selected>JPEG (.jpg)</option>
+                    <option value="image/png">PNG (.png)</option>
+                    <option value="image/webp">WEBP (.webp)</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Embed DPI Header</span>
+                  <input type="number" class="input-ctrl mono" id="exportDpiMirror" value="300" min="1" max="2400" onchange="syncDpiFromExport(this.value)" />
+                </div>
+              </div>
+
+              <div class="field-group" id="qualitySliderGroup">
+                <span class="field-label">
+                  <span>Compression Quality</span>
+                  <span class="status-mono" id="exportQualityLbl">92%</span>
+                </span>
+                <input type="range" id="exportQuality" min="5" max="100" value="92" oninput="onExportQualitySlider(this.value)" />
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">
+                <span class="section-title-left">
+                  <span class="material-symbols-outlined" style="font-size:16px;color:var(--accent-primary);">compress</span>
+                  Target File Size Optimizer (KB)
+                </span>
+                <label class="toggle-row" style="font-size:11px;">
+                  <input type="checkbox" id="targetKbEnabled" onchange="onExportSettingsChange()" />
+                  Auto-Fit KB
+                </label>
+              </div>
+              <p style="font-size:11.5px;color:var(--text-secondary);">
+                Automatically adjusts JPEG/WEBP compression to fit portal upload limits (e.g., 20 KB – 50 KB for UPSC/SSC).
+              </p>
+              <div class="form-grid-2">
+                <div class="field-group">
+                  <span class="field-label">Min Size (KB)</span>
+                  <input type="number" class="input-ctrl mono" id="targetMinKb" value="20" min="2" max="10000" onchange="onExportSettingsChange()" />
+                </div>
+                <div class="field-group">
+                  <span class="field-label">Max Size (KB)</span>
+                  <input type="number" class="input-ctrl mono" id="targetMaxKb" value="50" min="5" max="10000" onchange="onExportSettingsChange()" />
+                </div>
+              </div>
+              <div class="chip-grid" style="grid-template-columns:repeat(4,1fr);">
+                <button class="chip-btn" onclick="setTargetKbRange(10, 20)">10-20KB</button>
+                <button class="chip-btn" onclick="setTargetKbRange(20, 50)">20-50KB</button>
+                <button class="chip-btn" onclick="setTargetKbRange(50, 100)">50-100KB</button>
+                <button class="chip-btn" onclick="setTargetKbRange(100, 300)">&lt;300KB</button>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;height:38px;font-size:13px;" onclick="downloadFinalImage()">
+              <span class="material-symbols-outlined">download</span>
+              Download Final Image
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ======================================================================
+         4. BOTTOM STATUS BAR (Matches MarkImg Telemetry Footer)
+         ====================================================================== -->
+    <footer class="status-footer">
+      <div class="status-left">
+        <span style="font-weight:600;color:var(--text-primary);">Enscygen PrepImg v1.1</span>
+        <span class="status-mono" id="footerZoom">100%</span>
+        <span class="hide-mobile" id="footerFile">ready</span>
+        <span class="status-mono" id="footerDim">0 × 0 px</span>
+        <span class="status-mono hide-mobile" id="footerPhys">0.00 × 0.00 cm @ 300 DPI</span>
+      </div>
+      <div class="status-right">
+        <span class="hide-mobile" id="footerHint">Drag crop handles to adjust • Compare metadata in right inspector</span>
+        <span class="status-mono" id="footerCursor">X: 0 Y: 0</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ========================================================================
+       APPLICATION LOGIC (Plain Modular JavaScript)
+       ======================================================================== -->
+  <script>
+    /* ========================================================================
+       1. EXAM & DOCUMENT PRESET DEFINITIONS
+       ======================================================================== */
+    const EXAM_PRESETS = [
+      { id: 'upsc-photo', cat: 'Government Exams (India)', name: 'UPSC / Civil Services Photo', w: 350, h: 450, unit: 'px', dpi: 300, minKb: 20, maxKb: 300, fmt: 'image/jpeg', caption: true },
+      { id: 'upsc-sign',  cat: 'Government Exams (India)', name: 'UPSC / SSC Signature', w: 350, h: 150, unit: 'px', dpi: 300, minKb: 10, maxKb: 20, fmt: 'image/jpeg', caption: false },
+      { id: 'ssc-photo',  cat: 'Government Exams (India)', name: 'SSC CGL / CHSL Photo (3.5×4.5 cm)', w: 3.5, h: 4.5, unit: 'cm', dpi: 200, minKb: 20, maxKb: 50, fmt: 'image/jpeg', caption: true },
+      { id: 'ibps-photo', cat: 'Government Exams (India)', name: 'IBPS / SBI Bank Photo (4.5×3.5 cm)', w: 200, h: 230, unit: 'px', dpi: 200, minKb: 20, maxKb: 50, fmt: 'image/jpeg', caption: false },
+      { id: 'ibps-thumb', cat: 'Government Exams (India)', name: 'IBPS Left Thumb Impression', w: 240, h: 240, unit: 'px', dpi: 200, minKb: 20, maxKb: 50, fmt: 'image/jpeg', caption: false },
+      { id: 'neet-post',  cat: 'Government Exams (India)', name: 'NEET / NTA Postcard (4×6 in)', w: 4, h: 6, unit: 'in', dpi: 300, minKb: 50, maxKb: 300, fmt: 'image/jpeg', caption: true },
+      { id: 'gate-photo', cat: 'Government Exams (India)', name: 'GATE / JEE Main Photo (3.5×4.5 cm)', w: 480, h: 640, unit: 'px', dpi: 300, minKb: 20, maxKb: 200, fmt: 'image/jpeg', caption: false },
+      { id: 'pan-photo',  cat: 'ID & Passport Standards', name: 'PAN Card Photo (NSDL / UTI)', w: 213, h: 213, unit: 'px', dpi: 300, minKb: 10, maxKb: 50, fmt: 'image/jpeg', caption: false },
+      { id: 'in-pass',    cat: 'ID & Passport Standards', name: 'Indian Passport / Visa (2×2 in)', w: 2, h: 2, unit: 'in', dpi: 300, minKb: 20, maxKb: 300, fmt: 'image/jpeg', caption: false },
+      { id: 'eu-pass',    cat: 'ID & Passport Standards', name: 'Schengen / UK Passport (35×45 mm)', w: 35, h: 45, unit: 'mm', dpi: 300, minKb: 20, maxKb: 500, fmt: 'image/jpeg', caption: false },
+      { id: 'a4-doc',     cat: 'Documents & Web', name: 'A4 Scanned Document (210×297 mm)', w: 210, h: 297, unit: 'mm', dpi: 150, minKb: 50, maxKb: 1000, fmt: 'image/jpeg', caption: false },
+      { id: 'hd-web',     cat: 'Documents & Web', name: 'Full HD 1080p Web Banner', w: 1920, h: 1080, unit: 'px', dpi: 96, minKb: 50, maxKb: 800, fmt: 'image/webp', caption: false }
+    ];
+
+    /* ========================================================================
+       2. CENTRAL APPLICATION STATE
+       ======================================================================== */
+    const state = {
+      img: null,
+      fileName: 'sample_portrait.jpg',
+      fileType: 'image/jpeg',
+      fileSizeBytes: 0,
+      lastModified: 0,
+      sourceDpi: 96,
+      sourceExif: {},
+      
+      // Workspace View
+      canvasMode: 'crop', // 'crop' | 'preview' | 'split'
+      zoom: 1,
+      panX: 0,
+      panY: 0,
+      showRuleOfThirds: true,
+      showFaceGuide: false,
+      splitRatio: 0.5,
+
+      // Transform & Crop
+      rotation: 0,
+      straighten: 0,
+      flipH: false,
+      flipV: false,
+      crop: { x: 0, y: 0, w: 0, h: 0 },
+      aspectRatio: null,
+
+      // Output Resize & DPI
+      targetW: 0,
+      targetH: 0,
+      dpi: 300,
+      resizeUnit: 'px',
+
+      // Adjustments
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      sharpness: 0,
+
+      // Export & File Size Estimation
+      exportBlob: null,
+      actualQuality: 0.92,
+      latestOutW: 0,
+      latestOutH: 0,
+
+      // History Stacks
+      undoStack: [],
+      redoStack: []
+    };
+
+    const mainCanvas = document.getElementById('mainCanvas');
+    const ctx = mainCanvas.getContext('2d');
+    const miniCanvas = document.getElementById('minimapCanvas');
+    const miniCtx = miniCanvas.getContext('2d');
+
+    let dragState = null;
+    let renderScheduled = false;
+    let estimateTimer = null;
+
+    /* ========================================================================
+       3. INITIALIZATION & EVENT WIRING
+       ======================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPresets();
+      resizeCanvasViewport();
+      setupCanvasInteractions();
+      setupDragAndDrop();
+
+      window.addEventListener('resize', () => {
+        resizeCanvasViewport();
+        scheduleRender();
+      });
+
+      document.getElementById('fileInput').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          loadImageFile(e.target.files[0]);
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+          e.preventDefault();
+          undoState();
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+          e.preventDefault();
+          redoState();
+        } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && state.img) {
+          e.preventDefault();
+          const step = e.shiftKey ? 10 : 1;
+          const dims = getTransformedSourceDims();
+          if (e.key === 'ArrowLeft')  state.crop.x = Math.max(0, state.crop.x - step);
+          if (e.key === 'ArrowRight') state.crop.x = Math.min(dims.w - state.crop.w, state.crop.x + step);
+          if (e.key === 'ArrowUp')    state.crop.y = Math.max(0, state.crop.y - step);
+          if (e.key === 'ArrowDown')  state.crop.y = Math.min(dims.h - state.crop.h, state.crop.y + step);
+          syncCropInputsFromState();
+          scheduleRender();
+        }
+      });
+    });
+
+    function triggerUpload() {
+      document.getElementById('fileInput').click();
+    }
+
+    function setupDragAndDrop() {
+      const stage = document.getElementById('canvasStage');
+      const dz = document.getElementById('emptyDropzone');
+
+      ['dragenter', 'dragover'].forEach(evt => {
+        stage.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dz.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(evt => {
+        stage.addEventListener(evt, (e) => {
+          e.preventDefault();
+          dz.classList.remove('dragover');
+        });
+      });
+
+      stage.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files && files[0] && files[0].type.startsWith('image/')) {
+          loadImageFile(files[0]);
+        }
+      });
+    }
+
+    /* ========================================================================
+       4. IMAGE LOADING & COMPREHENSIVE EXIF / METADATA PARSER
+       ======================================================================== */
+    function loadImageFile(file) {
+      state.fileName = file.name;
+      state.fileType = file.type || 'image/jpeg';
+      state.fileSizeBytes = file.size;
+      state.lastModified = file.lastModified;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const arrayBuffer = ev.target.result;
+        const parsed = parseComprehensiveMetadata(arrayBuffer, file);
+        state.sourceDpi = parsed.dpi || 96;
+        state.sourceExif = parsed.exif;
+
+        const blobUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          state.img = img;
+          document.getElementById('emptyDropzone').classList.add('hidden');
+          resetAllEdits(true);
+          showToast(`Loaded ${file.name} (${img.naturalWidth}×${img.naturalHeight} px)`);
+        };
+        img.src = blobUrl;
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function loadSamplePortrait() {
+      const c = document.createElement('canvas');
+      c.width = 900;
+      c.height = 1150;
+      const g = c.getContext('2d');
+
+      const grad = g.createLinearGradient(0, 0, 0, c.height);
+      grad.addColorStop(0, '#e2e8f0');
+      grad.addColorStop(1, '#cbd5e1');
+      g.fillStyle = grad;
+      g.fillRect(0, 0, c.width, c.height);
+
+      g.fillStyle = '#1e293b';
+      g.beginPath();
+      g.ellipse(450, 1180, 340, 320, 0, Math.PI, 0);
+      g.fill();
+
+      g.fillStyle = '#f8fafc';
+      g.beginPath();
+      g.moveTo(370, 860);
+      g.lineTo(450, 1020);
+      g.lineTo(530, 860);
+      g.closePath();
+      g.fill();
+
+      g.fillStyle = '#e0ac8b';
+      g.fillRect(390, 720, 120, 160);
+
+      g.fillStyle = '#eab696';
+      g.beginPath();
+      g.ellipse(450, 520, 165, 220, 0, 0, Math.PI * 2);
+      g.fill();
+
+      g.fillStyle = '#1c1917';
+      g.beginPath();
+      g.ellipse(450, 385, 175, 130, 0, Math.PI, 0);
+      g.fill();
+
+      g.fillStyle = '#1e293b';
+      g.beginPath();
+      g.arc(390, 505, 14, 0, Math.PI * 2);
+      g.arc(510, 505, 14, 0, Math.PI * 2);
+      g.fill();
+
+      g.strokeStyle = '#9a5b4a';
+      g.lineWidth = 7;
+      g.lineCap = 'round';
+      g.beginPath();
+      g.arc(450, 595, 48, 0.15 * Math.PI, 0.85 * Math.PI);
+      g.stroke();
+
+      c.toBlob((blob) => {
+        const sampleFile = new File([blob], 'sample_candidate_photo.jpg', { type: 'image/jpeg' });
+        loadImageFile(sampleFile);
+      }, 'image/jpeg', 0.95);
+    }
+
+    function parseComprehensiveMetadata(buffer, file) {
+      const view = new DataView(buffer);
+      let detectedDpi = 96;
+      const exif = {
+        cameraMake: 'Not embedded',
+        cameraModel: 'Not embedded',
+        software: 'Not embedded',
+        dateTimeOriginal: 'Not embedded',
+        colorSpace: 'sRGB (8-bit/channel)',
+        bitDepth: '24-bit RGB',
+        exifPresent: 'No EXIF tags'
+      };
+
+      // Parse JPEG JFIF & EXIF APP1 headers
+      if (view.byteLength > 20 && view.getUint16(0) === 0xFFD8) {
+        let offset = 2;
+        while (offset + 4 < view.byteLength) {
+          const marker = view.getUint16(offset);
+          const len = view.getUint16(offset + 2);
+          if (marker === 0xFFE0 && len >= 14) {
+            const units = view.getUint8(offset + 11);
+            const xDen = view.getUint16(offset + 12);
+            if (units === 1 && xDen > 0) detectedDpi = xDen;
+            else if (units === 2 && xDen > 0) detectedDpi = Math.round(xDen * 2.54);
+          } else if (marker === 0xFFE1 && len > 16) {
+            // Check 'Exif\0\0'
+            if (view.getUint32(offset + 4) === 0x45786966) {
+              exif.exifPresent = 'Yes (Stripped on export)';
+              parseTiffExifTags(view, offset + 10, exif);
+            }
+          }
+          if ((marker & 0xFF00) !== 0xFF00) break;
+          offset += 2 + len;
+        }
+      } else if (view.byteLength > 33 && view.getUint32(0) === 0x89504E47) {
+        // Check PNG pHYs & IHDR bit depth
+        exif.colorSpace = 'sRGB / RGBA';
+        const bitD = view.getUint8(24);
+        const colorT = view.getUint8(25);
+        exif.bitDepth = `${bitD}-bit (ColorType ${colorT})`;
+        let offset = 8;
+        while (offset + 12 < view.byteLength) {
+          const cLen = view.getUint32(offset);
+          const cType = view.getUint32(offset + 4);
+          if (cType === 0x70485973 && cLen >= 9) { // pHYs
+            const ppmX = view.getUint32(offset + 8);
+            const unit = view.getUint8(offset + 16);
+            if (unit === 1 && ppmX > 0) detectedDpi = Math.round(ppmX * 0.0254);
+            break;
+          }
+          offset += 12 + cLen;
+        }
+      }
+
+      return { dpi: detectedDpi, exif };
+    }
+
+    function parseTiffExifTags(view, tiffStart, exif) {
+      try {
+        if (tiffStart + 8 >= view.byteLength) return;
+        const endian = view.getUint16(tiffStart);
+        const le = endian === 0x4949;
+        if (!le && endian !== 0x4D4D) return;
+        const ifdOffset = view.getUint32(tiffStart + 4, le);
+        const dirStart = tiffStart + ifdOffset;
+        if (dirStart + 2 >= view.byteLength) return;
+        const entries = view.getUint16(dirStart, le);
+
+        for (let i = 0; i < entries; i++) {
+          const entryOffset = dirStart + 2 + i * 12;
+          if (entryOffset + 12 > view.byteLength) break;
+          const tag = view.getUint16(entryOffset, le);
+          const type = view.getUint16(entryOffset + 2, le);
+          const count = view.getUint32(entryOffset + 4, le);
+          const valOffset = entryOffset + 8;
+
+          if (type === 2 && count > 1 && count < 64) {
+            const strAddr = count <= 4 ? valOffset : tiffStart + view.getUint32(valOffset, le);
+            if (strAddr + count <= view.byteLength) {
+              let str = '';
+              for (let c = 0; c < count - 1; c++) {
+                const ch = view.getUint8(strAddr + c);
+                if (ch >= 32 && ch <= 126) str += String.fromCharCode(ch);
+              }
+              if (tag === 0x010F && str) exif.cameraMake = str.trim();
+              if (tag === 0x0110 && str) exif.cameraModel = str.trim();
+              if (tag === 0x0131 && str) exif.software = str.trim();
+              if (tag === 0x0132 && str) exif.dateTimeOriginal = str.trim();
+            }
+          }
+        }
+      } catch (e) {
+        // Safe fallback if malformed EXIF
+      }
+    }
+
+    /* ========================================================================
+       5. UNIT CONVERSIONS & DIMENSION SYNCHRONIZATION
+       ======================================================================== */
+    function toPixels(val, unit, dpi, refPx = 100) {
+      const num = parseFloat(val) || 0;
+      if (unit === 'px')  return num;
+      if (unit === 'in')  return num * dpi;
+      if (unit === 'cm')  return (num / 2.54) * dpi;
+      if (unit === 'mm')  return (num / 25.4) * dpi;
+      if (unit === 'pct') return (num / 100) * refPx;
+      return num;
+    }
+
+    function fromPixels(px, unit, dpi, refPx = 100) {
+      if (unit === 'px')  return Math.round(px);
+      if (unit === 'in')  return +(px / dpi).toFixed(3);
+      if (unit === 'cm')  return +((px / dpi) * 2.54).toFixed(2);
+      if (unit === 'mm')  return +((px / dpi) * 25.4).toFixed(1);
+      if (unit === 'pct') return +((px / Math.max(1, refPx)) * 100).toFixed(1);
+      return Math.round(px);
+    }
+
+    function getTransformedSourceDims() {
+      if (!state.img) return { w: 0, h: 0 };
+      const rot = ((state.rotation % 360) + 360) % 360;
+      if (rot === 90 || rot === 270) {
+        return { w: state.img.naturalHeight, h: state.img.naturalWidth };
+      }
+      return { w: state.img.naturalWidth, h: state.img.naturalHeight };
+    }
+
+    function resetAllEdits(silent = false) {
+      if (!state.img) return;
+      state.rotation = 0;
+      state.straighten = 0;
+      state.flipH = false;
+      state.flipV = false;
+      state.aspectRatio = null;
+      document.getElementById('cropLockRatio').checked = false;
+      document.getElementById('straightenSlider').value = 0;
+      document.getElementById('straightenValLbl').textContent = '0°';
+
+      const dims = getTransformedSourceDims();
+      state.crop = { x: 0, y: 0, w: dims.w, h: dims.h };
+      state.targetW = dims.w;
+      state.targetH = dims.h;
+
+      const baseName = state.fileName.replace(/\.[^/.]+$/, '');
+      document.getElementById('exportFileName').value = `${baseName}_edited`;
+
+      resetAdjustments(true);
+      syncCropInputsFromState();
+      syncResizeInputsFromState();
+      fitToScreen();
+      scheduleRender();
+      if (!silent) showToast('Reset to original image dimensions');
+    }
+
+    /* ========================================================================
+       6. PRESETS APPLICATION
+       ======================================================================== */
+    function renderPresets() {
+      const container = document.getElementById('presetListContainer');
+      const query = document.getElementById('presetSearchInput').value.toLowerCase().trim();
+      container.innerHTML = '';
+
+      const grouped = {};
+      EXAM_PRESETS.forEach(p => {
+        if (query && !p.name.toLowerCase().includes(query) && !p.cat.toLowerCase().includes(query)) return;
+        if (!grouped[p.cat]) grouped[p.cat] = [];
+        grouped[p.cat].push(p);
+      });
+
+      Object.keys(grouped).forEach(cat => {
+        const catEl = document.createElement('div');
+        catEl.className = 'preset-category';
+        catEl.textContent = cat;
+        container.appendChild(catEl);
+
+        grouped[cat].forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'preset-item';
+          item.id = `preset-${p.id}`;
+          item.innerHTML = `
+            <div class="preset-info">
+              <span class="preset-name">${p.name}</span>
+              <span class="preset-sub">${p.w}×${p.h} ${p.unit} • ${p.dpi} DPI • ${p.minKb}-${p.maxKb}KB</span>
+            </div>
+            <span class="material-symbols-outlined" style="font-size:15px;color:var(--text-muted);">chevron_right</span>
+          `;
+          item.onclick = () => applyExamPreset(p);
+          container.appendChild(item);
+        });
+      });
+    }
+
+    function applyExamPreset(p) {
+      if (!state.img) {
+        showToast('Please upload an image first before applying a preset');
+        return;
+      }
+      pushHistory();
+
+      document.querySelectorAll('.preset-item').forEach(el => el.classList.remove('active'));
+      const el = document.getElementById(`preset-${p.id}`);
+      if (el) el.classList.add('active');
+
+      state.dpi = p.dpi;
+      document.getElementById('dpiInput').value = p.dpi;
+      document.getElementById('exportDpiMirror').value = p.dpi;
+
+      const targetPxW = Math.round(toPixels(p.w, p.unit, p.dpi, state.crop.w));
+      const targetPxH = Math.round(toPixels(p.h, p.unit, p.dpi, state.crop.h));
+
+      state.targetW = Math.max(1, targetPxW);
+      state.targetH = Math.max(1, targetPxH);
+      state.resizeUnit = p.unit;
+      document.getElementById('resizeUnitSelect').value = p.unit;
+
+      const ratio = state.targetW / state.targetH;
+      state.aspectRatio = ratio;
+      document.getElementById('cropLockRatio').checked = true;
+      enforceCropAspectRatio(ratio);
+      centerCropBox();
+
+      document.getElementById('captionEnabled').checked = !!p.caption;
+      if (p.caption && !document.getElementById('captionLine2').value) {
+        insertTodayDate(true);
+      }
+
+      document.getElementById('exportFormat').value = p.fmt;
+      document.getElementById('targetKbEnabled').checked = true;
+      document.getElementById('targetMinKb').value = p.minKb;
+      document.getElementById('targetMaxKb').value = p.maxKb;
+
+      syncCropInputsFromState();
+      syncResizeInputsFromState();
+      scheduleRender();
+      showToast(`Applied ${p.name} (${state.targetW}×${state.targetH}px)`);
+      closeMobileDrawers();
+    }
+
+    /* ========================================================================
+       7. CROP CONTROLS & INPUT SYNCHRONIZATION
+       ======================================================================== */
+    function setAspectRatio(ratioStr, btnEl) {
+      document.querySelectorAll('#aspectRatioChips .chip-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      const customBox = document.getElementById('customRatioInputs');
+      if (ratioStr === 'free') {
+        customBox.style.display = 'none';
+        state.aspectRatio = null;
+        document.getElementById('cropLockRatio').checked = false;
+        return;
+      }
+
+      if (ratioStr === 'custom') {
+        customBox.style.display = 'grid';
+        applyCustomRatio();
+        return;
+      }
+
+      customBox.style.display = 'none';
+      const [rw, rh] = ratioStr.split(':').map(Number);
+      state.aspectRatio = rw / rh;
+      document.getElementById('cropLockRatio').checked = true;
+      pushHistory();
+      enforceCropAspectRatio(state.aspectRatio);
+      syncCropInputsFromState();
+      scheduleRender();
+    }
+
+    function applyCustomRatio() {
+      const rw = parseFloat(document.getElementById('customRatioW').value) || 1;
+      const rh = parseFloat(document.getElementById('customRatioH').value) || 1;
+      state.aspectRatio = rw / rh;
+      document.getElementById('cropLockRatio').checked = true;
+      enforceCropAspectRatio(state.aspectRatio);
+      syncCropInputsFromState();
+      scheduleRender();
+    }
+
+    function onCropLockToggle() {
+      const locked = document.getElementById('cropLockRatio').checked;
+      if (locked && state.crop.h > 0) {
+        state.aspectRatio = state.crop.w / state.crop.h;
+      } else {
+        state.aspectRatio = null;
+      }
+    }
+
+    function enforceCropAspectRatio(ratio) {
+      if (!state.img || !ratio) return;
+      const dims = getTransformedSourceDims();
+      const cx = state.crop.x + state.crop.w / 2;
+      const cy = state.crop.y + state.crop.h / 2;
+
+      let newW = state.crop.w;
+      let newH = newW / ratio;
+
+      if (newH > dims.h) {
+        newH = dims.h;
+        newW = newH * ratio;
+      }
+      if (newW > dims.w) {
+        newW = dims.w;
+        newH = newW / ratio;
+      }
+
+      state.crop.w = Math.max(10, newW);
+      state.crop.h = Math.max(10, newH);
+      state.crop.x = Math.max(0, Math.min(dims.w - state.crop.w, cx - state.crop.w / 2));
+      state.crop.y = Math.max(0, Math.min(dims.h - state.crop.h, cy - state.crop.h / 2));
+    }
+
+    function syncCropInputsFromState() {
+      const unit = document.getElementById('cropUnitSelect').value;
+      document.querySelectorAll('.cropUnitLbl').forEach(el => el.textContent = unit);
+
+      document.getElementById('cropWInput').value = fromPixels(state.crop.w, unit, state.dpi);
+      document.getElementById('cropHInput').value = fromPixels(state.crop.h, unit, state.dpi);
+      document.getElementById('cropXInput').value = fromPixels(state.crop.x, unit, state.dpi);
+      document.getElementById('cropYInput').value = fromPixels(state.crop.y, unit, state.dpi);
+    }
+
+    function updateCropFromInputs() {
+      if (!state.img) return;
+      pushHistory();
+      const unit = document.getElementById('cropUnitSelect').value;
+      const dims = getTransformedSourceDims();
+
+      let w = toPixels(document.getElementById('cropWInput').value, unit, state.dpi);
+      let h = toPixels(document.getElementById('cropHInput').value, unit, state.dpi);
+      let x = toPixels(document.getElementById('cropXInput').value, unit, state.dpi);
+      let y = toPixels(document.getElementById('cropYInput').value, unit, state.dpi);
+
+      w = Math.max(10, Math.min(dims.w, w));
+      h = Math.max(10, Math.min(dims.h, h));
+      if (state.aspectRatio) {
+        h = w / state.aspectRatio;
+        if (h > dims.h) { h = dims.h; w = h * state.aspectRatio; }
+      }
+      x = Math.max(0, Math.min(dims.w - w, x));
+      y = Math.max(0, Math.min(dims.h - h, y));
+
+      state.crop = { x, y, w, h };
+      if (document.getElementById('resizeLockAspect').checked) {
+        state.targetW = Math.round(w);
+        state.targetH = Math.round(h);
+        syncResizeInputsFromState();
+      }
+      syncCropInputsFromState();
+      scheduleRender();
+    }
+
+    function centerCropBox() {
+      if (!state.img) return;
+      const dims = getTransformedSourceDims();
+      state.crop.x = (dims.w - state.crop.w) / 2;
+      state.crop.y = (dims.h - state.crop.h) / 2;
+      syncCropInputsFromState();
+      scheduleRender();
+    }
+
+    function selectFullImageCrop() {
+      if (!state.img) return;
+      pushHistory();
+      const dims = getTransformedSourceDims();
+      state.crop = { x: 0, y: 0, w: dims.w, h: dims.h };
+      if (state.aspectRatio) enforceCropAspectRatio(state.aspectRatio);
+      syncCropInputsFromState();
+      scheduleRender();
+    }
+
+    /* ========================================================================
+       8. RESIZE, DPI, BORDERS & TRANSFORM CONTROLS
+       ======================================================================== */
+    function onResizeUnitChange() {
+      state.resizeUnit = document.getElementById('resizeUnitSelect').value;
+      document.querySelectorAll('.resUnitLbl').forEach(el => el.textContent = state.resizeUnit);
+      syncResizeInputsFromState();
+    }
+
+    function syncResizeInputsFromState() {
+      const unit = state.resizeUnit;
+      document.querySelectorAll('.resUnitLbl').forEach(el => el.textContent = unit);
+      document.getElementById('resizeWInput').value = fromPixels(state.targetW, unit, state.dpi, state.crop.w);
+      document.getElementById('resizeHInput').value = fromPixels(state.targetH, unit, state.dpi, state.crop.h);
+    }
+
+    function onResizeDimensionInput(axis) {
+      if (!state.img) return;
+      const unit = state.resizeUnit;
+      const lock = document.getElementById('resizeLockAspect').checked;
+      const cropRatio = state.crop.w / Math.max(1, state.crop.h);
+
+      if (axis === 'w') {
+        const pxW = Math.max(1, Math.round(toPixels(document.getElementById('resizeWInput').value, unit, state.dpi, state.crop.w)));
+        state.targetW = pxW;
+        if (lock) {
+          state.targetH = Math.max(1, Math.round(pxW / cropRatio));
+          document.getElementById('resizeHInput').value = fromPixels(state.targetH, unit, state.dpi, state.crop.h);
+        }
+      } else {
+        const pxH = Math.max(1, Math.round(toPixels(document.getElementById('resizeHInput').value, unit, state.dpi, state.crop.h)));
+        state.targetH = pxH;
+        if (lock) {
+          state.targetW = Math.max(1, Math.round(pxH * cropRatio));
+          document.getElementById('resizeWInput').value = fromPixels(state.targetW, unit, state.dpi, state.crop.w);
+        }
+      }
+      scheduleRender();
+    }
+
+    function onResizeLockToggle() {
+      if (document.getElementById('resizeLockAspect').checked && state.crop.h > 0) {
+        const ratio = state.crop.w / state.crop.h;
+        state.targetH = Math.max(1, Math.round(state.targetW / ratio));
+        syncResizeInputsFromState();
+        scheduleRender();
+      }
+    }
+
+    function scaleByPercent(pct) {
+      if (!state.img) return;
+      pushHistory();
+      state.targetW = Math.max(1, Math.round(state.crop.w * (pct / 100)));
+      state.targetH = Math.max(1, Math.round(state.crop.h * (pct / 100)));
+      syncResizeInputsFromState();
+      scheduleRender();
+    }
+
+    function onDpiChange() {
+      const val = Math.max(1, Math.min(2400, parseInt(document.getElementById('dpiInput').value) || 300));
+      state.dpi = val;
+      document.getElementById('exportDpiMirror').value = val;
+      if (['cm', 'mm', 'in'].includes(state.resizeUnit)) {
+        onResizeDimensionInput('w');
+      } else {
+        syncResizeInputsFromState();
+      }
+      syncCropInputsFromState();
+      scheduleRender();
+    }
+
+    function setQuickDpi(val) {
+      document.getElementById('dpiInput').value = val;
+      onDpiChange();
+    }
+
+    function syncDpiFromExport(val) {
+      document.getElementById('dpiInput').value = val;
+      onDpiChange();
+    }
+
+    function toggleOuterBorderControls() {
+      const on = document.getElementById('outerBorderEnabled').checked;
+      document.getElementById('outerBorderFields').style.opacity = on ? '1' : '0.45';
+      document.getElementById('outerBorderPx').disabled = !on;
+      document.getElementById('outerBorderColor').disabled = !on;
+      scheduleRender();
+    }
+
+    function toggleCaptionLineControls() {
+      const divOn = document.getElementById('captionDividerEnabled').checked;
+      document.getElementById('captionDividerFields').style.opacity = divOn ? '1' : '0.45';
+      document.getElementById('captionBorderWidth').disabled = !divOn;
+      document.getElementById('captionBorderColor').disabled = !divOn;
+
+      const boxOn = document.getElementById('captionBoxBorderEnabled').checked;
+      document.getElementById('captionBoxBorderFields').style.opacity = boxOn ? '1' : '0.45';
+      document.getElementById('captionBoxBorderWidth').disabled = !boxOn;
+      document.getElementById('captionBoxBorderColor').disabled = !boxOn;
+
+      scheduleRender();
+    }
+
+    function rotateImage(deg) {
+      if (!state.img) return;
+      pushHistory();
+      state.rotation = (state.rotation + deg) % 360;
+      const dims = getTransformedSourceDims();
+      state.crop = { x: 0, y: 0, w: dims.w, h: dims.h };
+      if (state.aspectRatio) enforceCropAspectRatio(state.aspectRatio);
+      const tmp = state.targetW;
+      state.targetW = state.targetH;
+      state.targetH = tmp;
+      syncCropInputsFromState();
+      syncResizeInputsFromState();
+      fitToScreen();
+      scheduleRender();
+    }
+
+    function flipImage(dir) {
+      if (!state.img) return;
+      pushHistory();
+      if (dir === 'h') state.flipH = !state.flipH;
+      if (dir === 'v') state.flipV = !state.flipV;
+      scheduleRender();
+    }
+
+    function onStraightenChange(val) {
+      state.straighten = parseFloat(val) || 0;
+      document.getElementById('straightenValLbl').textContent = `${state.straighten}°`;
+      scheduleRender();
+    }
+
+    function resetTransform() {
+      state.rotation = 0;
+      state.straighten = 0;
+      state.flipH = false;
+      state.flipV = false;
+      document.getElementById('straightenSlider').value = 0;
+      document.getElementById('straightenValLbl').textContent = '0°';
+      scheduleRender();
+    }
+
+    function autoTrimBorder() {
+      if (!state.img) return;
+      pushHistory();
+      const srcCanvas = buildTransformedSourceCanvas();
+      const sctx = srcCanvas.getContext('2d');
+      const { width: w, height: h } = srcCanvas;
+      const data = sctx.getImageData(0, 0, w, h).data;
+
+      const r0 = data[0], g0 = data[1], b0 = data[2];
+      const tol = 28;
+      const isBg = (idx) => Math.abs(data[idx] - r0) < tol && Math.abs(data[idx + 1] - g0) < tol && Math.abs(data[idx + 2] - b0) < tol;
+
+      let top = 0, bottom = h - 1, left = 0, right = w - 1;
+      scanTop: for (; top < h; top++) {
+        for (let x = 0; x < w; x += 2) if (!isBg((top * w + x) * 4)) break scanTop;
+      }
+      scanBottom: for (; bottom > top; bottom--) {
+        for (let x = 0; x < w; x += 2) if (!isBg((bottom * w + x) * 4)) break scanBottom;
+      }
+      scanLeft: for (; left < w; left++) {
+        for (let y = top; y <= bottom; y += 2) if (!isBg((y * w + left) * 4)) break scanLeft;
+      }
+      scanRight: for (; right > left; right--) {
+        for (let y = top; y <= bottom; y += 2) if (!isBg((y * w + right) * 4)) break scanRight;
+      }
+
+      if (right - left > 15 && bottom - top > 15) {
+        state.crop = { x: left, y: top, w: right - left + 1, h: bottom - top + 1 };
+        if (state.aspectRatio) enforceCropAspectRatio(state.aspectRatio);
+        syncCropInputsFromState();
+        scheduleRender();
+        showToast('Auto-trimmed outer margins');
+      } else {
+        showToast('No uniform outer border detected');
+      }
+    }
+
+    /* ========================================================================
+       9. ADJUSTMENTS & CAPTION / NAME-DATE STRIP HELPERS
+       ======================================================================== */
+    function onAdjustChange() {
+      state.brightness = parseInt(document.getElementById('adjBrightness').value);
+      state.contrast   = parseInt(document.getElementById('adjContrast').value);
+      state.saturation = parseInt(document.getElementById('adjSaturation').value);
+      state.sharpness  = parseInt(document.getElementById('adjSharpness').value);
+
+      document.getElementById('valBrightness').textContent = `${state.brightness}%`;
+      document.getElementById('valContrast').textContent   = `${state.contrast}%`;
+      document.getElementById('valSaturation').textContent = `${state.saturation}%`;
+      document.getElementById('valSharpness').textContent  = `${state.sharpness}%`;
+      scheduleRender();
+    }
+
+    function resetAdjustments(silent = false) {
+      document.getElementById('adjBrightness').value = 100;
+      document.getElementById('adjContrast').value = 100;
+      document.getElementById('adjSaturation').value = 100;
+      document.getElementById('adjSharpness').value = 0;
+      onAdjustChange();
+      if (!silent) showToast('Adjustments reset');
+    }
+
+    function applyPresetFilter(type) {
+      if (type === 'normal') {
+        resetAdjustments();
+      } else if (type === 'grayscale') {
+        document.getElementById('adjBrightness').value = 102;
+        document.getElementById('adjContrast').value = 112;
+        document.getElementById('adjSaturation').value = 0;
+        document.getElementById('adjSharpness').value = 15;
+        onAdjustChange();
+      } else if (type === 'signature') {
+        document.getElementById('adjBrightness').value = 118;
+        document.getElementById('adjContrast').value = 175;
+        document.getElementById('adjSaturation').value = 0;
+        document.getElementById('adjSharpness').value = 35;
+        onAdjustChange();
+        showToast('Applied High-Contrast Signature Prep');
+      } else if (type === 'docscan') {
+        document.getElementById('adjBrightness').value = 112;
+        document.getElementById('adjContrast').value = 140;
+        document.getElementById('adjSaturation').value = 85;
+        document.getElementById('adjSharpness').value = 25;
+        onAdjustChange();
+        showToast('Applied Clean White Paper Scan');
+      }
+    }
+
+    function insertTodayDate(silent = false) {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      document.getElementById('captionLine2').value = `DOP: ${dd}-${mm}-${yyyy}`;
+      document.getElementById('captionEnabled').checked = true;
+      scheduleRender();
+      if (!silent) showToast(`Inserted DOP: ${dd}-${mm}-${yyyy}`);
+    }
+
+    /* ========================================================================
+       10. CORE IMAGE PROCESSING PIPELINE
+       ======================================================================== */
+    function buildTransformedSourceCanvas() {
+      const dims = getTransformedSourceDims();
+      const c = document.createElement('canvas');
+      c.width = dims.w;
+      c.height = dims.h;
+      const g = c.getContext('2d');
+
+      g.save();
+      g.translate(dims.w / 2, dims.h / 2);
+      g.rotate(((state.rotation + state.straighten) * Math.PI) / 180);
+      g.scale(state.flipH ? -1 : 1, state.flipV ? -1 : 1);
+
+      if (state.straighten !== 0) {
+        const rad = Math.abs(state.straighten) * Math.PI / 180;
+        const scaleBoost = Math.cos(rad) + Math.sin(rad) * 0.6;
+        g.scale(scaleBoost, scaleBoost);
+      }
+
+      g.filter = `brightness(${state.brightness}%) contrast(${state.contrast}%) saturate(${state.saturation}%)`;
+      g.drawImage(state.img, -state.img.naturalWidth / 2, -state.img.naturalHeight / 2);
+      g.restore();
+
+      return c;
+    }
+
+    function buildFinalProcessedCanvas() {
+      if (!state.img) return null;
+
+      const srcCanvas = buildTransformedSourceCanvas();
+      const baseW = Math.max(1, Math.round(state.targetW));
+      const baseH = Math.max(1, Math.round(state.targetH));
+
+      // Caption / Name-Date Box Configuration
+      const capEnabled      = document.getElementById('captionEnabled').checked;
+      const capPlacement    = document.getElementById('captionPlacement').value;
+      const rawL1           = document.getElementById('captionLine1').value.trim();
+      const rawL2           = document.getElementById('captionLine2').value.trim();
+      const upper           = document.getElementById('captionUppercase').checked;
+      const line1           = upper ? rawL1.toUpperCase() : rawL1;
+      const line2           = upper ? rawL2.toUpperCase() : rawL2;
+      const lines           = [line1, line2].filter(Boolean);
+
+      const fontSize        = Math.max(8, parseInt(document.getElementById('captionFontSize').value) || 20);
+      const lineHeight      = parseFloat(document.getElementById('captionLineHeight').value) || 1.25;
+      const padY            = Math.max(0, parseInt(document.getElementById('captionPadY').value) || 10);
+      
+      const dividerOn       = document.getElementById('captionDividerEnabled').checked;
+      const dividerW        = dividerOn ? Math.max(1, parseInt(document.getElementById('captionBorderWidth').value) || 2) : 0;
+
+      const boxBorderOn     = document.getElementById('captionBoxBorderEnabled').checked;
+      const boxBorderW      = boxBorderOn ? Math.max(1, parseInt(document.getElementById('captionBoxBorderWidth').value) || 2) : 0;
+
+      let stripHeight = 0;
+      if (capEnabled && lines.length > 0) {
+        stripHeight = Math.round(padY * 2 + lines.length * (fontSize * lineHeight) + dividerW);
+      }
+
+      const outerBorderOn   = document.getElementById('outerBorderEnabled').checked;
+      const outerBorder     = outerBorderOn ? Math.max(1, parseInt(document.getElementById('outerBorderPx').value) || 2) : 0;
+
+      const finalW = baseW + outerBorder * 2;
+      const finalH = baseH + (capEnabled && capPlacement === 'outside' ? stripHeight : 0) + outerBorder * 2;
+
+      const out = document.createElement('canvas');
+      out.width = finalW;
+      out.height = finalH;
+      const g = out.getContext('2d');
+
+      // 1. Fill Base Background
+      g.fillStyle = document.getElementById('canvasBgColor').value || '#ffffff';
+      g.fillRect(0, 0, finalW, finalH);
+
+      // 2. Draw Cropped Region into Base Box
+      const fitMode = document.getElementById('resizeFitMode').value;
+      const imgAreaX = outerBorder;
+      const imgAreaY = outerBorder;
+      const imgAreaW = baseW;
+      const imgAreaH = baseH;
+
+      const sx = state.crop.x;
+      const sy = state.crop.y;
+      const sw = Math.max(1, state.crop.w);
+      const sh = Math.max(1, state.crop.h);
+
+      g.save();
+      g.beginPath();
+      g.rect(imgAreaX, imgAreaY, imgAreaW, imgAreaH);
+      g.clip();
+
+      if (fitMode === 'stretch') {
+        g.drawImage(srcCanvas, sx, sy, sw, sh, imgAreaX, imgAreaY, imgAreaW, imgAreaH);
+      } else if (fitMode === 'contain') {
+        const scale = Math.min(imgAreaW / sw, imgAreaH / sh);
+        const dw = sw * scale;
+        const dh = sh * scale;
+        const dx = imgAreaX + (imgAreaW - dw) / 2;
+        const dy = imgAreaY + (imgAreaH - dh) / 2;
+        g.drawImage(srcCanvas, sx, sy, sw, sh, dx, dy, dw, dh);
+      } else if (fitMode === 'cover') {
+        const scale = Math.max(imgAreaW / sw, imgAreaH / sh);
+        const dw = sw * scale;
+        const dh = sh * scale;
+        const dx = imgAreaX + (imgAreaW - dw) / 2;
+        const dy = imgAreaY + (imgAreaH - dh) / 2;
+        g.drawImage(srcCanvas, sx, sy, sw, sh, dx, dy, dw, dh);
+      }
+      g.restore();
+
+      // 3. Apply Subtle Convolution Sharpening if > 0
+      if (state.sharpness > 0) {
+        applySharpenFilter(g, imgAreaX, imgAreaY, imgAreaW, imgAreaH, state.sharpness / 100);
+      }
+
+      // 4. Draw Bottom Name & Date Strip Box (Full Width Inside or Outside)
+      if (capEnabled && lines.length > 0 && stripHeight > 0) {
+        const boxX = outerBorder;
+        const boxW = baseW;
+        const boxY = capPlacement === 'outside'
+          ? outerBorder + baseH
+          : outerBorder + baseH - stripHeight;
+
+        const bgHex = document.getElementById('captionBgColor').value || '#ffffff';
+        const bgOp  = Math.max(0, Math.min(100, parseInt(document.getElementById('captionBgOpacity').value) || 100)) / 100;
+        g.save();
+        g.globalAlpha = bgOp;
+        g.fillStyle = bgHex;
+        g.fillRect(boxX, boxY, boxW, stripHeight);
+        g.restore();
+
+        // Optional Top Divider Line
+        if (dividerOn && dividerW > 0) {
+          g.fillStyle = document.getElementById('captionBorderColor').value || '#000000';
+          g.fillRect(boxX, boxY, boxW, dividerW);
+        }
+
+        // Optional Full Box Outline Border
+        if (boxBorderOn && boxBorderW > 0) {
+          g.save();
+          g.strokeStyle = document.getElementById('captionBoxBorderColor').value || '#000000';
+          g.lineWidth = boxBorderW;
+          const half = boxBorderW / 2;
+          g.strokeRect(boxX + half, boxY + half, boxW - boxBorderW, stripHeight - boxBorderW);
+          g.restore();
+        }
+
+        // Render Text Lines
+        const fontFam    = document.getElementById('captionFontFamily').value;
+        const fontWeight = document.getElementById('captionFontWeight').value;
+        const textAlign  = document.getElementById('captionAlign').value;
+        g.fillStyle = document.getElementById('captionTextColor').value || '#000000';
+        g.font = `${fontWeight} ${fontSize}px ${fontFam}`;
+        g.textBaseline = 'middle';
+        g.textAlign = textAlign;
+
+        const textX = textAlign === 'center'
+          ? boxX + boxW / 2
+          : (textAlign === 'left' ? boxX + 12 : boxX + boxW - 12);
+
+        const contentTop = boxY + dividerW + padY;
+        const stepY = fontSize * lineHeight;
+
+        lines.forEach((txt, idx) => {
+          const lineCenterY = contentTop + stepY * (idx + 0.5);
+          g.fillText(txt, textX, lineCenterY, boxW - 16);
+        });
+      }
+
+      // 5. Optional Outer Frame Border
+      if (outerBorderOn && outerBorder > 0) {
+        g.strokeStyle = document.getElementById('outerBorderColor').value || '#000000';
+        g.lineWidth = outerBorder * 2;
+        g.strokeRect(0, 0, finalW, finalH);
+      }
+
+      return out;
+    }
+
+    function applySharpenFilter(context, x, y, w, h, amount) {
+      if (w < 3 || h < 3) return;
+      const imgData = context.getImageData(x, y, w, h);
+      const src = imgData.data;
+      const out = new Uint8ClampedArray(src.length);
+      const k = amount * 0.85;
+
+      for (let py = 1; py < h - 1; py++) {
+        for (let px = 1; px < w - 1; px++) {
+          const i = (py * w + px) * 4;
+          for (let c = 0; c < 3; c++) {
+            const center = src[i + c];
+            const neighbors = (
+              src[((py - 1) * w + px) * 4 + c] +
+              src[((py + 1) * w + px) * 4 + c] +
+              src[(py * w + (px - 1)) * 4 + c] +
+              src[(py * w + (px + 1)) * 4 + c]
+            ) * 0.25;
+            out[i + c] = center + (center - neighbors) * k * 2.5;
+          }
+          out[i + 3] = src[i + 3];
+        }
+      }
+      for (let px = 0; px < w; px++) {
+        for (let c = 0; c < 4; c++) {
+          out[px * 4 + c] = src[px * 4 + c];
+          out[((h - 1) * w + px) * 4 + c] = src[((h - 1) * w + px) * 4 + c];
+        }
+      }
+      imgData.data.set(out);
+      context.putImageData(imgData, x, y);
+    }
+
+    /* ========================================================================
+       11. INTERACTIVE STAGE RENDERING
+       ======================================================================== */
+    function resizeCanvasViewport() {
+      const stage = document.getElementById('canvasStage');
+      const dpr = window.devicePixelRatio || 1;
+      mainCanvas.width = stage.clientWidth * dpr;
+      mainCanvas.height = stage.clientHeight * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const mBox = document.getElementById('minimapBox');
+      miniCanvas.width = mBox.clientWidth * dpr;
+      miniCanvas.height = mBox.clientHeight * dpr;
+      miniCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function scheduleRender() {
+      if (!renderScheduled) {
+        renderScheduled = true;
+        requestAnimationFrame(() => {
+          renderScheduled = false;
+          renderWorkspace();
+          scheduleSizeEstimation();
+        });
+      }
+    }
+
+    function fitToScreen() {
+      if (!state.img) return;
+      const stage = document.getElementById('canvasStage');
+      const pad = 60;
+      const availW = Math.max(120, stage.clientWidth - pad * 2);
+      const availH = Math.max(120, stage.clientHeight - pad * 2);
+
+      let subjectW, subjectH;
+      if (state.canvasMode === 'crop') {
+        const dims = getTransformedSourceDims();
+        subjectW = dims.w;
+        subjectH = dims.h;
+      } else {
+        const out = buildFinalProcessedCanvas();
+        subjectW = out ? out.width : 100;
+        subjectH = out ? out.height : 100;
+      }
+
+      state.zoom = Math.min(availW / subjectW, availH / subjectH, 2.5);
+      state.panX = 0;
+      state.panY = 0;
+      updateZoomLabels();
+      scheduleRender();
+    }
+
+    function adjustZoom(delta) {
+      state.zoom = Math.max(0.08, Math.min(8, state.zoom + delta));
+      updateZoomLabels();
+      scheduleRender();
+    }
+
+    function updateZoomLabels() {
+      const pct = `${Math.round(state.zoom * 100)}%`;
+      document.getElementById('zoomBadge').textContent = pct;
+      document.getElementById('footerZoom').textContent = pct;
+    }
+
+    function getImageScreenRect(imgW, imgH) {
+      const stage = document.getElementById('canvasStage');
+      const dispW = imgW * state.zoom;
+      const dispH = imgH * state.zoom;
+      const left = (stage.clientWidth - dispW) / 2 + state.panX;
+      const top  = (stage.clientHeight - dispH) / 2 + state.panY;
+      return { left, top, width: dispW, height: dispH };
+    }
+
+    function renderWorkspace() {
+      const stage = document.getElementById('canvasStage');
+      const sw = stage.clientWidth;
+      const sh = stage.clientHeight;
+      ctx.clearRect(0, 0, sw, sh);
+
+      if (!state.img) return;
+
+      if (state.canvasMode === 'crop') {
+        renderCropStage(sw, sh);
+      } else if (state.canvasMode === 'preview') {
+        renderPreviewStage(sw, sh);
+      } else if (state.canvasMode === 'split') {
+        renderSplitStage(sw, sh);
+      }
+    }
+
+    function renderCropStage(sw, sh) {
+      const srcCanvas = buildTransformedSourceCanvas();
+      const rect = getImageScreenRect(srcCanvas.width, srcCanvas.height);
+
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.35)';
+      ctx.shadowBlur = 16;
+      ctx.drawImage(srcCanvas, rect.left, rect.top, rect.width, rect.height);
+      ctx.restore();
+
+      const cx = rect.left + state.crop.x * state.zoom;
+      const cy = rect.top  + state.crop.y * state.zoom;
+      const cw = state.crop.w * state.zoom;
+      const ch = state.crop.h * state.zoom;
+
+      // Darken outer non-cropped area
+      ctx.fillStyle = 'rgba(10, 11, 14, 0.62)';
+      ctx.beginPath();
+      ctx.rect(rect.left, rect.top, rect.width, rect.height);
+      ctx.rect(cx, cy, cw, ch);
+      ctx.fill('evenodd');
+
+      // Crop Box Border (MarkImg Periwinkle)
+      ctx.strokeStyle = '#93b4eb';
+      ctx.lineWidth = 1.75;
+      ctx.strokeRect(cx, cy, cw, ch);
+
+      // Rule of Thirds Grid
+      if (state.showRuleOfThirds) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.26)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(cx + cw / 3, cy); ctx.lineTo(cx + cw / 3, cy + ch);
+        ctx.moveTo(cx + (2 * cw) / 3, cy); ctx.lineTo(cx + (2 * cw) / 3, cy + ch);
+        ctx.moveTo(cx, cy + ch / 3); ctx.lineTo(cx + cw, cy + ch / 3);
+        ctx.moveTo(cx, cy + (2 * ch) / 3); ctx.lineTo(cx + cw, cy + (2 * ch) / 3);
+        ctx.stroke();
+      }
+
+      // Passport Head / Oval Alignment Guide
+      if (state.showFaceGuide) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(74, 222, 128, 0.72)';
+        ctx.setLineDash([5, 4]);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(cx + cw / 2, cy + ch * 0.44, cw * 0.26, ch * 0.30, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx + cw * 0.2, cy + ch * 0.42);
+        ctx.lineTo(cx + cw * 0.8, cy + ch * 0.42);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 8 Interactive Resize Handles
+      const handles = getCropHandles(cx, cy, cw, ch);
+      handles.forEach(h => {
+        ctx.fillStyle = '#eceef2';
+        ctx.strokeStyle = '#181a1f';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.rect(h.x - 5, h.y - 5, 10, 10);
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      // Floating Dimension Pill Above Crop Box
+      const badgeTxt = `${Math.round(state.crop.w)} × ${Math.round(state.crop.h)} px`;
+      ctx.font = '600 11px "JetBrains Mono", monospace';
+      const tw = ctx.measureText(badgeTxt).width + 14;
+      const bx = Math.max(8, Math.min(sw - tw - 8, cx + cw / 2 - tw / 2));
+      const by = cy > 34 ? cy - 26 : cy + 8;
+
+      ctx.fillStyle = 'rgba(24, 26, 31, 0.94)';
+      ctx.strokeStyle = '#373b44';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(bx, by, tw, 20, 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#93b4eb';
+      ctx.fillText(badgeTxt, bx + 7, by + 14);
+
+      renderMinimap(srcCanvas);
+    }
+
+    function renderPreviewStage(sw, sh) {
+      const outCanvas = buildFinalProcessedCanvas();
+      if (!outCanvas) return;
+      const rect = getImageScreenRect(outCanvas.width, outCanvas.height);
+
+      drawCheckerboard(ctx, rect.left, rect.top, rect.width, rect.height);
+
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.4)';
+      ctx.shadowBlur = 18;
+      ctx.drawImage(outCanvas, rect.left, rect.top, rect.width, rect.height);
+      ctx.restore();
+
+      ctx.strokeStyle = 'rgba(147, 180, 235, 0.45)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(rect.left, rect.top, rect.width, rect.height);
+
+      renderMinimap(outCanvas);
+    }
+
+    function renderSplitStage(sw, sh) {
+      const srcCanvas = buildTransformedSourceCanvas();
+      const outCanvas = buildFinalProcessedCanvas();
+      if (!outCanvas) return;
+
+      const rect = getImageScreenRect(outCanvas.width, outCanvas.height);
+      const splitX = rect.left + rect.width * state.splitRatio;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(rect.left, rect.top, splitX - rect.left, rect.height);
+      ctx.clip();
+      ctx.drawImage(srcCanvas, rect.left, rect.top, rect.width, rect.height);
+      ctx.restore();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(splitX, rect.top, rect.left + rect.width - splitX, rect.height);
+      ctx.clip();
+      ctx.drawImage(outCanvas, rect.left, rect.top, rect.width, rect.height);
+      ctx.restore();
+
+      ctx.strokeStyle = '#93b4eb';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(splitX, rect.top);
+      ctx.lineTo(splitX, rect.top + rect.height);
+      ctx.stroke();
+
+      ctx.fillStyle = '#93b4eb';
+      ctx.beginPath();
+      ctx.arc(splitX, rect.top + rect.height / 2, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#121316';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('⇄', splitX, rect.top + rect.height / 2 + 4);
+      ctx.textAlign = 'left';
+
+      renderMinimap(outCanvas);
+    }
+
+    function drawCheckerboard(context, x, y, w, h) {
+      const sz = 10;
+      context.save();
+      context.beginPath();
+      context.rect(x, y, w, h);
+      context.clip();
+      context.fillStyle = '#1c1e24';
+      context.fillRect(x, y, w, h);
+      context.fillStyle = '#252830';
+      for (let py = y; py < y + h; py += sz) {
+        for (let px = x; px < x + w; px += sz) {
+          if ((Math.floor((px - x) / sz) + Math.floor((py - y) / sz)) % 2 === 0) {
+            context.fillRect(px, py, sz, sz);
+          }
+        }
+      }
+      context.restore();
+    }
+
+    function renderMinimap(canvasSource) {
+      const mw = document.getElementById('minimapBox').clientWidth;
+      const mh = document.getElementById('minimapBox').clientHeight;
+      miniCtx.clearRect(0, 0, mw, mh);
+      if (!canvasSource) return;
+
+      const scale = Math.min((mw - 8) / canvasSource.width, (mh - 8) / canvasSource.height);
+      const dw = canvasSource.width * scale;
+      const dh = canvasSource.height * scale;
+      const dx = (mw - dw) / 2;
+      const dy = (mh - dh) / 2;
+      miniCtx.drawImage(canvasSource, dx, dy, dw, dh);
+
+      if (state.canvasMode === 'crop') {
+        miniCtx.strokeStyle = '#93b4eb';
+        miniCtx.lineWidth = 1.5;
+        miniCtx.strokeRect(
+          dx + state.crop.x * scale,
+          dy + state.crop.y * scale,
+          state.crop.w * scale,
+          state.crop.h * scale
+        );
+      }
+    }
+
+    function getCropHandles(cx, cy, cw, ch) {
+      return [
+        { id: 'nw', x: cx,          y: cy },
+        { id: 'n',  x: cx + cw / 2, y: cy },
+        { id: 'ne', x: cx + cw,     y: cy },
+        { id: 'e',  x: cx + cw,     y: cy + ch / 2 },
+        { id: 'se', x: cx + cw,     y: cy + ch },
+        { id: 's',  x: cx + cw / 2, y: cy + ch },
+        { id: 'sw', x: cx,          y: cy + ch },
+        { id: 'w',  x: cx,          y: cy + ch / 2 }
+      ];
+    }
+
+    /* ========================================================================
+       12. POINTER / TOUCH INTERACTIONS
+       ======================================================================== */
+    function setupCanvasInteractions() {
+      const getPos = (e) => {
+        const rect = mainCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+      };
+
+      const onDown = (e) => {
+        if (!state.img) return;
+        const pos = getPos(e);
+
+        if (state.canvasMode === 'split') {
+          const out = buildFinalProcessedCanvas();
+          const rect = getImageScreenRect(out.width, out.height);
+          dragState = { type: 'split', rect };
+          updateSplitFromX(pos.x, rect);
+          return;
+        }
+
+        if (state.canvasMode === 'crop') {
+          const dims = getTransformedSourceDims();
+          const rect = getImageScreenRect(dims.w, dims.h);
+          const cx = rect.left + state.crop.x * state.zoom;
+          const cy = rect.top  + state.crop.y * state.zoom;
+          const cw = state.crop.w * state.zoom;
+          const ch = state.crop.h * state.zoom;
+
+          const handles = getCropHandles(cx, cy, cw, ch);
+          for (const h of handles) {
+            if (Math.hypot(pos.x - h.x, pos.y - h.y) <= 20) {
+              pushHistory();
+              dragState = {
+                type: 'handle',
+                handle: h.id,
+                startX: pos.x,
+                startY: pos.y,
+                origCrop: { ...state.crop },
+                dims
+              };
+              return;
+            }
+          }
+
+          if (pos.x >= cx && pos.x <= cx + cw && pos.y >= cy && pos.y <= cy + ch) {
+            pushHistory();
+            dragState = {
+              type: 'moveCrop',
+              startX: pos.x,
+              startY: pos.y,
+              origCrop: { ...state.crop },
+              dims
+            };
+            return;
+          }
+        }
+
+        dragState = {
+          type: 'pan',
+          startX: pos.x,
+          startY: pos.y,
+          origPanX: state.panX,
+          origPanY: state.panY
+        };
+      };
+
+      const onMove = (e) => {
+        const pos = getPos(e);
+        if (state.img) {
+          const dims = getTransformedSourceDims();
+          const rect = getImageScreenRect(dims.w, dims.h);
+          const ix = Math.max(0, Math.min(dims.w, Math.round((pos.x - rect.left) / state.zoom)));
+          const iy = Math.max(0, Math.min(dims.h, Math.round((pos.y - rect.top) / state.zoom)));
+          document.getElementById('footerCursor').textContent = `X: ${ix} Y: ${iy}`;
+        }
+
+        if (!dragState) return;
+        if (e.cancelable) e.preventDefault();
+
+        if (dragState.type === 'pan') {
+          state.panX = dragState.origPanX + (pos.x - dragState.startX);
+          state.panY = dragState.origPanY + (pos.y - dragState.startY);
+          scheduleRender();
+          return;
+        }
+
+        if (dragState.type === 'split') {
+          updateSplitFromX(pos.x, dragState.rect);
+          return;
+        }
+
+        const dx = (pos.x - dragState.startX) / state.zoom;
+        const dy = (pos.y - dragState.startY) / state.zoom;
+        const { origCrop, dims } = dragState;
+
+        if (dragState.type === 'moveCrop') {
+          state.crop.x = Math.max(0, Math.min(dims.w - origCrop.w, origCrop.x + dx));
+          state.crop.y = Math.max(0, Math.min(dims.h - origCrop.h, origCrop.y + dy));
+          syncCropInputsFromState();
+          scheduleRender();
+          return;
+        }
+
+        if (dragState.type === 'handle') {
+          let { x, y, w, h } = origCrop;
+          const id = dragState.handle;
+          const minSz = 16;
+
+          if (id.includes('e')) w = Math.max(minSz, Math.min(dims.w - x, origCrop.w + dx));
+          if (id.includes('s')) h = Math.max(minSz, Math.min(dims.h - y, origCrop.h + dy));
+          if (id.includes('w')) {
+            const newX = Math.max(0, Math.min(origCrop.x + origCrop.w - minSz, origCrop.x + dx));
+            w = origCrop.w + (origCrop.x - newX);
+            x = newX;
+          }
+          if (id.includes('n')) {
+            const newY = Math.max(0, Math.min(origCrop.y + origCrop.h - minSz, origCrop.y + dy));
+            h = origCrop.h + (origCrop.y - newY);
+            y = newY;
+          }
+
+          if (state.aspectRatio) {
+            if (id === 'n' || id === 's') {
+              w = h * state.aspectRatio;
+            } else {
+              h = w / state.aspectRatio;
+            }
+            if (x + w > dims.w) { w = dims.w - x; h = w / state.aspectRatio; }
+            if (y + h > dims.h) { h = dims.h - y; w = h * state.aspectRatio; }
+          }
+
+          state.crop = { x, y, w, h };
+          if (document.getElementById('resizeLockAspect').checked) {
+            state.targetW = Math.max(1, Math.round(w));
+            state.targetH = Math.max(1, Math.round(h));
+            syncResizeInputsFromState();
+          }
+          syncCropInputsFromState();
+          scheduleRender();
+        }
+      };
+
+      const onUp = () => {
+        dragState = null;
+      };
+
+      mainCanvas.addEventListener('mousedown', onDown);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+
+      mainCanvas.addEventListener('touchstart', onDown, { passive: false });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onUp);
+
+      mainCanvas.addEventListener('wheel', (e) => {
+        if (!state.img) return;
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 0.1 : -0.1;
+        adjustZoom(factor);
+      }, { passive: false });
+    }
+
+    function updateSplitFromX(clientX, rect) {
+      state.splitRatio = Math.max(0.05, Math.min(0.95, (clientX - rect.left) / Math.max(1, rect.width)));
+      scheduleRender();
+    }
+
+    /* ========================================================================
+       13. LIVE FILE SIZE ESTIMATION, DPI BINARY INJECTION & METADATA DIFF TABLE
+       ======================================================================== */
+    function scheduleSizeEstimation() {
+      clearTimeout(estimateTimer);
+      estimateTimer = setTimeout(computeFinalExportBlobAndStats, 110);
+    }
+
+    async function computeFinalExportBlobAndStats() {
+      if (!state.img) return;
+      const outCanvas = buildFinalProcessedCanvas();
+      if (!outCanvas) return;
+
+      state.latestOutW = outCanvas.width;
+      state.latestOutH = outCanvas.height;
+
+      const format = document.getElementById('exportFormat').value;
+      const targetKbMode = document.getElementById('targetKbEnabled').checked;
+      const minKb = parseFloat(document.getElementById('targetMinKb').value) || 10;
+      const maxKb = parseFloat(document.getElementById('targetMaxKb').value) || 50;
+
+      let chosenQuality = (parseInt(document.getElementById('exportQuality').value) || 92) / 100;
+      let blob = await canvasToBlobAsync(outCanvas, format, chosenQuality);
+
+      if (targetKbMode && (format === 'image/jpeg' || format === 'image/webp')) {
+        let low = 0.05, high = 0.99;
+        for (let iter = 0; iter < 8; iter++) {
+          const mid = (low + high) / 2;
+          const testBlob = await canvasToBlobAsync(outCanvas, format, mid);
+          const kb = testBlob.size / 1024;
+          if (kb > maxKb) {
+            high = mid;
+          } else if (kb < minKb) {
+            low = mid;
+          } else {
+            blob = testBlob;
+            chosenQuality = mid;
+            break;
+          }
+          blob = testBlob;
+          chosenQuality = mid;
+        }
+        document.getElementById('exportQuality').value = Math.round(chosenQuality * 100);
+        document.getElementById('exportQualityLbl').textContent = `${Math.round(chosenQuality * 100)}% (Auto)`;
+      }
+
+      blob = await injectDpiMetadata(blob, format, state.dpi);
+      state.exportBlob = blob;
+      state.actualQuality = chosenQuality;
+
+      updateAllLiveTelemetry(outCanvas.width, outCanvas.height, blob.size, targetKbMode, minKb, maxKb);
+      renderMetadataComparisonTable();
+    }
+
+    function canvasToBlobAsync(canvas, mime, quality) {
+      return new Promise(resolve => canvas.toBlob(resolve, mime, quality));
+    }
+
+    async function injectDpiMetadata(blob, format, dpi) {
+      try {
+        const buf = await blob.arrayBuffer();
+        const bytes = new Uint8Array(buf);
+
+        if (format === 'image/jpeg' && bytes.length > 20 && bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF && bytes[3] === 0xE0) {
+          bytes[13] = 1;
+          bytes[14] = (dpi >> 8) & 0xFF;
+          bytes[15] = dpi & 0xFF;
+          bytes[16] = (dpi >> 8) & 0xFF;
+          bytes[17] = dpi & 0xFF;
+          return new Blob([bytes], { type: 'image/jpeg' });
+        }
+
+        if (format === 'image/png' && bytes.length > 33) {
+          const ppm = Math.round(dpi / 0.0254);
+          const physChunk = new Uint8Array(21);
+          const view = new DataView(physChunk.buffer);
+          view.setUint32(0, 9);
+          physChunk.set([112, 72, 89, 115], 4);
+          view.setUint32(8, ppm);
+          view.setUint32(12, ppm);
+          physChunk[16] = 1;
+          view.setUint32(17, crc32(physChunk.subarray(4, 17)));
+
+          const out = new Uint8Array(bytes.length + 21);
+          out.set(bytes.subarray(0, 33), 0);
+          out.set(physChunk, 33);
+          out.set(bytes.subarray(33), 54);
+          return new Blob([out], { type: 'image/png' });
+        }
+      } catch (err) {
+        console.warn('DPI metadata patch skipped:', err);
+      }
+      return blob;
+    }
+
+    function crc32(arr) {
+      let crc = -1;
+      for (let i = 0; i < arr.length; i++) {
+        crc ^= arr[i];
+        for (let k = 0; k < 8; k++) {
+          crc = (crc >>> 1) ^ (0xEDB88320 & -(crc & 1));
+        }
+      }
+      return (crc ^ -1) >>> 0;
+    }
+
+    function updateAllLiveTelemetry(outW, outH, byteSize, checkKb, minKb, maxKb) {
+      const kb = byteSize / 1024;
+      const cmW = ((outW / state.dpi) * 2.54).toFixed(2);
+      const cmH = ((outH / state.dpi) * 2.54).toFixed(2);
+
+      document.getElementById('docFileName').textContent = state.fileName;
+      document.getElementById('headerDimBadge').textContent = `${outW} × ${outH} px`;
+      document.getElementById('headerDpiBadge').textContent = `${state.dpi} DPI`;
+
+      document.getElementById('statSrcDim').textContent = `${state.img.naturalWidth} × ${state.img.naturalHeight} px`;
+      document.getElementById('statOutPx').textContent  = `${outW} × ${outH} px`;
+      document.getElementById('statOutPhys').textContent = `${cmW} × ${cmH} cm`;
+      document.getElementById('statOutDpi').textContent  = `${state.dpi} DPI`;
+
+      const sizeEl = document.getElementById('statOutSize');
+      sizeEl.textContent = formatBytes(byteSize);
+      sizeEl.className = 'stat-val';
+      if (checkKb) {
+        if (kb >= minKb && kb <= maxKb) sizeEl.classList.add('good');
+        else sizeEl.classList.add('warn');
+      } else {
+        sizeEl.classList.add('good');
+      }
+
+      document.getElementById('footerFile').textContent = state.fileName;
+      document.getElementById('footerDim').textContent  = `${outW} × ${outH} px`;
+      document.getElementById('footerPhys').textContent = `${cmW} × ${cmH} cm @ ${state.dpi} DPI`;
+    }
+
+    function renderMetadataComparisonTable() {
+      const tbody = document.getElementById('metaComparisonBody');
+      if (!state.img) return;
+
+      const onlyChanged = document.getElementById('metaOnlyChanged').checked;
+      const format = document.getElementById('exportFormat').value;
+      const ext = format === 'image/png' ? 'png' : (format === 'image/webp' ? 'webp' : 'jpg');
+      const base = (document.getElementById('exportFileName').value || 'processed_image').trim();
+      const outFileName = base.endsWith(`.${ext}`) ? base : `${base}.${ext}`;
+
+      const srcW = state.img.naturalWidth;
+      const srcH = state.img.naturalHeight;
+      const outW = state.latestOutW || srcW;
+      const outH = state.latestOutH || srcH;
+
+      const srcGcd = gcd(srcW, srcH);
+      const outGcd = gcd(outW, outH);
+
+      const srcCmW = ((srcW / state.sourceDpi) * 2.54).toFixed(2);
+      const srcCmH = ((srcH / state.sourceDpi) * 2.54).toFixed(2);
+      const outCmW = ((outW / state.dpi) * 2.54).toFixed(2);
+      const outCmH = ((outH / state.dpi) * 2.54).toFixed(2);
+
+      const srcInW = (srcW / state.sourceDpi).toFixed(2);
+      const srcInH = (srcH / state.sourceDpi).toFixed(2);
+      const outInW = (outW / state.dpi).toFixed(2);
+      const outInH = (outH / state.dpi).toFixed(2);
+
+      const capEnabled = document.getElementById('captionEnabled').checked;
+      const outerBorderOn = document.getElementById('outerBorderEnabled').checked;
+
+      const rows = [
+        { prop: 'File Name', orig: state.fileName, next: outFileName },
+        { prop: 'MIME Format', orig: state.fileType, next: format },
+        { prop: 'File Size', orig: formatBytes(state.fileSizeBytes), next: state.exportBlob ? formatBytes(state.exportBlob.size) : 'Calculating...' },
+        { prop: 'Pixel Dimensions', orig: `${srcW} × ${srcH} px`, next: `${outW} × ${outH} px` },
+        { prop: 'Megapixels', orig: `${((srcW * srcH) / 1e6).toFixed(2)} MP`, next: `${((outW * outH) / 1e6).toFixed(2)} MP` },
+        { prop: 'Physical (cm)', orig: `${srcCmW} × ${srcCmH} cm`, next: `${outCmW} × ${outCmH} cm` },
+        { prop: 'Physical (in)', orig: `${srcInW} × ${srcInH} in`, next: `${outInW} × ${outInH} in` },
+        { prop: 'Print Resolution', orig: `${state.sourceDpi} DPI`, next: `${state.dpi} DPI` },
+        { prop: 'Aspect Ratio', orig: `${Math.round(srcW/srcGcd)}:${Math.round(srcH/srcGcd)} (${(srcW/srcH).toFixed(2)})`, next: `${Math.round(outW/outGcd)}:${Math.round(outH/outGcd)} (${(outW/outH).toFixed(2)})` },
+        { prop: 'Crop Region', orig: `0,0 (${srcW}×${srcH})`, next: `${Math.round(state.crop.x)},${Math.round(state.crop.y)} (${Math.round(state.crop.w)}×${Math.round(state.crop.h)})` },
+        { prop: 'Orientation', orig: '0° Normal', next: `${state.rotation + state.straighten}°${state.flipH ? ' FlipH' : ''}${state.flipV ? ' FlipV' : ''}` },
+        { prop: 'Tone / Clarity', orig: '100/100/100/0', next: `${state.brightness}/${state.contrast}/${state.saturation}/${state.sharpness}` },
+        { prop: 'Name/Date Strip', orig: 'None', next: capEnabled ? `Enabled (${document.getElementById('captionPlacement').value})` : 'None' },
+        { prop: 'Outer Border', orig: 'None', next: outerBorderOn ? `${document.getElementById('outerBorderPx').value}px` : 'None' },
+        { prop: 'Color Profile', orig: state.sourceExif.colorSpace || 'sRGB', next: 'sRGB IEC61966-2.1' },
+        { prop: 'Bit Depth', orig: state.sourceExif.bitDepth || '24-bit RGB', next: format === 'image/png' ? '32-bit RGBA' : '24-bit RGB' },
+        { prop: 'EXIF Privacy', orig: state.sourceExif.exifPresent || 'None', next: 'Clean (GPS/Camera Stripped)' },
+        { prop: 'Camera Make', orig: state.sourceExif.cameraMake || 'Not embedded', next: 'Removed' },
+        { prop: 'Camera Model', orig: state.sourceExif.cameraModel || 'Not embedded', next: 'Removed' },
+        { prop: 'Capture Date', orig: state.sourceExif.dateTimeOriginal || 'Not embedded', next: 'Removed' }
+      ];
+
+      const filtered = rows.filter(r => !onlyChanged || r.orig !== r.next);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:14px;">No metadata differences yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const changed = r.orig !== r.next;
+        return `
+          <tr class="${changed ? 'is-changed' : ''}">
+            <td class="prop-col">${r.prop}${changed ? '<span class="change-badge">MOD</span>' : ''}</td>
+            <td class="orig-col">${r.orig}</td>
+            <td class="new-col">${r.next}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function downloadFinalImage() {
+      if (!state.img) {
+        showToast('Please upload an image first');
+        return;
+      }
+      await computeFinalExportBlobAndStats();
+      if (!state.exportBlob) return;
+
+      const format = document.getElementById('exportFormat').value;
+      const ext = format === 'image/png' ? 'png' : (format === 'image/webp' ? 'webp' : 'jpg');
+      const base = (document.getElementById('exportFileName').value || 'processed_image').trim();
+      const fileName = base.endsWith(`.${ext}`) ? base : `${base}.${ext}`;
+
+      const url = URL.createObjectURL(state.exportBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+      showToast(`Saved ${fileName} (${formatBytes(state.exportBlob.size)} @ ${state.dpi} DPI)`);
+    }
+
+    function onExportSettingsChange() {
+      const fmt = document.getElementById('exportFormat').value;
+      document.getElementById('qualitySliderGroup').style.display = fmt === 'image/png' ? 'none' : 'flex';
+      scheduleSizeEstimation();
+    }
+
+    function onExportQualitySlider(val) {
+      document.getElementById('targetKbEnabled').checked = false;
+      document.getElementById('exportQualityLbl').textContent = `${val}%`;
+      scheduleSizeEstimation();
+    }
+
+    function setTargetKbRange(min, max) {
+      document.getElementById('targetKbEnabled').checked = true;
+      document.getElementById('targetMinKb').value = min;
+      document.getElementById('targetMaxKb').value = max;
+      scheduleSizeEstimation();
+      showToast(`Target size set to ${min}–${max} KB`);
+    }
+
+    /* ========================================================================
+       14. UI NAVIGATION, MOBILE DRAWER TOGGLES & HISTORY UNDO/REDO
+       ======================================================================== */
+    function switchInspectorTab(tabName) {
+      document.querySelectorAll('.insp-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === `pane-${tabName}`));
+      if (tabName === 'meta') renderMetadataComparisonTable();
+
+      if (window.innerWidth <= 960) {
+        document.getElementById('sidebarRight').classList.add('mobile-open');
+        document.getElementById('sidebarLeft').classList.remove('mobile-open');
+        document.getElementById('drawerBackdrop').classList.add('visible');
+      } else {
+        document.getElementById('sidebarRight').classList.remove('collapsed');
+      }
+    }
+
+    function setCanvasMode(mode) {
+      state.canvasMode = mode;
+      document.getElementById('pillModeCrop').classList.toggle('active', mode === 'crop');
+      document.getElementById('pillModePreview').classList.toggle('active', mode === 'preview');
+      document.getElementById('pillModeSplit').classList.toggle('active', mode === 'split');
+
+      document.getElementById('toolCropBtn').classList.toggle('active', mode === 'crop');
+      document.getElementById('toolPreviewBtn').classList.toggle('active', mode === 'preview');
+      fitToScreen();
+    }
+
+    function toggleRuleOfThirds() {
+      state.showRuleOfThirds = !state.showRuleOfThirds;
+      document.getElementById('toggleRuleThirdsBtn').classList.toggle('active', state.showRuleOfThirds);
+      scheduleRender();
+    }
+
+    function toggleFaceGuide() {
+      state.showFaceGuide = !state.showFaceGuide;
+      document.getElementById('toggleFaceGuideBtn').classList.toggle('active', state.showFaceGuide);
+      scheduleRender();
+    }
+
+    function toggleLeftPanel() {
+      document.getElementById('sidebarLeft').classList.toggle('collapsed');
+      setTimeout(resizeCanvasViewport, 50);
+    }
+
+    function toggleRightPanel() {
+      document.getElementById('sidebarRight').classList.toggle('collapsed');
+      setTimeout(resizeCanvasViewport, 50);
+    }
+
+    function toggleMobileDrawer(side) {
+      if (window.innerWidth > 960) {
+        if (side === 'left') toggleLeftPanel();
+        else toggleRightPanel();
+        return;
+      }
+
+      const left = document.getElementById('sidebarLeft');
+      const right = document.getElementById('sidebarRight');
+      const backdrop = document.getElementById('drawerBackdrop');
+
+      if (side === 'left') {
+        const willOpen = !left.classList.contains('mobile-open');
+        left.classList.toggle('mobile-open', willOpen);
+        right.classList.remove('mobile-open');
+        backdrop.classList.toggle('visible', willOpen);
+      } else {
+        const willOpen = !right.classList.contains('mobile-open');
+        right.classList.toggle('mobile-open', willOpen);
+        left.classList.remove('mobile-open');
+        backdrop.classList.toggle('visible', willOpen);
+      }
+    }
+
+    function closeMobileDrawers() {
+      document.getElementById('sidebarLeft').classList.remove('mobile-open');
+      document.getElementById('sidebarRight').classList.remove('mobile-open');
+      document.getElementById('drawerBackdrop').classList.remove('visible');
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      document.querySelector('#themeToggleBtn span').textContent = next === 'dark' ? 'light_mode' : 'dark_mode';
+      scheduleRender();
+    }
+
+    function pushHistory() {
+      if (!state.img) return;
+      state.undoStack.push(JSON.stringify({
+        rotation: state.rotation,
+        straighten: state.straighten,
+        flipH: state.flipH,
+        flipV: state.flipV,
+        crop: { ...state.crop },
+        targetW: state.targetW,
+        targetH: state.targetH,
+        dpi: state.dpi
+      }));
+      if (state.undoStack.length > 25) state.undoStack.shift();
+      state.redoStack = [];
+    }
+
+    function undoState() {
+      if (!state.undoStack.length) return showToast('Nothing to undo');
+      state.redoStack.push(JSON.stringify({
+        rotation: state.rotation, straighten: state.straighten, flipH: state.flipH, flipV: state.flipV,
+        crop: { ...state.crop }, targetW: state.targetW, targetH: state.targetH, dpi: state.dpi
+      }));
+      const prev = JSON.parse(state.undoStack.pop());
+      Object.assign(state, prev);
+      syncCropInputsFromState();
+      syncResizeInputsFromState();
+      scheduleRender();
+    }
+
+    function redoState() {
+      if (!state.redoStack.length) return showToast('Nothing to redo');
+      state.undoStack.push(JSON.stringify({
+        rotation: state.rotation, straighten: state.straighten, flipH: state.flipH, flipV: state.flipV,
+        crop: { ...state.crop }, targetW: state.targetW, targetH: state.targetH, dpi: state.dpi
+      }));
+      const next = JSON.parse(state.redoStack.pop());
+      Object.assign(state, next);
+      syncCropInputsFromState();
+      syncResizeInputsFromState();
+      scheduleRender();
+    }
+
+    function showToast(msg) {
+      const cont = document.getElementById('toastContainer');
+      const el = document.createElement('div');
+      el.className = 'toast-msg';
+      el.textContent = msg;
+      cont.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 220);
+      }, 2400);
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return '0 B';
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+    function gcd(a, b) {
+      return b === 0 ? a : gcd(b, a % b);
+    }
+  </script>
+</body>
+</html>
